@@ -371,6 +371,60 @@ def notificaciones_usuario():
     return ejecutar_sql(sql, (id_usuario,))
 
 
+# ======================= Registro de citas pasadas y próximas =======================
+# Citas pasadas de un paciente
+@app.route('/citas/pasadas', methods=['GET'])
+def citas_pasadas():
+    id_paciente = request.args.get('id_paciente')
+
+    sql = '''
+        SELECT * FROM "Cita"
+        WHERE id_paciente = %s AND fecha_hora < CURRENT_TIMESTAMP
+        ORDER BY fecha_hora DESC
+    '''
+    return ejecutar_sql(sql, (id_paciente,))
+
+# Citas próximas de un paciente
+@app.route('/citas/proximas', methods=['GET'])
+def citas_proximas():
+    id_paciente = request.args.get('id_paciente')
+
+    sql = '''
+        SELECT * FROM "Cita"
+        WHERE id_paciente = %s AND fecha_hora >= CURRENT_TIMESTAMP
+        ORDER BY fecha_hora
+    '''
+    return ejecutar_sql(sql, (id_paciente,))
+
+# ======================= Doctores agregan notas médicas =======================
+# Agregar nota médica
+@app.route('/expediente/agregar', methods=['POST'])
+def agregar_nota_medica():
+    datos = request.get_json()
+    id_paciente = datos.get('id_paciente')
+    id_doctor = datos.get('id_doctor')
+    nota = datos.get('nota')
+    fecha_hora = datos.get('fecha_hora')  # formato: '2025-04-09 17:00:00'
+
+    sql = '''
+        INSERT INTO "Expediente" (id_paciente, id_doctor, nota, fecha_hora)
+        VALUES (%s, %s, %s, %s)
+    '''
+    return ejecutar_sql(sql, (id_paciente, id_doctor, nota, fecha_hora))
+
+# Ver notas médicas de un paciente
+@app.route('/expediente/ver', methods=['GET'])
+def ver_expediente():
+    id_paciente = request.args.get('id_paciente')
+
+    sql = '''
+        SELECT * FROM "Expediente"
+        WHERE id_paciente = %s
+        ORDER BY fecha_hora DESC
+    '''
+    return ejecutar_sql(sql, (id_paciente,))
+
+
 # ----------------------------------
 
 # Obtener todos los usuarios
