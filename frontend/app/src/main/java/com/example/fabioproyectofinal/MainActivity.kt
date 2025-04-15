@@ -14,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -99,7 +98,7 @@ fun TopBar() {
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xFFB2C2A4), shape = RoundedCornerShape(8.dp))
-            .padding(8.dp),
+            .padding(24.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -141,25 +140,37 @@ fun ClinicaItem(clinica: Clinica) {
 
 @Composable
 fun BottomNavigationBar() {
-    BottomAppBar(
-        containerColor = Color(0xFFB2C2A4),
-        contentColor = Color.White
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        contentAlignment = Alignment.BottomCenter
     ) {
-        Row(
+        Surface(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth(1f)
+                .height(64.dp),
+            shape = RoundedCornerShape(16.dp),
+            color = Color(0xFFB2C2A4),
+            tonalElevation = 8.dp,
+            shadowElevation = 8.dp
         ) {
-            IconButton(onClick = {}) {
-                Icon(Icons.Default.FavoriteBorder, contentDescription = "Favoritos", modifier = Modifier.size(32.dp))
-            }
-            IconButton(onClick = {}) {
-                Icon(Icons.Default.Home, contentDescription = "Inicio", modifier = Modifier.size(32.dp))
-            }
-            IconButton(onClick = {}) {
-                Icon(Icons.Default.DateRange, contentDescription = "Calendar", modifier = Modifier.size(32.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = {}) {
+                    Icon(Icons.Default.FavoriteBorder, contentDescription = "Favoritos", modifier = Modifier.size(32.dp), tint = Color.White)
+                }
+                IconButton(onClick = {}) {
+                    Icon(Icons.Default.Home, contentDescription = "Inicio", modifier = Modifier.size(32.dp), tint = Color.White)
+                }
+                IconButton(onClick = {}) {
+                    Icon(Icons.Default.DateRange, contentDescription = "Calendario", modifier = Modifier.size(32.dp), tint = Color.White)
+                }
             }
         }
     }
