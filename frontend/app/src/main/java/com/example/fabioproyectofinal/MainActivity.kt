@@ -54,25 +54,44 @@ val clinicas = listOf(
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
+    var searchText by remember { mutableStateOf("") }
+
+    val clinicasFiltradas = clinicas.filter {
+        it.nombre.contains(searchText, ignoreCase = true) ||
+                it.direccion.contains(searchText, ignoreCase = true)
+    }
+
     Column(
-        modifier
+        modifier = modifier
             .fillMaxSize()
+            .background(Color(0xFFF0F0F0))
             .padding(16.dp)
     ) {
         TopBar()
-        Spacer(modifier = Modifier.height(8.dp))
-        Text("Buscador", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(8.dp))
-        SearchBar()
-        Spacer(modifier = Modifier.height(16.dp))
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(clinicas) { clinica ->
-                ClinicaCard(clinica)
+        Spacer(modifier = Modifier
+            .padding(bottom = 16.dp),)
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Buscar") },
+            placeholder = { Text("Buscar clínicas") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+
+        LazyColumn {
+            items(clinicasFiltradas) { clinica ->
+                ClinicaItem(clinica)
             }
         }
     }
 }
-
 @Composable
 fun TopBar() {
     Row(
@@ -90,35 +109,30 @@ fun TopBar() {
 }
 
 @Composable
-fun SearchBar() {
-    OutlinedTextField(
-        value = "",
-        onValueChange = {},
-        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-        placeholder = { Text("Nombre clínica o dirección:") },
+fun ClinicaItem(clinica: Clinica) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-    )
-}
-
-@Composable
-fun ClinicaCard(clinica: Clinica) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+            .padding(vertical = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp)
     ) {
-        Row(modifier = Modifier.padding(8.dp)) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(
                 painter = painterResource(id = clinica.imagen),
-                contentDescription = null,
+                contentDescription = clinica.nombre,
                 modifier = Modifier
                     .size(64.dp)
-                    .padding(end = 8.dp)
+                    .padding(end = 16.dp)
             )
             Column {
-                Text(text = clinica.nombre, fontWeight = FontWeight.Bold)
-                Text(text = clinica.direccion, fontSize = 12.sp)
+                Text(clinica.nombre, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(clinica.direccion, fontSize = 14.sp, color = Color.Gray)
             }
         }
     }
@@ -138,13 +152,13 @@ fun BottomNavigationBar() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = {}) {
-                Icon(Icons.Default.FavoriteBorder, contentDescription = "Favoritos")
+                Icon(Icons.Default.FavoriteBorder, contentDescription = "Favoritos", modifier = Modifier.size(32.dp))
             }
             IconButton(onClick = {}) {
-                Icon(Icons.Default.Home, contentDescription = "Inicio")
+                Icon(Icons.Default.Home, contentDescription = "Inicio", modifier = Modifier.size(32.dp))
             }
             IconButton(onClick = {}) {
-                Icon(Icons.Default.Person, contentDescription = "Perfil")
+                Icon(Icons.Default.Person, contentDescription = "Perfil", modifier = Modifier.size(32.dp))
             }
         }
     }
