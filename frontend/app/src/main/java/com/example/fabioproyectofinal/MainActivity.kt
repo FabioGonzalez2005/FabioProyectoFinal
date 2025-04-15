@@ -65,7 +65,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFF0F0F0))
-            .padding(16.dp)
+            .height(64.dp)
     ) {
         TopBar()
         Spacer(modifier = Modifier
@@ -94,17 +94,33 @@ fun MainScreen(modifier: Modifier = Modifier) {
 }
 @Composable
 fun TopBar() {
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFB2C2A4), shape = RoundedCornerShape(8.dp))
-            .padding(24.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(16.dp),
+        contentAlignment = Alignment.TopCenter
     ) {
-        Text("ESP ▼", color = Color.White)
-        Text("(logo)", color = Color.White)
-        Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.White)
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            shape = RoundedCornerShape(16.dp),
+            color = Color(0xFFB2C2A4),
+            tonalElevation = 8.dp,
+            shadowElevation = 8.dp
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("ESP ▼", color = Color.White)
+                Text("(logo)", color = Color.White)
+                Icon(Icons.Default.Person, contentDescription = "Perfil", tint = Color.White)
+            }
+        }
     }
 }
 
