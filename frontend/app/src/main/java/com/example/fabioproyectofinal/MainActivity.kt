@@ -64,7 +64,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF0F0F0))
+            .background(Color(0xFFFFF9F2))
             .height(64.dp)
     ) {
         TopBar()
@@ -135,7 +135,8 @@ fun ClinicaItem(clinica: Clinica) {
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Row(
             modifier = Modifier
@@ -163,6 +164,7 @@ fun BottomNavigationBar() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color(0xFFFFF9F2))
             .padding(16.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
