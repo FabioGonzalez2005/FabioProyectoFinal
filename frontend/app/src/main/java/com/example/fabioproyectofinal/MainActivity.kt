@@ -77,7 +77,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
             placeholder = { Text("Buscar clínicas") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -85,11 +85,15 @@ fun MainScreen(modifier: Modifier = Modifier) {
             )
         )
 
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+        ) {
             items(clinicasFiltradas) { clinica ->
                 ClinicaItem(clinica)
             }
         }
+
     }
 }
 @Composable
