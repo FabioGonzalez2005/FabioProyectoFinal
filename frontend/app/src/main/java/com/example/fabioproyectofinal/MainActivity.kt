@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -104,7 +105,7 @@ fun TopBar() {
     ) {
         Text("ESP ▼", color = Color.White)
         Text("(logo)", color = Color.White)
-        Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
+        Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.White)
     }
 }
 
@@ -158,7 +159,7 @@ fun BottomNavigationBar() {
                 Icon(Icons.Default.Home, contentDescription = "Inicio", modifier = Modifier.size(32.dp))
             }
             IconButton(onClick = {}) {
-                Icon(Icons.Default.Person, contentDescription = "Perfil", modifier = Modifier.size(32.dp))
+                Icon(Icons.Default.DateRange, contentDescription = "Calendar", modifier = Modifier.size(32.dp))
             }
         }
     }
