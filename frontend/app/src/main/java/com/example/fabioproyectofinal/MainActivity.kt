@@ -78,7 +78,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 .padding(start = 16.dp, bottom = 16.dp)
         )
 
-        // Barra de búsqueda
         OutlinedTextField(
             value = searchText,
             onValueChange = { searchText = it },
@@ -86,28 +85,35 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 Icon(
                     Icons.Filled.Search,
                     contentDescription = "Buscar",
-                    modifier = Modifier.size(16.dp) // ícono más pequeño
+                    modifier = Modifier.size(18.dp)
                 )
             },
             placeholder = {
                 Text(
-                    "Buscar clínicas",
-                    fontSize = 12.sp // texto más pequeño
+                    "Nombre clínica o dirección",
+                    fontSize = 18.sp,
+                    color = Color(0xFFB2C2A4),
                 )
             },
-            textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), // tamaño del texto
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 4.dp)
-                .height(42.dp), // altura total
+                .background(Color.White, RoundedCornerShape(8.dp)), // fondo blanco y esquinas redondeadas
             shape = RoundedCornerShape(8.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.Gray,
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                disabledBorderColor = Color.Transparent,
+                errorBorderColor = Color.Transparent,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                disabledContainerColor = Color.White,
+                errorContainerColor = Color.White,
                 cursorColor = MaterialTheme.colorScheme.primary
             ),
             singleLine = true
         )
+
 
 
         // Lista de tarjetas de clínicas disponibles
@@ -122,6 +128,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
     }
 }
+
+// Barra de navegación superior
 @Composable
 fun TopBar() {
     Box(
@@ -154,6 +162,7 @@ fun TopBar() {
     }
 }
 
+// Tarjeta de clínica
 @Composable
 fun ClinicaItem(clinica: Clinica) {
     Card(
@@ -174,7 +183,7 @@ fun ClinicaItem(clinica: Clinica) {
                 painter = painterResource(id = clinica.imagen),
                 contentDescription = clinica.nombre,
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(110.dp)
                     .padding(end = 16.dp)
             )
             Column {
