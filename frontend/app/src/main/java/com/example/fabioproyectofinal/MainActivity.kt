@@ -67,24 +67,50 @@ fun MainScreen(modifier: Modifier = Modifier) {
             .background(Color(0xFFFFF9F2))
             .height(64.dp)
     ) {
+        // Navegación superior
         TopBar()
-        Spacer(modifier = Modifier
-            .padding(bottom = 16.dp),)
+        // "Buscador"
+        Text(
+            text = "Buscador",
+            color = Color(0xFFB2C2A4),
+            fontSize = 40.sp,
+            modifier = Modifier
+                .padding(start = 16.dp, bottom = 16.dp)
+        )
+
+        // Barra de búsqueda
         OutlinedTextField(
             value = searchText,
             onValueChange = { searchText = it },
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Buscar") },
-            placeholder = { Text("Buscar clínicas") },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.Search,
+                    contentDescription = "Buscar",
+                    modifier = Modifier.size(16.dp) // ícono más pequeño
+                )
+            },
+            placeholder = {
+                Text(
+                    "Buscar clínicas",
+                    fontSize = 12.sp // texto más pequeño
+                )
+            },
+            textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), // tamaño del texto
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-            shape = RoundedCornerShape(16.dp),
+                .padding(horizontal = 16.dp, vertical = 4.dp)
+                .height(42.dp), // altura total
+            shape = RoundedCornerShape(8.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.Gray
-            )
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = MaterialTheme.colorScheme.primary
+            ),
+            singleLine = true
         )
 
+
+        // Lista de tarjetas de clínicas disponibles
         LazyColumn(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
@@ -159,6 +185,7 @@ fun ClinicaItem(clinica: Clinica) {
     }
 }
 
+// Barra de navegación inferior
 @Composable
 fun BottomNavigationBar() {
     Box(
