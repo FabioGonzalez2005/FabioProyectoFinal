@@ -1,4 +1,4 @@
-package com.example.fabioproyectofinal
+package com.example.fabioproyectofinal.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
