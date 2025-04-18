@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.fabioproyectofinal.ui.theme.FabioProyectoFInalTheme
 import com.example.fabioproyectofinal.view.BottomNavigationBar
-import com.example.fabioproyectofinal.view.MainScreen
+import com.example.fabioproyectofinal.view.MainScreenApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     bottomBar = { BottomNavigationBar() }
                 ) { innerPadding ->
-                    MainScreen(Modifier.padding(innerPadding))
+                    MainScreenApp(Modifier.padding(innerPadding))
                 }
             }
         }

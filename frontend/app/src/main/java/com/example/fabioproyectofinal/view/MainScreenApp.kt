@@ -28,8 +28,8 @@ import com.example.fabioproyectofinal.model.data.clinics
 fun MainScreenApp(modifier: Modifier = Modifier) {
     var searchText by remember { mutableStateOf("") }
     val clinicasFiltradas = clinics.filter {
-        it.nombre.contains(searchText, ignoreCase = true) ||
-                it.direccion.contains(searchText, ignoreCase = true)
+        it.name.contains(searchText, ignoreCase = true) ||
+                it.address.contains(searchText, ignoreCase = true)
     }
 
     Column(
@@ -152,15 +152,15 @@ fun ClinicaItem(clinica: Clinic) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = clinica.imagen),
-                contentDescription = clinica.nombre,
+                painter = painterResource(id = clinica.src),
+                contentDescription = clinica.name,
                 modifier = Modifier
                     .size(110.dp)
                     .padding(end = 16.dp)
             )
             Column {
-                Text(clinica.nombre, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(clinica.direccion, fontSize = 14.sp, color = Color.Gray)
+                Text(clinica.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(clinica.address, fontSize = 14.sp, color = Color.Gray)
             }
         }
     }
