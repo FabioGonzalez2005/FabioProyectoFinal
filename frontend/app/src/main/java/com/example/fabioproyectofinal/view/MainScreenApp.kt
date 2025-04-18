@@ -21,23 +21,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.fabioproyectofinal.R
-
-
-
-// Datos simulados
-data class Clinica(val nombre: String, val direccion: String, val imagen: Int)
-
-val clinicas = listOf(
-    Clinica("Hospiten Lanzarote", "Cam. Lomo Gordo, s/n, 35510 Puerto del Carmen, Las Palmas", R.drawable.hospiten),
-    Clinica("International Clinic", "C. Acatife, 9, 35510 Puerto del Carmen, Las Palmas", R.drawable.international),
-    Clinica("Clínicas Dr. Mager - Deutsche Ärzte", "Avda de las Playas, C. Chalana, 37, 35510 Puerto del Carmen", R.drawable.mager)
-)
+import com.example.fabioproyectofinal.model.data.Clinic
+import com.example.fabioproyectofinal.model.data.clinics
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreenApp(modifier: Modifier = Modifier) {
     var searchText by remember { mutableStateOf("") }
-    val clinicasFiltradas = clinicas.filter {
+    val clinicasFiltradas = clinics.filter {
         it.nombre.contains(searchText, ignoreCase = true) ||
                 it.direccion.contains(searchText, ignoreCase = true)
     }
@@ -146,7 +136,7 @@ fun TopBar() {
 
 // Tarjeta de clínica
 @Composable
-fun ClinicaItem(clinica: Clinica) {
+fun ClinicaItem(clinica: Clinic) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
