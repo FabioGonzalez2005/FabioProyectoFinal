@@ -101,9 +101,7 @@ fun ClinicList(clinicasFiltradas: List<Clinic>, navController: NavHostController
             .fillMaxSize()
     ) {
         items(clinicasFiltradas) { clinic ->
-            ClinicaItem(clinic = clinic, navController = navController) {
-                navController.navigate("clinic_screen/${clinic.id}")
-            }
+            ClinicaItem(clinic = clinic, navController = navController)
         }
     }
 }
@@ -143,22 +141,18 @@ fun TopBar() {
 
 // Tarjeta de clínica
 @Composable
-fun ClinicaItem(clinic: Clinic, navController: NavHostController, onClick: () -> Unit) {
+fun ClinicaItem(clinic: Clinic, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable {
+                navController.navigate(route = AppScreens.ClinicDetailScreen.route)
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Button(
-            onClick = {
-                navController.navigate(route = AppScreens.ClinicDetailScreen.route)
-            }
-        ) {
-            Text("Ver detalles")
-        }
         Row(
             modifier = Modifier
                 .padding(16.dp)
@@ -177,11 +171,9 @@ fun ClinicaItem(clinic: Clinic, navController: NavHostController, onClick: () ->
                 Text(clinic.address, fontSize = 14.sp, color = Color.Gray)
             }
         }
-        }
-    Modifier.clickable {
-        navController.navigate(route = AppScreens.ClinicDetailScreen.route)
     }
 }
+
 
 // Barra de navegación inferior
 @Composable
