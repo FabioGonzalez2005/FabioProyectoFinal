@@ -16,7 +16,7 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
         }
         composable("clinic_screen") { backStackEntry ->
             val clinicId = backStackEntry.arguments?.getString("clinicId")?.toIntOrNull()
-            ClinicDetailScreen()
+            ClinicDetailScreen(navController)
         }
     }
 }
