@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.Clinic
 import com.example.fabioproyectofinal.model.data.clinics
+import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 @Composable
 fun MainScreenApp(navController: NavHostController) {
@@ -151,6 +152,13 @@ fun ClinicaItem(clinic: Clinic, navController: NavHostController, onClick: () ->
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
+        Button(
+            onClick = {
+                navController.navigate(route = AppScreens.ClinicDetailScreen.route)
+            }
+        ) {
+            Text("Ver detalles")
+        }
         Row(
             modifier = Modifier
                 .padding(16.dp)
@@ -169,9 +177,9 @@ fun ClinicaItem(clinic: Clinic, navController: NavHostController, onClick: () ->
                 Text(clinic.address, fontSize = 14.sp, color = Color.Gray)
             }
         }
-    }
+        }
     Modifier.clickable {
-        navController.navigate("clinic_screen")
+        navController.navigate(route = AppScreens.ClinicDetailScreen.route)
     }
 }
 
