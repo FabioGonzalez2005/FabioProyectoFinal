@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
             FabioProyectoFInalTheme {
                 Scaffold(
                     topBar = { TopBar()},
-                    bottomBar = { BottomNavigationBar() }
+                    bottomBar = { BottomNavigationBar(navController) }
                 ) { innerPadding ->
                     AppNavigation(navController = navController, modifier = Modifier.padding(innerPadding))
                 }

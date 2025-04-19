@@ -176,7 +176,7 @@ fun ClinicaItem(clinic: Clinic, navController: NavHostController) {
 
 // Barra de navegación inferior
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -203,7 +203,7 @@ fun BottomNavigationBar() {
                 IconButton(onClick = {}) {
                     Icon(Icons.Default.FavoriteBorder, contentDescription = "Favoritos", modifier = Modifier.size(32.dp), tint = Color.White)
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = { navController.navigate(route = AppScreens.MainScreenApp.route)}) {
                     Icon(Icons.Default.Home, contentDescription = "Inicio", modifier = Modifier.size(32.dp), tint = Color.White)
                 }
                 IconButton(onClick = {}) {
