@@ -2,6 +2,7 @@ package com.example.fabioproyectofinal.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,11 +22,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.Clinic
 import com.example.fabioproyectofinal.model.data.clinics
 
 @Composable
-fun MainScreenApp(modifier: Modifier = Modifier) {
+fun MainScreenApp(navController: NavHostController) {
     var searchText by remember { mutableStateOf("") }
     val clinicasFiltradas = clinics.filter {
         it.name.contains(searchText, ignoreCase = true) ||
@@ -33,7 +36,7 @@ fun MainScreenApp(modifier: Modifier = Modifier) {
     }
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFFFF9F2))
             .height(64.dp)
@@ -85,19 +88,22 @@ fun MainScreenApp(modifier: Modifier = Modifier) {
             ),
             singleLine = true
         )
+        ClinicList(clinicasFiltradas, navController)
+    }
+}
 
-
-
-        // Lista de tarjetas de clínicas disponibles
-        LazyColumn(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-        ) {
-            items(clinicasFiltradas) { clinica ->
-                ClinicaItem(clinica)
+@Composable
+fun ClinicList(clinicasFiltradas: List<Clinic>, navController: NavHostController) {
+    LazyColumn(
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            .fillMaxSize()
+    ) {
+        items(clinicasFiltradas) { clinic ->
+            ClinicaItem(clinic = clinic, navController = navController) {
+                navController.navigate("clinic_screen/${clinic.id}")
             }
         }
-
     }
 }
 
@@ -136,7 +142,7 @@ fun TopBar() {
 
 // Tarjeta de clínica
 @Composable
-fun ClinicaItem(clinica: Clinic) {
+fun ClinicaItem(clinic: Clinic, navController: NavHostController, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,17 +158,20 @@ fun ClinicaItem(clinica: Clinic) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = clinica.src),
-                contentDescription = clinica.name,
+                painter = painterResource(id = clinic.src),
+                contentDescription = clinic.name,
                 modifier = Modifier
                     .size(110.dp)
                     .padding(end = 16.dp)
             )
             Column {
-                Text(clinica.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(clinica.address, fontSize = 14.sp, color = Color.Gray)
+                Text(clinic.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(clinic.address, fontSize = 14.sp, color = Color.Gray)
             }
         }
+    }
+    Modifier.clickable {
+        navController.navigate("clinic_screen")
     }
 }
 
