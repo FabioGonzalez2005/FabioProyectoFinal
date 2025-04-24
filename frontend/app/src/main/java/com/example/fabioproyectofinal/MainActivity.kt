@@ -21,7 +21,6 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             FabioProyectoFInalTheme {
                 Scaffold(
-                    topBar = { TopBar()},
                     bottomBar = { BottomNavigationBar(navController) }
                 ) { innerPadding ->
                     AppNavigation(navController = navController, modifier = Modifier.padding(innerPadding))

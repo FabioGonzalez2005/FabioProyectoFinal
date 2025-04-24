@@ -21,12 +21,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,80 +40,127 @@ import com.example.fabioproyectofinal.model.data.Clinic
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 @Composable
-fun ClinicDetailScreen(navController: NavController) {
-    Column(
+fun CustomTopBar(nombre: String, navController: NavHostController, onBackClick: () -> Unit) {
+    Row(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Encabezado
-        Text("Fabio González Waschkowitz", fontSize = 16.sp, fontWeight = FontWeight.Medium)
-
-        Spacer(modifier = Modifier.size(16.dp))
-
-        // Card de la clínica
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(6.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFDFCF8))
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.hospiten),
-                    contentDescription = "Imagen clínica",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(150.dp)
-                )
-                Spacer(modifier = Modifier.size(8.dp))
-                Text("Hospiten Lanzarote", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                Text("Cam. Lomo Gordo, s/n, 35510\nPuerto del Carmen, Las Palmas", fontSize = 14.sp)
-            }
+        // Botón de retroceso
+        IconButton(onClick = { navController.popBackStack() }) {
+            Image(
+                painter = painterResource(id = R.drawable.icon_back),
+                contentDescription = "Volver",
+                modifier = Modifier.size(24.dp)
+            )
         }
 
-        Spacer(modifier = Modifier.size(16.dp))
-
-        // Botones
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            ClinicActionButton("Dirección", R.drawable.icon_map) { /* Acción */ }
-            ClinicActionButton("Llamar", R.drawable.icon_call) { /* Acción */ }
-            ClinicActionButton("Instagram", R.drawable.icon_instagram) { /* Acción */ }
-        }
-
-        Spacer(modifier = Modifier.size(24.dp))
-
-        // Título sección profesionales
-        Text("Escoge profesional:", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-
-        Spacer(modifier = Modifier.size(8.dp))
-
-        // Lista de profesionales
-        val professionals = listOf(
-            "Alberto Medina" to "Osteópata",
-            "Jimena Cáceres" to "Dermatología",
-            "Armando Pérez" to "Oncología",
-            "Cristina Morales" to "Rehabilitación"
+        // Nombre del usuario
+        Text(
+            text = nombre,
+            style = TextStyle(
+                color = Color(0xFFACBCA0),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
         )
 
-        LazyColumn {
-            items(professionals.chunked(2)) { row ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    for ((name, specialty) in row) {
-                        ProfessionalCard(name, specialty)
-                    }
-                }
-                Spacer(modifier = Modifier.size(12.dp))
+        // Icono de usuario
+        Image(
+            painter = painterResource(id = R.drawable.icon_user),
+            contentDescription = "Usuario",
+            modifier = Modifier.size(24.dp)
+        )
+    }
+}
+
+@Composable
+fun ClinicDetailScreen(navController: NavHostController) {
+    Scaffold(
+        topBar = {
+            CustomTopBar("Fabio González Waschkowitz", navController = navController) {
+                navController.popBackStack()
             }
         }
+    ) { innerPadding ->
 
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(16.dp), // Padding adicional si quieres
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.size(16.dp))
+
+            // Card de la clínica
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(6.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFFDFCF8))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.hospiten),
+                        contentDescription = "Imagen clínica",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .size(150.dp)
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Text("Hospiten Lanzarote", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Text("Cam. Lomo Gordo, s/n, 35510\nPuerto del Carmen, Las Palmas", fontSize = 14.sp)
+                }
+            }
+
+            Spacer(modifier = Modifier.size(16.dp))
+
+            // Botones
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ClinicActionButton("Dirección", R.drawable.icon_map) { /* Acción */ }
+                ClinicActionButton("Llamar", R.drawable.icon_call) { /* Acción */ }
+                ClinicActionButton("Instagram", R.drawable.icon_instagram) { /* Acción */ }
+            }
+
+            Spacer(modifier = Modifier.size(24.dp))
+
+            // Título sección profesionales
+            Text("Escoge profesional:", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+
+            Spacer(modifier = Modifier.size(8.dp))
+
+            // Lista de profesionales
+            val professionals = listOf(
+                "Alberto Medina" to "Osteópata",
+                "Jimena Cáceres" to "Dermatología",
+                "Armando Pérez" to "Oncología",
+                "Cristina Morales" to "Rehabilitación",
+            )
+
+            LazyColumn {
+                items(professionals.chunked(2)) { row ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        for ((name, specialty) in row) {
+                            ProfessionalCard(name, specialty)
+                        }
+                    }
+                    Spacer(modifier = Modifier.size(12.dp))
+                }
+            }
+        }
     }
 }
 
