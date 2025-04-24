@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -88,17 +90,27 @@ fun ClinicDetailScreen(navController: NavController) {
         Spacer(modifier = Modifier.size(8.dp))
 
         // Lista de profesionales
-        Column {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                ProfessionalCard("Alberto Medina", "Osteópata")
-                ProfessionalCard("Jimena Cáceres", "Dermatología")
-            }
-            Spacer(modifier = Modifier.size(12.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                ProfessionalCard("Armando Pérez", "Oncología")
-                ProfessionalCard("Cristina Morales", "Rehabilitación")
+        val professionals = listOf(
+            "Alberto Medina" to "Osteópata",
+            "Jimena Cáceres" to "Dermatología",
+            "Armando Pérez" to "Oncología",
+            "Cristina Morales" to "Rehabilitación"
+        )
+
+        LazyColumn {
+            items(professionals.chunked(2)) { row ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    for ((name, specialty) in row) {
+                        ProfessionalCard(name, specialty)
+                    }
+                }
+                Spacer(modifier = Modifier.size(12.dp))
             }
         }
+
     }
 }
 
