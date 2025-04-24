@@ -37,6 +37,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.Clinic
+import com.example.fabioproyectofinal.model.data.clinics
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 @Composable
@@ -96,29 +97,7 @@ fun ClinicDetailScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.size(16.dp))
 
-            // Card de la clínica
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(6.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFDFCF8))
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.hospiten),
-                        contentDescription = "Imagen clínica",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .size(150.dp)
-                    )
-                    Spacer(modifier = Modifier.size(8.dp))
-                    Text("Hospiten Lanzarote", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    Text("Cam. Lomo Gordo, s/n, 35510\nPuerto del Carmen, Las Palmas", fontSize = 14.sp)
-                }
-            }
+            ClinicaItemCard(clinic = clinics.first())
 
             Spacer(modifier = Modifier.size(16.dp))
 
@@ -176,6 +155,38 @@ fun ClinicActionButton(text: String, iconRes: Int, onClick: () -> Unit) {
             modifier = Modifier.size(48.dp)
         )
         Text(text, fontSize = 14.sp)
+    }
+}
+
+// Tarjeta de clínica
+@Composable
+fun ClinicaItemCard(clinic: Clinic) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = clinic.src),
+                contentDescription = clinic.name,
+                modifier = Modifier
+                    .size(110.dp)
+                    .padding(end = 16.dp)
+            )
+            Column {
+                Text(clinic.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(clinic.address, fontSize = 14.sp, color = Color.Gray)
+            }
+        }
     }
 }
 
