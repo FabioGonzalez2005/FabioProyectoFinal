@@ -25,7 +25,7 @@ import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 
-// Tarjeta de profesional
+// Tarjeta de profesional en vertical
 @Composable
 fun ProfessionalCard(name: String, specialty: String, navController: NavHostController, onClick: () -> Unit) {
     Card(
