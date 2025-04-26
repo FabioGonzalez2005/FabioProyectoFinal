@@ -77,5 +77,26 @@ fun AppointmentsScreen(navController: NavHostController) {
                 )
             }
         }
+        // "Rechazadas"
+        Card(
+            modifier = Modifier
+                .size(width = 180.dp, height = 45.dp),
+            shape = RoundedCornerShape(10.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = "Rechazadas:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFFB2C2A4),
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
     }
 }
