@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.example.fabioproyectofinal.view.screens.MainScreenApp
 import com.example.fabioproyectofinal.view.screens.ClinicDetailScreen
 import com.example.fabioproyectofinal.view.screens.FavouritesScreen
+import com.example.fabioproyectofinal.view.screens.SelectProfessionalScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -21,6 +22,9 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
         }
         composable("favourites_screen") {
             FavouritesScreen(navController)
+        }
+        composable("select_professional_screen") {
+            SelectProfessionalScreen(navController)
         }
     }
 }
