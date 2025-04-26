@@ -1,6 +1,7 @@
 package com.example.fabioproyectofinal.view.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,24 +32,19 @@ import com.example.fabioproyectofinal.view.components.ProfessionalCard
 
 @Composable
 fun ClinicDetailScreen(navController: NavHostController) {
-    Scaffold(
-        topBar = {
-            TopBar("Fabio González Waschkowitz", navController = navController)
-        }
-    ) { innerPadding ->
-
         Column(
             modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .background(Color(0xFFFFF9F2)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Spacer(modifier = Modifier.size(16.dp))
-
-            ClinicaCard(clinic = clinics.first())
-
-            Spacer(modifier = Modifier.size(16.dp))
+            TopBar("Fabio González Waschkowitz", navController = navController)
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            ) {
+                ClinicaCard(clinic = clinics.first())
+            }
 
             // Botones
             Row(
@@ -89,4 +86,3 @@ fun ClinicDetailScreen(navController: NavHostController) {
             }
         }
     }
-}
