@@ -35,9 +35,7 @@ import com.example.fabioproyectofinal.view.components.TopBar
 fun ClinicDetailScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
-            TopBar("Fabio González Waschkowitz", navController = navController) {
-                navController.popBackStack()
-            }
+            TopBar("Fabio González Waschkowitz", navController = navController)
         }
     ) { innerPadding ->
 

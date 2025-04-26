@@ -20,8 +20,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
 
+
+// Barra de navegación superior
 @Composable
-fun TopBar(nombre: String, navController: NavHostController, onBackClick: () -> Unit) {
+fun TopBar(nombre: String, navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
