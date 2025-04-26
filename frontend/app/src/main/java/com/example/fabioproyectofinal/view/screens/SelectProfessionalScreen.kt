@@ -25,6 +25,7 @@ fun SelectProfessionalScreen(navController: NavHostController) {
     var selectedDate by remember { mutableStateOf("14 marzo 2025") }
     var selectedSlot by remember { mutableStateOf<String?>(null) }
     var expanded by remember { mutableStateOf(false) }
+    var buttonColor by remember { mutableStateOf(Color(0xFFF4F4F4)) }
 
     val dateOptions = listOf(
         "14 marzo 2025",
@@ -176,6 +177,9 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                                     isAvailable = isAvailable,
                                     onClick = {
                                         selectedSlot = time
+                                        if (isAvailable) {
+                                            buttonColor = Color(0xFFB2C2A4)
+                                        }
                                     }
                                 )
                             } else {
@@ -186,21 +190,24 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                 }
             }
 
-
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Botón de aceptar
             Button(
                 onClick = {
                     // Acción al aceptar
+                    if (selectedSlot != null) {
+                        buttonColor = Color(0xFF859A72)
+                    }
                 },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
                     .padding(horizontal = 16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF4F4F4))
+                colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
             ) {
-                Text(text = "Aceptar", color = Color.Gray)
+                Text(text = "Aceptar", color = Color.White)
             }
         }
     }
