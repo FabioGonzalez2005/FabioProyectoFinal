@@ -2,6 +2,7 @@ package com.example.fabioproyectofinal.view.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -24,13 +25,15 @@ import com.example.fabioproyectofinal.R
 
 // Tarjeta de profesional
 @Composable
-fun ProfessionalCard(name: String, specialty: String) {
+fun ProfessionalCard(name: String, specialty: String, onClick: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Card(
             shape = RoundedCornerShape(12.dp),
+
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
                 .background(Color.White)
+                .clickable { onClick() },
         ) {
             Image(
                 painter = painterResource(id = R.drawable.icon_user),

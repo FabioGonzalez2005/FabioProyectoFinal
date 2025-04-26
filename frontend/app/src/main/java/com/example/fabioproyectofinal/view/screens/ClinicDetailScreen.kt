@@ -90,7 +90,7 @@ fun ClinicDetailScreen(navController: NavHostController) {
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             pair.forEach { (name, specialty) ->
-                                ProfessionalCard(name = name, specialty = specialty)
+                                ProfessionalCard(name = name, specialty = specialty) { /* Acción */ }
                             }
                         }
                         Spacer(modifier = Modifier.height(12.dp))
