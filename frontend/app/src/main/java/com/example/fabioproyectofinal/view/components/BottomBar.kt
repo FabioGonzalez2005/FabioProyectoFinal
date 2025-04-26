@@ -60,7 +60,7 @@ fun BottomBar(navController: NavHostController) {
                     Icon(Icons.Default.Home, contentDescription = "Inicio", modifier = Modifier.size(32.dp), tint = Color.White)
                 }
                 // Botón Calendario
-                IconButton(onClick = {}) {
+                IconButton(onClick = { navController.navigate(route = AppScreens.AppointmentsScreen.route)}) {
                     Icon(Icons.Default.DateRange, contentDescription = "Calendario", modifier = Modifier.size(32.dp), tint = Color.White)
                 }
             }
