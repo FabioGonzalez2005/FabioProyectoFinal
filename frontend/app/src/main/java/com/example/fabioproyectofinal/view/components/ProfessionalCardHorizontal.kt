@@ -1,7 +1,6 @@
 package com.example.fabioproyectofinal.view.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,17 +20,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
 
 // Tarjeta de profesional en horizontal
 @Composable
-fun ProfessionalCardHorizontal(name: String, specialty: String, price: String, navController: NavHostController, onClick: () -> Unit) {
+fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable {},
+            .padding(vertical = 8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)

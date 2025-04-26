@@ -1,7 +1,6 @@
 package com.example.fabioproyectofinal.view.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -15,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.view.components.ProfessionalCardHorizontal
 import com.example.fabioproyectofinal.view.components.TopBar
+import com.example.fabioproyectofinal.view.components.TimeSlotButton
 
 @Composable
 fun SelectProfessionalScreen(navController: NavHostController) {
@@ -45,10 +45,7 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                 name = "Alberto Medina",
                 specialty = "Osteópata",
                 price = "45",
-                navController = navController
-            ) {
-                // Acción al hacer clic en la tarjeta
-            }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -111,26 +108,5 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                 Text(text = "Aceptar", color = Color.Gray)
             }
         }
-    }
-}
-
-@Composable
-fun TimeSlotButton(time: String, isSelected: Boolean, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .height(48.dp)
-            .padding(horizontal = 4.dp)
-            .background(
-                color = if (isSelected) Color(0xFFBFCDB2) else Color(0xFFDDE2D3),
-                shape = RoundedCornerShape(10.dp)
-            )
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = time,
-            color = Color.DarkGray,
-            fontSize = 14.sp
-        )
     }
 }
