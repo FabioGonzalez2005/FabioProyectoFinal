@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -58,31 +59,44 @@ fun ClinicDetailScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.size(24.dp))
 
-            // Título sección profesionales
-            Text("Escoge profesional:", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+            Column(
+                modifier = Modifier
+                    .background(Color.White)
+                    .padding(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Título sección profesionales
+                Text(
+                    "Escoge profesional:",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                    color = Color(0xFFB2C2A4)
+                )
 
-            Spacer(modifier = Modifier.size(8.dp))
+                Spacer(modifier = Modifier.size(8.dp))
 
-            // Lista de profesionales
-            val professionals = listOf(
-                "Alberto Medina" to "Osteópata",
-                "Jimena Cáceres" to "Dermatología",
-                "Armando Pérez" to "Oncología",
-                "Cristina Morales" to "Rehabilitación",
-            )
+                // Lista de profesionales
+                val professionals = listOf(
+                    "Alberto Medina" to "Osteópata",
+                    "Jimena Cáceres" to "Dermatología",
+                    "Armando Pérez" to "Oncología",
+                    "Cristina Morales" to "Rehabilitación",
+                )
 
-            LazyColumn {
-                items(professionals.chunked(2)) { row ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        for ((name, specialty) in row) {
-                            ProfessionalCard(name, specialty)
+                LazyColumn {
+                    items(professionals.chunked(2)) { pair ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            pair.forEach { (name, specialty) ->
+                                ProfessionalCard(name = name, specialty = specialty)
+                            }
                         }
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
-                    Spacer(modifier = Modifier.size(12.dp))
                 }
             }
+
         }
     }
