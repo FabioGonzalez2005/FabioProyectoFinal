@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.fabioproyectofinal.view.MainScreenApp
-import com.example.fabioproyectofinal.view.ClinicDetailScreen
+import com.example.fabioproyectofinal.view.screens.MainScreenApp
+import com.example.fabioproyectofinal.view.screens.ClinicDetailScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {

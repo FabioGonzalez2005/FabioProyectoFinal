@@ -1,4 +1,4 @@
-package com.example.fabioproyectofinal.view
+package com.example.fabioproyectofinal.view.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.Clinic
 import com.example.fabioproyectofinal.model.data.clinics
 import com.example.fabioproyectofinal.model.navigation.AppScreens
+import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable
 fun MainScreenApp(navController: NavHostController) {
@@ -42,7 +42,9 @@ fun MainScreenApp(navController: NavHostController) {
             .height(64.dp)
     ) {
         // Navegación superior
-        TopBar()
+        TopBar("Fabio González Waschkowitz", navController = navController) {
+            navController.popBackStack()
+        }
         // "Buscador"
         Text(
             text = "Buscador",
@@ -101,39 +103,6 @@ fun ClinicList(clinicasFiltradas: List<Clinic>, navController: NavHostController
     ) {
         items(clinicasFiltradas) { clinic ->
             ClinicaItem(clinic = clinic, navController = navController)
-        }
-    }
-}
-
-// Barra de navegación superior
-@Composable
-fun TopBar() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            shape = RoundedCornerShape(16.dp),
-            color = Color(0xFFB2C2A4),
-            tonalElevation = 8.dp,
-            shadowElevation = 8.dp
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("ESP ▼", color = Color.White)
-                Text("(logo)", color = Color.White)
-                Icon(Icons.Default.Person, contentDescription = "Perfil", tint = Color.White)
-            }
         }
     }
 }

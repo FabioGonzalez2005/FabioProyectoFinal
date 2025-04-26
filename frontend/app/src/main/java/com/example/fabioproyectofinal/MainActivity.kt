@@ -10,8 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.fabioproyectofinal.navigation.AppNavigation
 import com.example.fabioproyectofinal.ui.theme.FabioProyectoFInalTheme
-import com.example.fabioproyectofinal.view.BottomNavigationBar
-import com.example.fabioproyectofinal.view.TopBar
+import com.example.fabioproyectofinal.view.screens.BottomNavigationBar
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
