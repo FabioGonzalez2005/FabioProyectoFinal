@@ -27,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
-import com.example.fabioproyectofinal.model.data.Clinic
 import com.example.fabioproyectofinal.model.data.clinics
 import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.TopBar
+import com.example.fabioproyectofinal.view.components.ProfessionalCard
 
 @Composable
 fun ClinicDetailScreen(navController: NavHostController) {
@@ -107,18 +107,5 @@ fun ClinicActionButton(text: String, iconRes: Int, onClick: () -> Unit) {
             modifier = Modifier.size(48.dp)
         )
         Text(text, fontSize = 14.sp)
-    }
-}
-
-@Composable
-fun ProfessionalCard(name: String, specialty: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(
-            painter = painterResource(id = R.drawable.icon_user),
-            contentDescription = name,
-            modifier = Modifier.size(60.dp)
-        )
-        Text(name, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-        Text(specialty, fontSize = 12.sp, color = Color.Gray)
     }
 }
