@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.Clinic
 import com.example.fabioproyectofinal.model.data.clinics
 import com.example.fabioproyectofinal.model.navigation.AppScreens
+import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable
@@ -100,42 +101,7 @@ fun ClinicList(clinicasFiltradas: List<Clinic>, navController: NavHostController
             .fillMaxSize()
     ) {
         items(clinicasFiltradas) { clinic ->
-            ClinicaItem(clinic = clinic, navController = navController)
-        }
-    }
-}
-
-// Tarjeta de clínica
-@Composable
-fun ClinicaItem(clinic: Clinic, navController: NavHostController) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable {
-                navController.navigate(route = AppScreens.ClinicDetailScreen.route)
-            },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = clinic.src),
-                contentDescription = clinic.name,
-                modifier = Modifier
-                    .size(110.dp)
-                    .padding(end = 16.dp)
-            )
-            Column {
-                Text(clinic.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(clinic.address, fontSize = 14.sp, color = Color.Gray)
-            }
+            ClinicaCard(clinic = clinic, navController = navController)
         }
     }
 }

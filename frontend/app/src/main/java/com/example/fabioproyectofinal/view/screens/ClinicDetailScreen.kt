@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.Clinic
 import com.example.fabioproyectofinal.model.data.clinics
+import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable
@@ -48,7 +49,7 @@ fun ClinicDetailScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.size(16.dp))
 
-            ClinicaItemCard(clinic = clinics.first())
+            ClinicaCard(clinic = clinics.first())
 
             Spacer(modifier = Modifier.size(16.dp))
 
@@ -106,38 +107,6 @@ fun ClinicActionButton(text: String, iconRes: Int, onClick: () -> Unit) {
             modifier = Modifier.size(48.dp)
         )
         Text(text, fontSize = 14.sp)
-    }
-}
-
-// Tarjeta de clínica
-@Composable
-fun ClinicaItemCard(clinic: Clinic) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = clinic.src),
-                contentDescription = clinic.name,
-                modifier = Modifier
-                    .size(110.dp)
-                    .padding(end = 16.dp)
-            )
-            Column {
-                Text(clinic.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(clinic.address, fontSize = 14.sp, color = Color.Gray)
-            }
-        }
     }
 }
 
