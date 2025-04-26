@@ -59,11 +59,24 @@ fun ProfessionalCardHorizontal(name: String, specialty: String, price: String, n
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
-                Text(
-                    text = price,
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
+                Row {
+                    Text(
+                        text = "Precio: ",
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                    Text(
+                        text = price,
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = " €",
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
             }
         }
     }

@@ -25,7 +25,7 @@ fun SelectProfessionalScreen(navController: NavHostController) {
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
-                ProfessionalCardHorizontal(name = "Alberto Medina", specialty = "Osteópata", "1", navController) { /* Acción */ }
+                ProfessionalCardHorizontal(name = "Alberto Medina", specialty = "Osteópata", "45", navController) { /* Acción */ }
                 }
             }
         }
