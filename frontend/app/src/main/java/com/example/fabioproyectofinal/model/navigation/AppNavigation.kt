@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.fabioproyectofinal.view.screens.MainScreenApp
 import com.example.fabioproyectofinal.view.screens.ClinicDetailScreen
+import com.example.fabioproyectofinal.view.screens.FavouritesScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -17,6 +18,9 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
         composable("clinic_screen") { backStackEntry ->
             val clinicId = backStackEntry.arguments?.getString("clinicId")?.toIntOrNull()
             ClinicDetailScreen(navController)
+        }
+        composable("favourites_screen") {
+            FavouritesScreen(navController)
         }
     }
 }

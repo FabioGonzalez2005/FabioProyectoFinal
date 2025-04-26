@@ -52,7 +52,7 @@ fun BottomBar(navController: NavHostController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Botón favoritos
-                IconButton(onClick = {}) {
+                IconButton(onClick = { navController.navigate(route = AppScreens.FavouritesScreen.route)}) {
                     Icon(Icons.Default.FavoriteBorder, contentDescription = "Favoritos", modifier = Modifier.size(32.dp), tint = Color.White)
                 }
                 // Botón home
