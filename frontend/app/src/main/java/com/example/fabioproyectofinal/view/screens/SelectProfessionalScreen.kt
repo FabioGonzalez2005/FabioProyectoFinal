@@ -1,8 +1,11 @@
 package com.example.fabioproyectofinal.view.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -72,7 +75,7 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                 // Texto con estilo personalizado
                 Card(
                     modifier = Modifier
-                        .size(width = 144.dp, height = 45.dp),
+                        .size(width = 180.dp, height = 45.dp),
                     shape = RoundedCornerShape(10.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -91,35 +94,62 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                     }
                     }
 
-                // Menú desplegable para seleccionar fecha
-                Box(
+                Card(
                     modifier = Modifier
-                        .size(width = 144.dp, height = 45.dp)
-                        .background(Color.White),
-                    contentAlignment = Alignment.CenterStart
+                        .size(width = 180.dp, height = 45.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .clickable { expanded = true }
+                        .padding(horizontal = 12.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    shape = RoundedCornerShape(10.dp)
                 ) {
-                    OutlinedButton(onClick = { expanded = true }) {
-                        Text(text = selectedDate,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFFB2C2A4),
-                            modifier = Modifier.padding(start = 8.dp))
-                    }
-
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
+                    Box(
+                        contentAlignment = Alignment.CenterStart
                     ) {
-                        dateOptions.forEach { date ->
-                            DropdownMenuItem(
-                                onClick = {
-                                    selectedDate = date
-                                    expanded = false
-                                },
-                                text = {
-                                    Text(text = date)
-                                }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = selectedDate,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color(0xFFB2C2A4),
+                                modifier = Modifier.padding(start = 8.dp)
+
                             )
+
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowDown,
+                                contentDescription = "Desplegar",
+                                tint = Color(0xFFB2C2A4)
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier
+                                .background(Color.White)
+                                .clip(RoundedCornerShape(10.dp))
+                        ) {
+                            dateOptions.forEach { date ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        selectedDate = date
+                                        expanded = false
+                                    },
+                                    text = {
+                                        Text(
+                                            text = date,
+                                            color = Color(0xFFB2C2A4),
+                                            fontSize = 16.sp
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
                 }
