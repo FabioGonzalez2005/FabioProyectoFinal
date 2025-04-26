@@ -73,7 +73,7 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Texto con estilo personalizado
+                // "Disponibilidad
                 Card(
                     modifier = Modifier
                         .size(width = 180.dp, height = 45.dp),
@@ -95,17 +95,16 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                     }
                     }
 
+                // Selector de día
                 Card(
                     modifier = Modifier
-                        .size(width = 180.dp, height = 45.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .clickable { expanded = true }
-                        .padding(horizontal = 12.dp),
+                        .size(width = 180.dp, height = 45.dp),
+                    shape = RoundedCornerShape(10.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    shape = RoundedCornerShape(10.dp)
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
                     Box(
+                        modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Row(
