@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.fabioproyectofinal.navigation.AppNavigation
 import com.example.fabioproyectofinal.ui.theme.FabioProyectoFInalTheme
-import com.example.fabioproyectofinal.view.screens.BottomNavigationBar
+import com.example.fabioproyectofinal.view.components.BottomBar
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             FabioProyectoFInalTheme {
                 Scaffold(
-                    bottomBar = { BottomNavigationBar(navController) }
+                    bottomBar = { BottomBar(navController) }
                 ) { innerPadding ->
                     AppNavigation(navController = navController, modifier = Modifier.padding(innerPadding))
                 }
