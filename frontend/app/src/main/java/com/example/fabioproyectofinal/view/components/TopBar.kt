@@ -1,11 +1,16 @@
 package com.example.fabioproyectofinal.view.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +28,7 @@ import com.example.fabioproyectofinal.R
 
 // Barra de navegación superior
 @Composable
-fun TopBar(nombre: String, navController: NavHostController) {
+fun TopBar(nombre: String, navController: NavHostController, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,7 +59,10 @@ fun TopBar(nombre: String, navController: NavHostController) {
         Image(
             painter = painterResource(id = R.drawable.icon_user),
             contentDescription = "Usuario",
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier
+                .size(24.dp)
+                .clickable { onClick() }
         )
+
     }
 }

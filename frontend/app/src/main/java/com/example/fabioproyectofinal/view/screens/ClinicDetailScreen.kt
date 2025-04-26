@@ -39,7 +39,7 @@ fun ClinicDetailScreen(navController: NavHostController) {
                 .background(Color(0xFFFFF9F2)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TopBar("Fabio González Waschkowitz", navController = navController)
+            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
             Column(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)

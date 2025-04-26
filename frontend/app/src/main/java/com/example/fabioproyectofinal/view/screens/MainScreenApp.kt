@@ -34,7 +34,7 @@ fun MainScreenApp(navController: NavHostController) {
             .height(64.dp)
     ) {
         // Navegación superior
-        TopBar("Fabio González Waschkowitz", navController = navController)
+        TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
         // "Buscador"
         Text(
             text = "Buscador",
