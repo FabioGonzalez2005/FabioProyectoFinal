@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -20,6 +21,14 @@ import com.example.fabioproyectofinal.view.components.TimeSlotButton
 fun SelectProfessionalScreen(navController: NavHostController) {
     var selectedDate by remember { mutableStateOf("14 marzo 2025") }
     var selectedSlot by remember { mutableStateOf<String?>(null) }
+    var expanded by remember { mutableStateOf(false) }
+
+    val dateOptions = listOf(
+        "14 marzo 2025",
+        "15 marzo 2025",
+        "16 marzo 2025",
+        "17 marzo 2025"
+    )
 
     val timeSlots = listOf(
         "8:00 - 9:00" to true,
@@ -52,22 +61,68 @@ fun SelectProfessionalScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Disponibilidad:",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.DarkGray
-                )
 
-                Text(
-                    text = selectedDate,
-                    fontSize = 16.sp,
-                    color = Color.DarkGray
-                )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Texto con estilo personalizado
+                Card(
+                    modifier = Modifier
+                        .size(width = 144.dp, height = 45.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Text(
+                            text = "Disponibilidad:",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFFB2C2A4),
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                    }
+
+                // Menú desplegable para seleccionar fecha
+                Box(
+                    modifier = Modifier
+                        .size(width = 144.dp, height = 45.dp)
+                        .background(Color.White),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    OutlinedButton(onClick = { expanded = true }) {
+                        Text(text = selectedDate,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFFB2C2A4),
+                            modifier = Modifier.padding(start = 8.dp))
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        dateOptions.forEach { date ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedDate = date
+                                    expanded = false
+                                },
+                                text = {
+                                    Text(text = date)
+                                }
+                            )
+                        }
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
