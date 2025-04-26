@@ -16,16 +16,27 @@ import androidx.compose.ui.unit.sp
 
 // Botón con horarios disponibles
 @Composable
-fun TimeSlotButton(time: String, isSelected: Boolean, onClick: () -> Unit) {
+fun TimeSlotButton(
+    time: String,
+    isSelected: Boolean,
+    isAvailable: Boolean,
+    onClick: () -> Unit
+) {
+    val backgroundColor = when {
+        !isAvailable -> Color(0xFFD32F2F) // Rojo cuando no está disponible
+        isSelected -> Color(0xFF859A72)   // Verde oscuro cuando está seleccionado
+        else -> Color(0xFFB2C2A4)         // Verde claro cuando está disponible pero no seleccionado
+    }
+
     Box(
         modifier = Modifier
             .size(width = 188.dp, height = 42.dp)
             .padding(horizontal = 4.dp)
             .background(
-                color = if (isSelected) Color(0xFF859A72) else Color(0xFFB2C2A4),
+                color = backgroundColor,
                 shape = RoundedCornerShape(10.dp)
             )
-            .clickable { onClick() },
+            .clickable(enabled = isAvailable) { onClick() }, // Solo clickeable si está disponible
         contentAlignment = Alignment.Center
     ) {
         Text(

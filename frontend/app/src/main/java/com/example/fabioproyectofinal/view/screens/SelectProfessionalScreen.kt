@@ -22,9 +22,12 @@ fun SelectProfessionalScreen(navController: NavHostController) {
     var selectedSlot by remember { mutableStateOf<String?>(null) }
 
     val timeSlots = listOf(
-        "8:00 - 9:00", "9:00 - 10:00",
-        "12:00 - 13:00", "13:00 - 14:00",
-        "14:00 - 15:00", "15:00 - 16:00"
+        "8:00 - 9:00" to true,
+        "9:00 - 10:00" to false, // no disponible
+        "12:00 - 13:00" to true,
+        "13:00 - 14:00" to true,
+        "14:00 - 15:00" to false, // no disponible
+        "15:00 - 16:00" to true
     )
 
     Column(
@@ -81,16 +84,23 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                         for (j in 0..1) {
                             val slot = timeSlots.getOrNull(i + j)
                             if (slot != null) {
+                                val (time, isAvailable) = slot
                                 TimeSlotButton(
-                                    time = slot,
-                                    isSelected = selectedSlot == slot,
-                                    onClick = { selectedSlot = slot }
+                                    time = time,
+                                    isSelected = selectedSlot == time,
+                                    isAvailable = isAvailable,
+                                    onClick = {
+                                        selectedSlot = time
+                                    }
                                 )
+                            } else {
+                                Spacer(modifier = Modifier.size(width = 188.dp, height = 42.dp))
                             }
                         }
                     }
                 }
             }
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
