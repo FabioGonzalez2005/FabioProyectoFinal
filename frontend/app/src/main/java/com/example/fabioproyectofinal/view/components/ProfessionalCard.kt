@@ -26,14 +26,17 @@ import com.example.fabioproyectofinal.R
 // Tarjeta de profesional
 @Composable
 fun ProfessionalCard(name: String, specialty: String, onClick: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Card(
-            shape = RoundedCornerShape(12.dp),
-
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp)
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+    ) {
+        Column(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-                .background(Color.White)
-                .clickable { onClick() },
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 painter = painterResource(id = R.drawable.icon_user),
@@ -41,9 +44,22 @@ fun ProfessionalCard(name: String, specialty: String, onClick: () -> Unit) {
                 modifier = Modifier.size(60.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(name, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFFB2C2A4))
-            Text(specialty, fontSize = 12.sp, color = Color.Gray)
+            Text(
+                text = name,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFB2C2A4)
+            )
+            Text(
+                text = specialty,
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
         }
     }
 }
+
+
+
+
 

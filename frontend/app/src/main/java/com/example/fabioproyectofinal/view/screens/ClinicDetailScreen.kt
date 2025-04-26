@@ -97,7 +97,7 @@ fun ClinicDetailScreen(navController: NavHostController) {
                             items(professionals.chunked(2)) { pair ->
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                    horizontalArrangement = Arrangement.Center
                                 ) {
                                     pair.forEach { (name, specialty) ->
                                         ProfessionalCard(name = name, specialty = specialty) { /* Acción */ }
