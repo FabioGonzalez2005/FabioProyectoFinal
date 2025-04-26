@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,42 +61,51 @@ fun ClinicDetailScreen(navController: NavHostController) {
             }
 
             Spacer(modifier = Modifier.size(24.dp))
-
             Column(
-                modifier = Modifier
-                    .background(Color.White)
-                    .padding(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.padding(horizontal = 16.dp)
             ) {
-                // Título sección profesionales
-                Text(
-                    "Escoge profesional:",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    color = Color(0xFFB2C2A4)
-                )
+                Card(
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = CardDefaults.cardElevation(4.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .background(Color.White)
+                            .padding(12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Título sección profesionales
+                        Text(
+                            "Escoge profesional:",
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp,
+                            color = Color(0xFFB2C2A4)
+                        )
 
-                Spacer(modifier = Modifier.size(8.dp))
+                        Spacer(modifier = Modifier.size(8.dp))
 
-                // Lista de profesionales
-                val professionals = listOf(
-                    "Alberto Medina" to "Osteópata",
-                    "Jimena Cáceres" to "Dermatología",
-                    "Armando Pérez" to "Oncología",
-                    "Cristina Morales" to "Rehabilitación",
-                )
+                        // Lista de profesionales
+                        val professionals = listOf(
+                            "Alberto Medina" to "Osteópata",
+                            "Jimena Cáceres" to "Dermatología",
+                            "Armando Pérez" to "Oncología",
+                            "Cristina Morales" to "Rehabilitación",
+                        )
 
-                LazyColumn {
-                    items(professionals.chunked(2)) { pair ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            pair.forEach { (name, specialty) ->
-                                ProfessionalCard(name = name, specialty = specialty) { /* Acción */ }
+                        LazyColumn {
+                            items(professionals.chunked(2)) { pair ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    pair.forEach { (name, specialty) ->
+                                        ProfessionalCard(name = name, specialty = specialty) { /* Acción */ }
+                                    }
+                                }
+                                Spacer(modifier = Modifier.height(12.dp))
                             }
                         }
-                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }
