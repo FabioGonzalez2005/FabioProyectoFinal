@@ -13,6 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.fabioproyectofinal.view.components.AppointmentCard
+import com.example.fabioproyectofinal.view.components.AppointmentList
 import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable
@@ -111,6 +113,7 @@ fun AppointmentsScreen(navController: NavHostController) {
                 )
             }
         }
+        AppointmentList()
 
     }
 }
