@@ -1,6 +1,7 @@
 package com.example.fabioproyectofinal.view.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -25,7 +26,10 @@ fun AppointmentsScreen(navController: NavHostController) {
         // Navegación superior
         TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
         // "Buscador"
-        Row {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             // "Citas"
             Text(
                 text = "Citas",
@@ -34,11 +38,13 @@ fun AppointmentsScreen(navController: NavHostController) {
                 modifier = Modifier
                     .padding(start = 16.dp, bottom = 16.dp)
             )
-            // "Historia"
+            // "Historial"
             Card(
-                modifier = Modifier
-                    .size(width = 180.dp, height = 45.dp),
                 shape = RoundedCornerShape(10.dp),
+                modifier = Modifier
+                    .size(width = 100.dp, height = 45.dp)
+                    .padding(end = 16.dp)
+                    .clickable { },
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
@@ -47,7 +53,7 @@ fun AppointmentsScreen(navController: NavHostController) {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = "Historial:",
+                        text = "Historial",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFFB2C2A4),
@@ -59,7 +65,9 @@ fun AppointmentsScreen(navController: NavHostController) {
         // "Confirmadas"
         Card(
             modifier = Modifier
-                .size(width = 180.dp, height = 45.dp),
+                .fillMaxWidth()
+                .height(28.dp)
+                .padding(horizontal = 16.dp),
             shape = RoundedCornerShape(10.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -69,18 +77,23 @@ fun AppointmentsScreen(navController: NavHostController) {
                 contentAlignment = Alignment.CenterStart
             ) {
                 Text(
-                    text = "Confirmadas:",
-                    fontSize = 16.sp,
+                    text = "Confirmadas: 1",
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFFB2C2A4),
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
         }
+
+        Spacer(modifier = Modifier.size(12.dp))
+
         // "Rechazadas"
         Card(
             modifier = Modifier
-                .size(width = 180.dp, height = 45.dp),
+                .fillMaxWidth()
+                .height(28.dp)
+                .padding(horizontal = 16.dp),
             shape = RoundedCornerShape(10.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -90,13 +103,14 @@ fun AppointmentsScreen(navController: NavHostController) {
                 contentAlignment = Alignment.CenterStart
             ) {
                 Text(
-                    text = "Rechazadas:",
-                    fontSize = 16.sp,
+                    text = "Rechazadas: 0",
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFFB2C2A4),
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
         }
+
     }
 }
