@@ -38,10 +38,55 @@ fun AccountScreen(navController: NavHostController) {
         ) {
             Text(
                 text = "Cuenta",
-                fontSize = 32.sp,
-                color = Color(0xFF7C8B6B),
+                color = Color(0xFFB2C2A4),
+                fontSize = 40.sp,
             )
 
+            // Botones para cambiar entre pantallas
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, bottom = 12.dp)
+            ) {
+                Button(
+                    onClick = { isCreatingAccount = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (!isCreatingAccount) Color(0xFFB2C2A4) else Color.White
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp),
+                    elevation = ButtonDefaults.buttonElevation(0.dp),
+                    shape = RoundedCornerShape(6.dp),
+                ) {
+                    Text(
+                        text = "Iniciar sesión",
+                        color = if (!isCreatingAccount) Color.White else Color(0xFFB2C2A4),
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                    )
+                }
+
+                Button(
+                    onClick = { isCreatingAccount = true },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isCreatingAccount) Color(0xFFB2C2A4) else Color.White
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp),
+                    elevation = ButtonDefaults.buttonElevation(0.dp),
+                    shape = RoundedCornerShape(6.dp),
+                ) {
+                    Text(
+                        text = "Crea una cuenta",
+                        color = if (isCreatingAccount) Color.White else Color(0xFFB2C2A4),
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                    )
+                }
+            }
             // Campos comunes y según la pantalla
             OutlinedTextField(
                 value = username,
@@ -104,52 +149,12 @@ fun AccountScreen(navController: NavHostController) {
             Button(
                 onClick = { /* Acción al continuar */ },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                shape = RoundedCornerShape(6.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 36.dp)
             ) {
                 Text(text = "Continuar", color = Color.White)
-            }
-
-            // Botones para cambiar entre pantallas
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp)
-            ) {
-                Button(
-                    onClick = { isCreatingAccount = false },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (!isCreatingAccount) Color(0xFFB2C2A4) else Color.White
-                    ),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 8.dp),
-                    elevation = ButtonDefaults.buttonElevation(0.dp)
-                ) {
-                    Text(
-                        text = "Iniciar sesión",
-                        color = if (!isCreatingAccount) Color.White else Color(0xFFB2C2A4)
-                    )
-                }
-
-                Button(
-                    onClick = { isCreatingAccount = true },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isCreatingAccount) Color(0xFFB2C2A4) else Color.White
-                    ),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp),
-                    elevation = ButtonDefaults.buttonElevation(0.dp),
-                    shape = RoundedCornerShape(16.dp),
-                ) {
-                    Text(
-                        text = "Crea una cuenta",
-                        color = if (isCreatingAccount) Color.White else Color(0xFFB2C2A4)
-                    )
-                }
             }
         }
     }
