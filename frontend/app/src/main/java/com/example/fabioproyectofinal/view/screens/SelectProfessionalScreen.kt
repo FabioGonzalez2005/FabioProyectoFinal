@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.ProfessionalCardHorizontal
 import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.view.components.TimeSlotButton
@@ -42,171 +43,181 @@ fun SelectProfessionalScreen(navController: NavHostController) {
         "14:00 - 15:00" to false, // no disponible
         "15:00 - 16:00" to true
     )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFFFF9F2)),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
-
+    Scaffold(
+        topBar = {
+            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
+        },
+        bottomBar = {
+            BottomBar(navController = navController)
+        },
+        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+    ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .fillMaxWidth(),
+                .fillMaxSize()
+                .background(Color(0xFFFFF9F2))
+                .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProfessionalCardHorizontal(
-                name = "Alberto Medina",
-                specialty = "Osteópata",
-                price = "45",
-            )
+            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // "Disponibilidad
-                Card(
-                    modifier = Modifier
-                        .size(width = 180.dp, height = 45.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        Text(
-                            text = "Disponibilidad:",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFFB2C2A4),
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                    }
+                ProfessionalCardHorizontal(
+                    name = "Alberto Medina",
+                    specialty = "Osteópata",
+                    price = "45",
+                )
 
-                // Selector de día
-                Card(
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+                Row(
                     modifier = Modifier
-                        .size(width = 180.dp, height = 45.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.CenterStart
+                    // "Disponibilidad
+                    Card(
+                        modifier = Modifier
+                            .size(width = 180.dp, height = 45.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.CenterStart
                         ) {
                             Text(
-                                text = selectedDate,
+                                text = "Disponibilidad:",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = Color(0xFFB2C2A4),
                                 modifier = Modifier.padding(start = 8.dp)
-
                             )
-
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowDown,
-                                contentDescription = "Desplegar",
-                                tint = Color(0xFFB2C2A4)
-                            )
-                        }
-
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                            modifier = Modifier
-                                .background(Color.White)
-                                .clip(RoundedCornerShape(10.dp))
-                        ) {
-                            dateOptions.forEach { date ->
-                                DropdownMenuItem(
-                                    onClick = {
-                                        selectedDate = date
-                                        expanded = false
-                                    },
-                                    text = {
-                                        Text(
-                                            text = date,
-                                            color = Color(0xFFB2C2A4),
-                                            fontSize = 16.sp
-                                        )
-                                    }
-                                )
-                            }
                         }
                     }
-                }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                for (i in timeSlots.indices step 2) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                    // Selector de día
+                    Card(
+                        modifier = Modifier
+                            .size(width = 180.dp, height = 45.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
-                        for (j in 0..1) {
-                            val slot = timeSlots.getOrNull(i + j)
-                            if (slot != null) {
-                                val (time, isAvailable) = slot
-                                TimeSlotButton(
-                                    time = time,
-                                    isSelected = selectedSlot == time,
-                                    isAvailable = isAvailable,
-                                    onClick = {
-                                        selectedSlot = time
-                                        if (isAvailable) {
-                                            buttonColor = Color(0xFFB2C2A4)
-                                        }
-                                    }
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = selectedDate,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color(0xFFB2C2A4),
+                                    modifier = Modifier.padding(start = 8.dp)
+
                                 )
-                            } else {
-                                Spacer(modifier = Modifier.size(width = 188.dp, height = 42.dp))
+
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowDown,
+                                    contentDescription = "Desplegar",
+                                    tint = Color(0xFFB2C2A4)
+                                )
+                            }
+
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                                modifier = Modifier
+                                    .background(Color.White)
+                                    .clip(RoundedCornerShape(10.dp))
+                            ) {
+                                dateOptions.forEach { date ->
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            selectedDate = date
+                                            expanded = false
+                                        },
+                                        text = {
+                                            Text(
+                                                text = date,
+                                                color = Color(0xFFB2C2A4),
+                                                fontSize = 16.sp
+                                            )
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            // Botón de aceptar
-            Button(
-                onClick = {
-                    // Acción al aceptar
-                    if (selectedSlot != null) {
-                        buttonColor = Color(0xFF859A72)
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    for (i in timeSlots.indices step 2) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            for (j in 0..1) {
+                                val slot = timeSlots.getOrNull(i + j)
+                                if (slot != null) {
+                                    val (time, isAvailable) = slot
+                                    TimeSlotButton(
+                                        time = time,
+                                        isSelected = selectedSlot == time,
+                                        isAvailable = isAvailable,
+                                        onClick = {
+                                            selectedSlot = time
+                                            if (isAvailable) {
+                                                buttonColor = Color(0xFFB2C2A4)
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    Spacer(modifier = Modifier.size(width = 188.dp, height = 42.dp))
+                                }
+                            }
+                        }
                     }
-                },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .padding(horizontal = 16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
-            ) {
-                Text(text = "Aceptar", color = Color.White)
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Botón de aceptar
+                Button(
+                    onClick = {
+                        // Acción al aceptar
+                        if (selectedSlot != null) {
+                            buttonColor = Color(0xFF859A72)
+                        }
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .padding(horizontal = 16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
+                ) {
+                    Text(text = "Aceptar", color = Color.White)
+                }
             }
         }
     }
