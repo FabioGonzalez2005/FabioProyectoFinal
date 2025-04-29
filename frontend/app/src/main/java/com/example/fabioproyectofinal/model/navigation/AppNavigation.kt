@@ -9,6 +9,7 @@ import com.example.fabioproyectofinal.view.screens.AppointmentsScreen
 import com.example.fabioproyectofinal.view.screens.MainScreenApp
 import com.example.fabioproyectofinal.view.screens.ClinicDetailScreen
 import com.example.fabioproyectofinal.view.screens.FavouritesScreen
+import com.example.fabioproyectofinal.view.screens.HistoryScreen
 import com.example.fabioproyectofinal.view.screens.SelectProfessionalScreen
 
 @Composable
@@ -26,6 +27,9 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
         }
         composable("appointments_screen") {
             AppointmentsScreen(navController)
+        }
+        composable("history_screen") {
+            HistoryScreen(navController)
         }
         composable("select_professional_screen") {
             SelectProfessionalScreen(navController)

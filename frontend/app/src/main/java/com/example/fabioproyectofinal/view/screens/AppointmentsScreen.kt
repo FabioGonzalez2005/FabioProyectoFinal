@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.appointments
+import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.AppointmentCard
 import com.example.fabioproyectofinal.view.components.TopBar
 
@@ -48,7 +49,7 @@ fun AppointmentsScreen(navController: NavHostController) {
                 modifier = Modifier
                     .size(width = 120.dp, height = 45.dp)
                     .padding(end = 16.dp)
-                    .clickable { },
+                    .clickable { navController.navigate(route = AppScreens.HistoryScreen.route) },
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
