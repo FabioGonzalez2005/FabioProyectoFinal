@@ -3,37 +3,23 @@ package com.example.fabioproyectofinal.view.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.Appointment
-import com.example.fabioproyectofinal.model.data.AppointmentStatus
-import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 @Composable
 fun AppointmentCard(appointment: Appointment, navController: NavHostController? = null) {
@@ -94,14 +80,14 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = "Cita:",
-                            fontSize = 14.sp,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = appointment.date,
-                            fontSize = 14.sp,
+                            fontSize = 18.sp,
                             color = Color(0xFFB2C2A4),
                             fontWeight = FontWeight.Bold
                         )
@@ -109,7 +95,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
 
                     Text(
                         text = "13:00",
-                        fontSize = 14.sp,
+                        fontSize = 18.sp,
                         color = Color(0xFFB2C2A4),
                         fontWeight = FontWeight.Bold
                     )
@@ -133,7 +119,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("Cancelar", color = Color.Black)
+                        Text("Cancelar")
                     }
                 }
             }

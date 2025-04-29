@@ -124,7 +124,11 @@ fun AppointmentsScreen(navController: NavHostController) {
 
 @Composable
 fun AppointmentList(navController: NavHostController? = null) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            .fillMaxSize()
+    ) {
         items(appointments) { appointment ->
             AppointmentCard(appointment = appointment, navController = navController)
         }
