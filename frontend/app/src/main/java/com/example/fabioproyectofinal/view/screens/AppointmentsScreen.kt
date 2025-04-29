@@ -46,7 +46,7 @@ fun AppointmentsScreen(navController: NavHostController) {
             Card(
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
-                    .size(width = 100.dp, height = 45.dp)
+                    .size(width = 120.dp, height = 45.dp)
                     .padding(end = 16.dp)
                     .clickable { },
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -54,14 +54,13 @@ fun AppointmentsScreen(navController: NavHostController) {
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.CenterStart
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "Historial",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFFB2C2A4),
-                        modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
