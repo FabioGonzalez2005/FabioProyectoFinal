@@ -34,5 +34,25 @@ val pastAppointments = listOf(
         time = "12:00",
         professional = "Alberto Medina",
         specialty = "Osteópata",
+    ),
+    History(
+        id = 3,
+        name = "International Clinic",
+        address = "C. Acatife, 9, 35510 Puerto del Carmen, Las Palmas",
+        src = R.drawable.international,
+        date = "05/06/2025",
+        time = "12:00",
+        professional = "Alberto Medina",
+        specialty = "Osteópata",
+    ),
+    History(
+        id = 4,
+        name = "International Clinic",
+        address = "C. Acatife, 9, 35510 Puerto del Carmen, Las Palmas",
+        src = R.drawable.international,
+        date = "05/06/2025",
+        time = "12:00",
+        professional = "Alberto Medina",
+        specialty = "Osteópata",
     )
 )

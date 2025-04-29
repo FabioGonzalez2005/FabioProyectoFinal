@@ -37,5 +37,23 @@ val appointments = listOf(
         date = "05/06/2025",
         time = "12:00",
         status = AppointmentStatus.REJECTED
+    ),
+    Appointment(
+        id = 2,
+        name = "International Clinic",
+        address = "C. Acatife, 9, 35510 Puerto del Carmen, Las Palmas",
+        src = R.drawable.international,
+        date = "05/06/2025",
+        time = "12:00",
+        status = AppointmentStatus.REJECTED
+    ),
+    Appointment(
+        id = 2,
+        name = "International Clinic",
+        address = "C. Acatife, 9, 35510 Puerto del Carmen, Las Palmas",
+        src = R.drawable.international,
+        date = "05/06/2025",
+        time = "12:00",
+        status = AppointmentStatus.REJECTED
     )
 )
