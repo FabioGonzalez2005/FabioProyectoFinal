@@ -18,60 +18,72 @@ import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.appointments
 import com.example.fabioproyectofinal.model.data.pastAppointments
 import com.example.fabioproyectofinal.view.components.AppointmentCard
+import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.HistoryCard
 import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable
 fun HistoryScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFFFF9F2))
-            .height(64.dp)
-    ) {
-        // Navegación superior
-        TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
-        // "Buscador"
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            // "Citas"
-            Text(
-                text = "Historial",
-                color = Color(0xFFB2C2A4),
-                fontSize = 40.sp,
-                modifier = Modifier
-                    .padding(start = 16.dp, bottom = 16.dp)
-            )
-        }
-        // Texto
-        Card(
+    Scaffold(
+        topBar = {
+            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
+        },
+        bottomBar = {
+            BottomBar(navController = navController)
+        },
+        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+    ) { innerPadding ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(28.dp)
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(10.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+                .fillMaxSize()
+                .background(Color(0xFFFFF9F2))
+                .height(64.dp)
+                .padding(innerPadding)
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.CenterStart
+            // Navegación superior
+            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
+            // "Buscador"
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
             ) {
+                // "Citas"
                 Text(
-                    text = "Últimas citas:",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    text = "Historial",
                     color = Color(0xFFB2C2A4),
-                    modifier = Modifier.padding(start = 8.dp)
+                    fontSize = 40.sp,
+                    modifier = Modifier
+                        .padding(start = 16.dp, bottom = 16.dp)
                 )
             }
+            // Texto
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(28.dp)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(10.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White)
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        text = "Últimas citas:",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFFB2C2A4),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.size(12.dp))
+
+            HistoryCardList()
         }
-
-        Spacer(modifier = Modifier.size(12.dp))
-
-        HistoryCardList()
     }
 }
 
