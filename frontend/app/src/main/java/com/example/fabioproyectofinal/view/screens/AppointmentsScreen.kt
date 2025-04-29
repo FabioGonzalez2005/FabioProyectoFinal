@@ -3,6 +3,8 @@ package com.example.fabioproyectofinal.view.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,8 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.fabioproyectofinal.model.data.appointments
 import com.example.fabioproyectofinal.view.components.AppointmentCard
-import com.example.fabioproyectofinal.view.components.AppointmentList
 import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable
@@ -113,7 +115,18 @@ fun AppointmentsScreen(navController: NavHostController) {
                 )
             }
         }
-        AppointmentList()
 
+        Spacer(modifier = Modifier.size(12.dp))
+
+        AppointmentList()
+    }
+}
+
+@Composable
+fun AppointmentList(navController: NavHostController? = null) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(appointments) { appointment ->
+            AppointmentCard(appointment = appointment, navController = navController)
+        }
     }
 }
