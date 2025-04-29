@@ -3,6 +3,7 @@ package com.example.fabioproyectofinal.view.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -120,7 +121,7 @@ fun AccountScreen(navController: NavHostController) {
                 Button(
                     onClick = { isCreatingAccount = false },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (!isCreatingAccount) Color.White else Color(0xFFB2C2A4)
+                        containerColor = if (!isCreatingAccount) Color(0xFFB2C2A4) else Color.White
                     ),
                     modifier = Modifier
                         .weight(1f)
@@ -129,7 +130,7 @@ fun AccountScreen(navController: NavHostController) {
                 ) {
                     Text(
                         text = "Iniciar sesión",
-                        color = if (!isCreatingAccount) Color(0xFFB2C2A4) else Color.White
+                        color = if (!isCreatingAccount) Color.White else Color(0xFFB2C2A4)
                     )
                 }
 
@@ -141,7 +142,8 @@ fun AccountScreen(navController: NavHostController) {
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp),
-                    elevation = ButtonDefaults.buttonElevation(0.dp)
+                    elevation = ButtonDefaults.buttonElevation(0.dp),
+                    shape = RoundedCornerShape(16.dp),
                 ) {
                     Text(
                         text = "Crea una cuenta",
