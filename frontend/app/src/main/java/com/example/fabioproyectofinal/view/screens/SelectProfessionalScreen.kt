@@ -59,8 +59,6 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
-
             Column(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -72,10 +70,7 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                     specialty = "Osteópata",
                     price = "45",
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -104,7 +99,6 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                             )
                         }
                     }
-
                     // Selector de día
                     Card(
                         modifier = Modifier
@@ -128,7 +122,6 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                                     fontWeight = FontWeight.SemiBold,
                                     color = Color(0xFFB2C2A4),
                                     modifier = Modifier.padding(start = 8.dp)
-
                                 )
 
                                 Icon(
@@ -137,7 +130,6 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                                     tint = Color(0xFFB2C2A4)
                                 )
                             }
-
                             DropdownMenu(
                                 expanded = expanded,
                                 onDismissRequest = { expanded = false },
@@ -164,9 +156,7 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Column(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -198,9 +188,7 @@ fun SelectProfessionalScreen(navController: NavHostController) {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 // Botón de aceptar
                 Button(
                     onClick = {

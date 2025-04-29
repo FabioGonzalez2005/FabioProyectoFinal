@@ -27,7 +27,6 @@ fun TimeSlotButton(
         isSelected -> Color(0xFF859A72)   // Verde oscuro cuando está seleccionado
         else -> Color(0xFFB2C2A4)         // Verde claro cuando está disponible pero no seleccionado
     }
-
     Box(
         modifier = Modifier
             .size(width = 188.dp, height = 42.dp)

@@ -40,8 +40,6 @@ fun HistoryScreen(navController: NavHostController) {
                 .height(64.dp)
                 .padding(innerPadding)
         ) {
-            // Navegación superior
-            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
             // "Buscador"
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -79,9 +77,7 @@ fun HistoryScreen(navController: NavHostController) {
                     )
                 }
             }
-
             Spacer(modifier = Modifier.size(12.dp))
-
             HistoryCardList()
         }
     }

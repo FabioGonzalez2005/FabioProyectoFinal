@@ -45,7 +45,6 @@ fun TopBar(nombre: String, navController: NavHostController, onClick: () -> Unit
                 modifier = Modifier.size(24.dp)
             )
         }
-
         // Nombre del usuario
         Text(
             text = nombre,
@@ -55,7 +54,6 @@ fun TopBar(nombre: String, navController: NavHostController, onClick: () -> Unit
                 fontWeight = FontWeight.Medium
             )
         )
-
         // Icono de usuario
         Image(
             painter = painterResource(id = R.drawable.icon_user),

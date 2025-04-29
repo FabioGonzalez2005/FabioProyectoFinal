@@ -39,8 +39,6 @@ fun AccountScreen(navController: NavHostController) {
                 .background(Color(0xFFFFF9F2))
                 .padding(innerPadding)
         ) {
-            // Navegación superior
-            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -53,7 +51,6 @@ fun AccountScreen(navController: NavHostController) {
                     color = Color(0xFFB2C2A4),
                     fontSize = 40.sp,
                 )
-
                 // Botones para cambiar entre pantallas
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
@@ -79,7 +76,6 @@ fun AccountScreen(navController: NavHostController) {
                                 .padding(vertical = 9.dp)
                         )
                     }
-
                     Button(
                         onClick = { isCreatingAccount = true },
                         colors = ButtonDefaults.buttonColors(
@@ -110,7 +106,6 @@ fun AccountScreen(navController: NavHostController) {
                     ),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                 )
-
                 if (isCreatingAccount) {
                     OutlinedTextField(
                         value = email,
@@ -128,7 +123,6 @@ fun AccountScreen(navController: NavHostController) {
                         modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                     )
                 }
-
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -140,7 +134,6 @@ fun AccountScreen(navController: NavHostController) {
                     visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                 )
-
                 if (isCreatingAccount) {
                     OutlinedTextField(
                         value = confirmPassword,
@@ -163,7 +156,6 @@ fun AccountScreen(navController: NavHostController) {
                             .clickable {}
                     )
                 }
-
                 Button(
                     onClick = { /* Acción al continuar */ },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),

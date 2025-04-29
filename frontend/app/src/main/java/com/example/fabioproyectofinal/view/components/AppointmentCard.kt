@@ -49,9 +49,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                             .size(110.dp)
                             .padding(end = 16.dp)
                     )
-
                     Spacer(modifier = Modifier.width(12.dp))
-
                     Column {
                         Text(
                             text = appointment.name,
@@ -65,13 +63,9 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 HorizontalDivider(thickness = 2.dp, color = Color(0xFFCAD2C5))
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -92,7 +86,6 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                             fontWeight = FontWeight.Bold
                         )
                     }
-
                     Text(
                         text = "13:00",
                         fontSize = 18.sp,
@@ -100,9 +93,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                         fontWeight = FontWeight.Bold
                     )
                 }
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
