@@ -18,107 +18,113 @@ import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.appointments
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.AppointmentCard
+import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable
 fun AppointmentsScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFFFF9F2))
-            .height(64.dp)
-    ) {
-        // Navegación superior
-        TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
-        // "Buscador"
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+    Scaffold(
+        topBar = {
+            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
+        },
+        bottomBar = {
+            BottomBar(navController = navController)
+        },
+        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFFFF9F2))
+                .height(64.dp)
+                .padding(innerPadding)
         ) {
-            // "Citas"
-            Text(
-                text = "Citas",
-                color = Color(0xFFB2C2A4),
-                fontSize = 40.sp,
-                modifier = Modifier
-                    .padding(start = 16.dp, bottom = 16.dp)
-            )
-            // "Historial"
+            // "Buscador"
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                // "Citas"
+                Text(
+                    text = "Citas",
+                    color = Color(0xFFB2C2A4),
+                    fontSize = 40.sp,
+                    modifier = Modifier
+                        .padding(start = 16.dp, bottom = 16.dp)
+                )
+                // "Historial"
+                Card(
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .size(width = 120.dp, height = 45.dp)
+                        .padding(end = 16.dp)
+                        .clickable { navController.navigate(route = AppScreens.HistoryScreen.route) },
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Historial",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFFB2C2A4),
+                        )
+                    }
+                }
+            }
+            // "Confirmadas"
             Card(
-                shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
-                    .size(width = 120.dp, height = 45.dp)
-                    .padding(end = 16.dp)
-                    .clickable { navController.navigate(route = AppScreens.HistoryScreen.route) },
+                    .fillMaxWidth()
+                    .height(28.dp)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(10.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = "Historial",
-                        fontSize = 16.sp,
+                        text = "Confirmadas: 1",
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFFB2C2A4),
+                        modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
-        }
-        // "Confirmadas"
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(28.dp)
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(10.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.CenterStart
+            Spacer(modifier = Modifier.size(12.dp))
+            // "Rechazadas"
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(28.dp)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(10.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
-                Text(
-                    text = "Confirmadas: 1",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFFB2C2A4),
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        text = "Rechazadas: 0",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFFB2C2A4),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
             }
+            Spacer(modifier = Modifier.size(12.dp))
+            AppointmentList()
         }
-
-        Spacer(modifier = Modifier.size(12.dp))
-
-        // "Rechazadas"
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(28.dp)
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(10.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(
-                    text = "Rechazadas: 0",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFFB2C2A4),
-                    modifier = Modifier.padding(start = 8.dp)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.size(12.dp))
-
-        AppointmentList()
     }
 }
 

@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.clinics
+import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.ClinicActionButton
 import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.TopBar
@@ -33,20 +35,28 @@ import com.example.fabioproyectofinal.view.components.ProfessionalCard
 
 @Composable
 fun ClinicDetailScreen(navController: NavHostController) {
+    Scaffold(
+        topBar = {
+            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
+        },
+        bottomBar = {
+            BottomBar(navController = navController)
+        },
+        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFFFF9F2)),
+                .background(Color(0xFFFFF9F2))
+                .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
             Column(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 ClinicaCard(clinic = clinics.first())
             }
-
             // Botones
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -56,7 +66,6 @@ fun ClinicDetailScreen(navController: NavHostController) {
                 ClinicActionButton("Llamar", R.drawable.icon_call) { /* Acción */ }
                 ClinicActionButton("Instagram", R.drawable.icon_instagram) { /* Acción */ }
             }
-
             Spacer(modifier = Modifier.size(24.dp))
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp)
@@ -79,7 +88,6 @@ fun ClinicDetailScreen(navController: NavHostController) {
                             fontSize = 16.sp,
                             color = Color(0xFFB2C2A4)
                         )
-
                         Spacer(modifier = Modifier.size(8.dp))
 
                         // Lista de profesionales
@@ -89,7 +97,6 @@ fun ClinicDetailScreen(navController: NavHostController) {
                             "Armando Pérez" to "Oncología",
                             "Cristina Morales" to "Rehabilitación",
                         )
-
                         LazyColumn {
                             items(professionals.chunked(2)) { pair ->
                                 Row(
@@ -97,7 +104,11 @@ fun ClinicDetailScreen(navController: NavHostController) {
                                     horizontalArrangement = Arrangement.Center
                                 ) {
                                     pair.forEach { (name, specialty) ->
-                                        ProfessionalCard(name = name, specialty = specialty, navController) { /* Acción */ }
+                                        ProfessionalCard(
+                                            name = name,
+                                            specialty = specialty,
+                                            navController
+                                        ) { /* Acción */ }
                                     }
                                 }
                                 Spacer(modifier = Modifier.height(12.dp))
@@ -106,6 +117,6 @@ fun ClinicDetailScreen(navController: NavHostController) {
                     }
                 }
             }
-
         }
     }
+}
