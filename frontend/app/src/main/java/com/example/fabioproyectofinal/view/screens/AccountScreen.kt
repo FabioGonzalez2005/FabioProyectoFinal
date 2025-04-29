@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -64,7 +65,7 @@ fun AccountScreen(navController: NavHostController) {
                         text = "Iniciar sesión",
                         color = if (!isCreatingAccount) Color.White else Color(0xFFB2C2A4),
                         modifier = Modifier
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 9.dp)
                     )
                 }
 
@@ -83,7 +84,7 @@ fun AccountScreen(navController: NavHostController) {
                         text = "Crea una cuenta",
                         color = if (isCreatingAccount) Color.White else Color(0xFFB2C2A4),
                         modifier = Modifier
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 9.dp)
                     )
                 }
             }
@@ -133,6 +134,7 @@ fun AccountScreen(navController: NavHostController) {
                         focusedBorderColor = Color(0xFF7C8B6B),
                         unfocusedBorderColor = Color(0xFF7C8B6B)
                     ),
+                    visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
                 )
             } else {
@@ -151,8 +153,9 @@ fun AccountScreen(navController: NavHostController) {
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                 shape = RoundedCornerShape(6.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
                     .padding(bottom = 36.dp)
+                    .width(160.dp)
             ) {
                 Text(text = "Continuar", color = Color.White)
             }
