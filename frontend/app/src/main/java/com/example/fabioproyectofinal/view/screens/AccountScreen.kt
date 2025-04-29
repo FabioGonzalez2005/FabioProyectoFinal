@@ -13,6 +13,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable
@@ -23,141 +24,157 @@ fun AccountScreen(navController: NavHostController) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFFFF9F2))
-    ) {
-        // Navegación superior
-        TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
+    Scaffold(
+        topBar = {
+            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
+        },
+        bottomBar = {
+            BottomBar(navController = navController)
+        },
+        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFFFF9F2))
-                .height(64.dp)
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .padding(innerPadding)
         ) {
-            Text(
-                text = "Cuenta",
-                color = Color(0xFFB2C2A4),
-                fontSize = 40.sp,
-            )
-
-            // Botones para cambiar entre pantallas
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
+            // Navegación superior
+            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 12.dp)
+                    .fillMaxSize()
+                    .background(Color(0xFFFFF9F2))
+                    .height(64.dp)
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
-                Button(
-                    onClick = { isCreatingAccount = false },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (!isCreatingAccount) Color(0xFFB2C2A4) else Color.White
-                    ),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 8.dp),
-                    elevation = ButtonDefaults.buttonElevation(0.dp),
-                    shape = RoundedCornerShape(6.dp),
-                ) {
-                    Text(
-                        text = "Iniciar sesión",
-                        color = if (!isCreatingAccount) Color.White else Color(0xFFB2C2A4),
-                        modifier = Modifier
-                            .padding(vertical = 9.dp)
-                    )
-                }
+                Text(
+                    text = "Cuenta",
+                    color = Color(0xFFB2C2A4),
+                    fontSize = 40.sp,
+                )
 
-                Button(
-                    onClick = { isCreatingAccount = true },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isCreatingAccount) Color(0xFFB2C2A4) else Color.White
-                    ),
+                // Botones para cambiar entre pantallas
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp),
-                    elevation = ButtonDefaults.buttonElevation(0.dp),
-                    shape = RoundedCornerShape(6.dp),
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, bottom = 12.dp)
                 ) {
-                    Text(
-                        text = "Crea una cuenta",
-                        color = if (isCreatingAccount) Color.White else Color(0xFFB2C2A4),
+                    Button(
+                        onClick = { isCreatingAccount = false },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (!isCreatingAccount) Color(0xFFB2C2A4) else Color.White
+                        ),
                         modifier = Modifier
-                            .padding(vertical = 9.dp)
-                    )
-                }
-            }
-            // Campos comunes y según la pantalla
-            OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Introduce tu usuario", color = Color(0xFF7C8B6B)) },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF7C8B6B),
-                    unfocusedBorderColor = Color(0xFF7C8B6B)
-                ),
-                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
-            )
+                            .weight(1f)
+                            .padding(end = 8.dp),
+                        elevation = ButtonDefaults.buttonElevation(0.dp),
+                        shape = RoundedCornerShape(6.dp),
+                    ) {
+                        Text(
+                            text = "Iniciar sesión",
+                            color = if (!isCreatingAccount) Color.White else Color(0xFFB2C2A4),
+                            modifier = Modifier
+                                .padding(vertical = 9.dp)
+                        )
+                    }
 
-            if (isCreatingAccount) {
+                    Button(
+                        onClick = { isCreatingAccount = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isCreatingAccount) Color(0xFFB2C2A4) else Color.White
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 8.dp),
+                        elevation = ButtonDefaults.buttonElevation(0.dp),
+                        shape = RoundedCornerShape(6.dp),
+                    ) {
+                        Text(
+                            text = "Crea una cuenta",
+                            color = if (isCreatingAccount) Color.White else Color(0xFFB2C2A4),
+                            modifier = Modifier
+                                .padding(vertical = 9.dp)
+                        )
+                    }
+                }
+                // Campos comunes y según la pantalla
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Introduce tu correo electrónico", color = Color(0xFF7C8B6B)) },
+                    value = username,
+                    onValueChange = { username = it },
+                    label = { Text("Introduce tu usuario", color = Color(0xFF7C8B6B)) },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF7C8B6B),
                         unfocusedBorderColor = Color(0xFF7C8B6B)
                     ),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                 )
-            }
 
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Introduce tu contraseña", color = Color(0xFF7C8B6B)) },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF7C8B6B),
-                    unfocusedBorderColor = Color(0xFF7C8B6B)
-                ),
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
-            )
+                if (isCreatingAccount) {
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = {
+                            Text(
+                                "Introduce tu correo electrónico",
+                                color = Color(0xFF7C8B6B)
+                            )
+                        },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF7C8B6B),
+                            unfocusedBorderColor = Color(0xFF7C8B6B)
+                        ),
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                    )
+                }
 
-            if (isCreatingAccount) {
                 OutlinedTextField(
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
-                    label = { Text("Confirma tu contraseña", color = Color(0xFF7C8B6B)) },
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Introduce tu contraseña", color = Color(0xFF7C8B6B)) },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF7C8B6B),
                         unfocusedBorderColor = Color(0xFF7C8B6B)
                     ),
                     visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                 )
-            } else {
-                Text(
-                    text = "He olvidado mi contraseña",
-                    color = Color.Gray,
-                    fontSize = 12.sp,
-                    modifier = Modifier
-                        .padding(bottom = 24.dp)
-                        .clickable {}
-                )
-            }
 
-            Button(
-                onClick = { /* Acción al continuar */ },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
-                shape = RoundedCornerShape(6.dp),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 36.dp)
-                    .width(160.dp)
-            ) {
-                Text(text = "Continuar", color = Color.White)
+                if (isCreatingAccount) {
+                    OutlinedTextField(
+                        value = confirmPassword,
+                        onValueChange = { confirmPassword = it },
+                        label = { Text("Confirma tu contraseña", color = Color(0xFF7C8B6B)) },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF7C8B6B),
+                            unfocusedBorderColor = Color(0xFF7C8B6B)
+                        ),
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
+                    )
+                } else {
+                    Text(
+                        text = "He olvidado mi contraseña",
+                        color = Color.Gray,
+                        fontSize = 12.sp,
+                        modifier = Modifier
+                            .padding(bottom = 24.dp)
+                            .clickable {}
+                    )
+                }
+
+                Button(
+                    onClick = { /* Acción al continuar */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                    shape = RoundedCornerShape(6.dp),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 36.dp)
+                        .width(160.dp)
+                ) {
+                    Text(text = "Continuar", color = Color.White)
+                }
             }
         }
     }
