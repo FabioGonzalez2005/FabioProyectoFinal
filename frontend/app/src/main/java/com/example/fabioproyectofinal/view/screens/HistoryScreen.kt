@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.appointments
+import com.example.fabioproyectofinal.model.data.pastAppointments
 import com.example.fabioproyectofinal.view.components.AppointmentCard
 import com.example.fabioproyectofinal.view.components.HistoryCard
 import com.example.fabioproyectofinal.view.components.TopBar
@@ -81,8 +82,8 @@ fun HistoryCardList(navController: NavHostController? = null) {
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .fillMaxSize()
     ) {
-        items(appointments) { appointment ->
-            HistoryCard(appointment = appointment, navController = navController)
+        items(pastAppointments) { history ->
+            HistoryCard(history = history, navController = navController)
         }
     }
 }
