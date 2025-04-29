@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.fabioproyectofinal.view.screens.AccountScreen
 import com.example.fabioproyectofinal.view.screens.AppointmentsScreen
 import com.example.fabioproyectofinal.view.screens.MainScreenApp
 import com.example.fabioproyectofinal.view.screens.ClinicDetailScreen
@@ -33,6 +34,9 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
         }
         composable("select_professional_screen") {
             SelectProfessionalScreen(navController)
+        }
+        composable("account_screen") {
+            AccountScreen(navController)
         }
     }
 }

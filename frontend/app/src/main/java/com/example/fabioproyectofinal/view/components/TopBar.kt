@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
+import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 
 // Barra de navegación superior
@@ -61,7 +62,7 @@ fun TopBar(nombre: String, navController: NavHostController, onClick: () -> Unit
             contentDescription = "Usuario",
             modifier = Modifier
                 .size(24.dp)
-                .clickable { onClick() }
+                .clickable { navController.navigate(route = AppScreens.AccountScreen.route) }
         )
 
     }
