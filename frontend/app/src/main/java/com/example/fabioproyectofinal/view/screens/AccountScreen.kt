@@ -31,7 +31,7 @@ fun AccountScreen(navController: NavHostController) {
         bottomBar = {
             BottomBar(navController = navController)
         },
-        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+        containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
             modifier = Modifier
