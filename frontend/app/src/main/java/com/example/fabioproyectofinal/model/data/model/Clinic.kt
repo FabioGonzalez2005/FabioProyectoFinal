@@ -1,4 +1,4 @@
-package com.example.fabioproyectofinal.model.data
+package com.example.fabioproyectofinal.model.data.model
 
 import com.example.fabioproyectofinal.R
 
