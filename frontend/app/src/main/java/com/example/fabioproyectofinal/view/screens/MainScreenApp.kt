@@ -88,20 +88,30 @@ fun MainScreenApp(navController: NavHostController) {
                 ),
                 singleLine = true
             )
-            ClinicList(clinicasFiltradas, navController)
+            ClinicList(clinicasFiltradas, navController, false)
         }
     }
 }
 
 
 @Composable
-fun ClinicList(clinicasFiltradas: List<Clinic>, navController: NavHostController) {
+fun ClinicList(
+    clinicasFiltradas: List<Clinic>,
+    navController: NavHostController,
+    showFavouritesOnly: Boolean
+) {
+    val clinicasAMostrar = if (showFavouritesOnly) {
+        clinicasFiltradas.filter { it.inFavourites }
+    } else {
+        clinicasFiltradas
+    }
+
     LazyColumn(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .fillMaxSize()
     ) {
-        items(clinicasFiltradas) { clinic ->
+        items(clinicasAMostrar) { clinic ->
             ClinicaCard(clinic = clinic, navController = navController)
         }
     }

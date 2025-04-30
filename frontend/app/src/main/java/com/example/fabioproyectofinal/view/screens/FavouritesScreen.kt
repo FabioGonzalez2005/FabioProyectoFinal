@@ -84,7 +84,7 @@ fun FavouritesScreen(navController: NavHostController) {
                 ),
                 singleLine = true
             )
-            ClinicList(clinicasFiltradas, navController)
+            ClinicList(clinicasFiltradas, navController, true)
         }
     }
 }
