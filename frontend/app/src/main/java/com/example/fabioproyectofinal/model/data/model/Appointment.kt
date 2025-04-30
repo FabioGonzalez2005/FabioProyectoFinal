@@ -17,6 +17,8 @@ data class Appointment(
     val date: String,
     val time: String,
     val status: AppointmentStatus,
+    val professional: String,
+    val specialty: String
 )
 
 // Lista de citas simuladas
@@ -28,7 +30,9 @@ val appointments = listOf(
         src = R.drawable.hospiten,
         date = "04/06/2025",
         time = "13:00",
-        status = AppointmentStatus.Confirmado
+        status = AppointmentStatus.Confirmado,
+        professional = "Alberto Medina",
+        specialty = "Osteópata"
     ),
     Appointment(
         id = 2,
@@ -37,7 +41,10 @@ val appointments = listOf(
         src = R.drawable.international,
         date = "05/06/2025",
         time = "12:00",
-        status = AppointmentStatus.Pendiente
+        status = AppointmentStatus.Pendiente,
+        professional = "Alberto Medina",
+        specialty = "Osteópata"
+
     ),
     Appointment(
         id = 2,
@@ -46,7 +53,9 @@ val appointments = listOf(
         src = R.drawable.international,
         date = "05/06/2025",
         time = "12:00",
-        status = AppointmentStatus.Pendiente
+        status = AppointmentStatus.Pendiente,
+        professional = "Alberto Medina",
+        specialty = "Osteópata"
     ),
     Appointment(
         id = 2,
@@ -55,6 +64,8 @@ val appointments = listOf(
         src = R.drawable.international,
         date = "05/06/2025",
         time = "12:00",
-        status = AppointmentStatus.Cancelado
+        status = AppointmentStatus.Cancelado,
+        professional = "Alberto Medina",
+        specialty = "Osteópata"
     )
 )

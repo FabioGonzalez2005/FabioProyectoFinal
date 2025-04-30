@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.model.Appointment
 
 @Composable
@@ -34,7 +35,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(8.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -115,14 +116,31 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Button(
-                        onClick = { /* Acción de consulta */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
-                        shape = RoundedCornerShape(8.dp)
+                    Row(
+                        modifier = Modifier,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Consulta")
+                        Image(
+                            painter = painterResource(id = R.drawable.icon_user),
+                            contentDescription = appointment.professional,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column {
+                            Text(
+                                text = appointment.professional,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFB2C2A4)
+                            )
+                            Text(
+                                text = appointment.specialty,
+                                fontSize = 12.sp,
+                                color = Color.Gray
+                            )
+                        }
                     }
                     Button(
                         onClick = { /* Acción de cancelar */ },
