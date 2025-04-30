@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.fabioproyectofinal.model.data.Appointment
+import com.example.fabioproyectofinal.model.data.model.Appointment
 
 @Composable
 fun AppointmentCard(appointment: Appointment, navController: NavHostController? = null) {

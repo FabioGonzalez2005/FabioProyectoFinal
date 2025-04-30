@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.fabioproyectofinal.model.data.appointments
+import com.example.fabioproyectofinal.model.data.model.appointments
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.AppointmentCard
 import com.example.fabioproyectofinal.view.components.BottomBar

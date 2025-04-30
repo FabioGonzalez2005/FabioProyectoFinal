@@ -60,7 +60,7 @@ fun TopBar(nombre: String, navController: NavHostController, onClick: () -> Unit
             contentDescription = "Usuario",
             modifier = Modifier
                 .size(24.dp)
-                .clickable { navController.navigate(route = AppScreens.AccountScreen.route) }
+                .clickable { navController.navigate(route = AppScreens.RegisterScreen.route) }
         )
 
     }

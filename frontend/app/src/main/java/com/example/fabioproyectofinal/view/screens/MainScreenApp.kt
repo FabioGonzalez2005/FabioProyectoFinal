@@ -14,8 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.fabioproyectofinal.model.data.Clinic
-import com.example.fabioproyectofinal.model.data.clinics
+import com.example.fabioproyectofinal.model.data.model.Clinic
+import com.example.fabioproyectofinal.model.data.model.clinics
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.TopBar

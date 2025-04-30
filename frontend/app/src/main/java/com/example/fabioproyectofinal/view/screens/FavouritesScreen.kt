@@ -2,8 +2,6 @@ package com.example.fabioproyectofinal.view.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -14,10 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.fabioproyectofinal.model.data.Clinic
-import com.example.fabioproyectofinal.model.data.clinics
+import com.example.fabioproyectofinal.model.data.model.clinics
 import com.example.fabioproyectofinal.view.components.BottomBar
-import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable

@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
-import com.example.fabioproyectofinal.model.data.clinics
+import com.example.fabioproyectofinal.model.data.model.clinics
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.ClinicActionButton
 import com.example.fabioproyectofinal.view.components.ClinicaCard

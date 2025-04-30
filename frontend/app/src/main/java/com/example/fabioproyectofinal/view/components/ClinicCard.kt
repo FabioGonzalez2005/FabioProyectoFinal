@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.fabioproyectofinal.model.data.Clinic
+import com.example.fabioproyectofinal.model.data.model.Clinic
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 // Tarjeta de clínica
