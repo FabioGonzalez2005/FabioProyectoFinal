@@ -112,7 +112,11 @@ fun ClinicList(
             .fillMaxSize()
     ) {
         items(clinicasAMostrar) { clinic ->
-            ClinicaCard(clinic = clinic, navController = navController)
+            ClinicaCard(
+                clinic = clinic,
+                navController = navController,
+                inFavourites = clinic.inFavourites
+            )
         }
     }
 }

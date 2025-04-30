@@ -55,7 +55,7 @@ fun ClinicDetailScreen(navController: NavHostController) {
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
-                ClinicaCard(clinic = clinics.first())
+                ClinicaCard(clinic = clinics.first(), navController, true)
             }
             // Botones
             Row(

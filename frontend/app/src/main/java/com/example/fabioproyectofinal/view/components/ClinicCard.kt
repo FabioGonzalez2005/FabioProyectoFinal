@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,12 +22,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.model.Clinic
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 // Tarjeta de clínica
 @Composable
-fun ClinicaCard(clinic: Clinic, navController: NavHostController? = null) {
+fun ClinicaCard(
+    clinic: Clinic,
+    navController: NavHostController? = null,
+    inFavourites: Boolean
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,6 +60,16 @@ fun ClinicaCard(clinic: Clinic, navController: NavHostController? = null) {
             Column {
                 Text(clinic.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Text(clinic.address, fontSize = 14.sp, color = Color.Gray)
+
+                // Mostrar icono solo si está en favoritos
+                if (inFavourites) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.icon_favourite),
+                        contentDescription = "Favorito",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }
