@@ -61,6 +61,25 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Estado:",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "${appointment.status}",
+                                fontSize = 14.sp,
+                                color = Color(0xFFB2C2A4),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(12.dp))

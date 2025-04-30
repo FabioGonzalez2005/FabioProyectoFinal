@@ -99,6 +99,30 @@ fun AppointmentsScreen(navController: NavHostController) {
                 }
             }
             Spacer(modifier = Modifier.size(12.dp))
+            // "Pendientes"
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(28.dp)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(10.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White)
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        text = "Pendientes: 2",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFFB2C2A4),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.size(12.dp))
             // "Rechazadas"
             Card(
                 modifier = Modifier
@@ -114,7 +138,7 @@ fun AppointmentsScreen(navController: NavHostController) {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = "Rechazadas: 0",
+                        text = "Canceladas: 0",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFFB2C2A4),

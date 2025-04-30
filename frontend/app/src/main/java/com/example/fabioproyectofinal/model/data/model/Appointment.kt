@@ -4,9 +4,9 @@ import com.example.fabioproyectofinal.R
 
 // Enum que define el estado de la cita
 enum class AppointmentStatus {
-    CONFIRMED,
-    PENDING,
-    REJECTED
+    Confirmado,
+    Pendiente,
+    Cancelado
 }
 
 data class Appointment(
@@ -28,7 +28,7 @@ val appointments = listOf(
         src = R.drawable.hospiten,
         date = "04/06/2025",
         time = "13:00",
-        status = AppointmentStatus.CONFIRMED
+        status = AppointmentStatus.Confirmado
     ),
     Appointment(
         id = 2,
@@ -37,7 +37,7 @@ val appointments = listOf(
         src = R.drawable.international,
         date = "05/06/2025",
         time = "12:00",
-        status = AppointmentStatus.PENDING
+        status = AppointmentStatus.Pendiente
     ),
     Appointment(
         id = 2,
@@ -46,7 +46,7 @@ val appointments = listOf(
         src = R.drawable.international,
         date = "05/06/2025",
         time = "12:00",
-        status = AppointmentStatus.PENDING
+        status = AppointmentStatus.Pendiente
     ),
     Appointment(
         id = 2,
@@ -55,6 +55,6 @@ val appointments = listOf(
         src = R.drawable.international,
         date = "05/06/2025",
         time = "12:00",
-        status = AppointmentStatus.REJECTED
+        status = AppointmentStatus.Cancelado
     )
 )
