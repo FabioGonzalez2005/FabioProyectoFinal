@@ -1,29 +1,87 @@
 package com.example.fabioproyectofinal.view.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.model.Appointment
+import kotlinx.coroutines.delay
 
 @Composable
 fun AppointmentCard(appointment: Appointment, navController: NavHostController? = null) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            confirmButton = {},
+            dismissButton = {},
+            title = null,
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Confirmar cancelación",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFB2C2A4),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "¿Estás seguro de que deseas cancelar la cita?",
+                        fontSize = 14.sp,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        AnimatedDialogButton(
+                            text = "Sí",
+                            onClick = {
+                                showDialog = false
+                                println("Cita cancelada")
+                            }
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        AnimatedDialogButton(
+                            text = "No",
+                            onClick = {
+                                showDialog = false
+                            }
+                        )
+                    }
+                }
+            },
+            shape = RoundedCornerShape(12.dp),
+            containerColor = Color.White
+        )
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,9 +97,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
+            Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         painter = painterResource(id = appointment.src),
@@ -118,10 +174,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(
-                        modifier = Modifier,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
                             painter = painterResource(id = R.drawable.icon_user),
                             contentDescription = appointment.professional,
@@ -143,11 +196,11 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                         }
                     }
                     Button(
-                        onClick = { /* Acción de cancelar */ },
+                        onClick = { showDialog = true },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("Cancelar")
+                        Text("Cancelar", color = Color.White)
                     }
                 }
             }
