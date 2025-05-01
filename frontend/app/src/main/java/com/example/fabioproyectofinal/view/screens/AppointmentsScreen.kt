@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.fabioproyectofinal.model.data.model.AppointmentStatus
 import com.example.fabioproyectofinal.model.data.model.appointments
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.AppointmentCard
@@ -23,6 +24,10 @@ import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable
 fun AppointmentsScreen(navController: NavHostController) {
+    val confirmedCount = appointments.count { it.status == AppointmentStatus.Confirmado }
+    val pendingCount = appointments.count { it.status == AppointmentStatus.Pendiente }
+    val cancelledCount = appointments.count { it.status == AppointmentStatus.Cancelado }
+
     Scaffold(
         topBar = {
             TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
@@ -30,7 +35,7 @@ fun AppointmentsScreen(navController: NavHostController) {
         bottomBar = {
             BottomBar(navController = navController)
         },
-        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+        containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -75,7 +80,8 @@ fun AppointmentsScreen(navController: NavHostController) {
                     }
                 }
             }
-            // "Confirmadas"
+
+            // Confirmadas
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -90,7 +96,7 @@ fun AppointmentsScreen(navController: NavHostController) {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = "Confirmadas: 1",
+                        text = "Confirmadas: $confirmedCount",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFFB2C2A4),
@@ -98,8 +104,10 @@ fun AppointmentsScreen(navController: NavHostController) {
                     )
                 }
             }
+
             Spacer(modifier = Modifier.size(12.dp))
-            // "Pendientes"
+
+            // Pendientes
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -114,7 +122,7 @@ fun AppointmentsScreen(navController: NavHostController) {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = "Pendientes: 2",
+                        text = "Pendientes: $pendingCount",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFFB2C2A4),
@@ -122,8 +130,10 @@ fun AppointmentsScreen(navController: NavHostController) {
                     )
                 }
             }
+
             Spacer(modifier = Modifier.size(12.dp))
-            // "Rechazadas"
+
+            // Canceladas
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -138,7 +148,7 @@ fun AppointmentsScreen(navController: NavHostController) {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = "Canceladas: 0",
+                        text = "Canceladas: $cancelledCount",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFFB2C2A4),
@@ -146,8 +156,10 @@ fun AppointmentsScreen(navController: NavHostController) {
                     )
                 }
             }
+
             Spacer(modifier = Modifier.size(12.dp))
-            AppointmentList()
+
+            AppointmentList(navController = navController)
         }
     }
 }
