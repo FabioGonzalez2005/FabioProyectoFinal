@@ -45,14 +45,22 @@ fun RegisterScreen(navController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { navController.navigate(route = AppScreens.LoginScreen.route) },
+                    onClick = {
+                        navController.navigate(route = AppScreens.LoginScreen.route) {
+                            popUpTo(AppScreens.RegisterScreen.route) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp),
                     elevation = ButtonDefaults.buttonElevation(0.dp),
                     shape = RoundedCornerShape(6.dp),
-                ) {
+                )
+                {
                     Text("Iniciar sesión", color = Color(0xFFB2C2A4), modifier = Modifier.padding(vertical = 9.dp))
                 }
                 Button(

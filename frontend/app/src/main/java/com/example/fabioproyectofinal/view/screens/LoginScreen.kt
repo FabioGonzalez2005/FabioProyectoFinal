@@ -52,14 +52,22 @@ fun LoginScreen(navController: NavHostController) {
                     Text("Iniciar sesión", color = Color.White, modifier = Modifier.padding(vertical = 9.dp))
                 }
                 Button(
-                    onClick = { navController.navigate(route = AppScreens.RegisterScreen.route) },
+                    onClick = {
+                        navController.navigate(route = AppScreens.RegisterScreen.route) {
+                            popUpTo(AppScreens.LoginScreen.route) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp),
                     elevation = ButtonDefaults.buttonElevation(0.dp),
                     shape = RoundedCornerShape(6.dp),
-                ) {
+                )
+                {
                     Text("Crea una cuenta", color = Color(0xFFB2C2A4), modifier = Modifier.padding(vertical = 9.dp))
                 }
             }
