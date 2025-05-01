@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.model.Appointment
+import com.example.fabioproyectofinal.model.data.model.AppointmentStatus
 
 @Composable
 fun AppointmentCard(appointment: Appointment, navController: NavHostController? = null) {
@@ -79,6 +80,14 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
         )
     }
 
+    // Aquí decidimos el color del estado dinámicamente
+    val statusColor = when (appointment.status) {
+        AppointmentStatus.Confirmado -> Color(0xFFB2C2A4) // Verde
+        AppointmentStatus.Cancelado -> Color(0xFFA64646)  // Rojo
+        AppointmentStatus.Pendiente -> Color(0xFFBD8F45)  // Naranja
+        else -> Color.Gray
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -130,7 +139,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                             Text(
                                 text = "${appointment.status}",
                                 fontSize = 14.sp,
-                                color = Color(0xFFB2C2A4),
+                                color = statusColor,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -192,13 +201,26 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                             )
                         }
                     }
-                    Button(
-                        onClick = { showDialog = true },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("Cancelar", color = Color.White)
+                    if (appointment.status == AppointmentStatus.Cancelado) {
+                        Button(
+                            onClick = {
+                                println("Ver motivos de la cancelación")
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text("Ver motivos", color = Color.White)
+                        }
+                    } else {
+                        Button(
+                            onClick = { showDialog = true },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text("Cancelar", color = Color.White)
+                        }
                     }
+
                 }
             }
         }
