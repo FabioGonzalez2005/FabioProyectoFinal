@@ -6,9 +6,9 @@ app = Flask(__name__)
 def ejecutar_sql(sql_text, params=None, es_insert=False):
     host = "localhost"
     port = "5432"
-    dbname = "alexsoft"
-    user = "postgres"
-    password = "postgres"
+    dbname = "fabioapi"
+    user = "alumno1234"
+    password = "Alumno1234"
 
     connection = psycopg2.connect(
         host=host,
@@ -503,6 +503,36 @@ def disponibilidad_doctores():
         JOIN "Disponibilidad_Doctor" dd ON d.id_doctor = dd.id_doctor
         ORDER BY dd.dia_semana, dd.hora_inicio
     ''')
+
+@app.route('/test_connection', methods=['GET'])
+def test_connection():
+    try:
+        host = "localhost"
+        port = "5432"
+        dbname = "fabioapi"
+        user = "postgres"
+        password = "Alumno1234"
+
+        connection = psycopg2.connect(
+            host=host,
+            port=port,
+            dbname=dbname,
+            user=user,
+            password=password,
+        )
+
+        cursor = connection.cursor()
+        cursor.execute("SELECT 1")
+        result = cursor.fetchone()
+        cursor.close()
+        connection.close()
+
+        if result:
+            return jsonify({"message": "Conectado a la base de datos correctamente."}), 200
+        else:
+            return jsonify({"message": "Error al realizar la consulta."}), 500
+    except Exception as e:
+            return jsonify({"message": f"Error en la conexión: {repr(e)}"}), 500
 
 
 # ======================= INICIO APP =======================
