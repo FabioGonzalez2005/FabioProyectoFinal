@@ -2,7 +2,7 @@ package com.example.fabioproyectofinal.model.navigation
 
 sealed class AppScreens(val route: String) {
     // Pantallas
-    object MainScreenApp: AppScreens("main")
+    object MainScreenApp: AppScreens("main_screen_app")
     object FavouritesScreen: AppScreens("favourites_screen")
     object AppointmentsScreen: AppScreens("appointments_screen")
     object HistoryScreen: AppScreens("history_screen")
@@ -10,4 +10,5 @@ sealed class AppScreens(val route: String) {
     object SelectProfessionalScreen: AppScreens("select_professional_screen")
     object RegisterScreen: AppScreens("register_screen")
     object LoginScreen: AppScreens("login_screen")
+    object DoctorListScreen: AppScreens("doctor_list_screen")
 }
