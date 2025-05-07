@@ -42,6 +42,14 @@ def ejecutar_sql(sql_text, params=None, es_insert=False):
 
 # ======================= RUTAS =======================
 
+# ======================= CLINICAS =======================
+# Ver todas las clínicas
+@app.route('/clinicas', methods=['GET'])
+def obtener_clinicas():
+    return ejecutar_sql('SELECT * FROM Clínica ORDER BY id_clínica')
+
+
+
 # ======================= PACIENTES =======================
 
 # Registro de paciente
@@ -50,7 +58,7 @@ def registrar_paciente():
     datos = request.get_json()
 
     sql_usuario = '''
-        INSERT INTO "Usuario" (id_usuario, nombre, email, contraseña)
+        INSERT INTO Usuario (id_usuario, nombre, email, contraseña)
         VALUES (%s, %s, %s, %s)
     '''
     sql_paciente = '''
@@ -92,7 +100,7 @@ def perfil_paciente(id_usuario):
 def editar_perfil(id_usuario):
     datos = request.get_json()
     sql = '''
-        UPDATE "Usuario"
+        UPDATE Usuario
         SET nombre = %s, email = %s, contraseña = %s
         WHERE id_usuario = %s
     '''
@@ -171,7 +179,7 @@ def ver_disponibilidad(id_doctor):
 # Ver todos los usuarios
 @app.route('/admin/usuarios', methods=['GET'])
 def listar_usuarios():
-    sql = 'SELECT * FROM "Usuario" ORDER BY id_usuario ASC'
+    sql = 'SELECT * FROM Usuario ORDER BY id_usuario ASC'
     return ejecutar_sql(sql)
 
 # Eliminar un usuario
@@ -430,7 +438,7 @@ def ver_expediente():
 # Obtener todos los usuarios
 @app.route('/usuarios', methods=['GET'])
 def obtener_usuarios():
-    return ejecutar_sql('SELECT * FROM "Usuario" ORDER BY id_usuario')
+    return ejecutar_sql('SELECT * FROM Usuario ORDER BY id_usuario')
 
 
 # Obtener todos los roles

@@ -1,0 +1,84 @@
+2025-05-05 23:57:01,940 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-05 23:57:01,940 - [33mPress CTRL+C to quit[0m
+2025-05-05 23:57:01,942 -  * Restarting with stat
+2025-05-05 23:57:02,313 -  * Debugger is active!
+2025-05-05 23:57:02,319 -  * Debugger PIN: 824-326-826
+2025-05-05 23:57:06,059 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-05 23:57:06,059 - [33mPress CTRL+C to quit[0m
+2025-05-05 23:57:06,061 -  * Restarting with stat
+2025-05-05 23:57:06,517 -  * Debugger is active!
+2025-05-05 23:57:06,521 -  * Debugger PIN: 824-326-826
+2025-05-05 23:57:13,085 - Traceback (most recent call last):
+  File "C:\Users\fabio\Desktop\FabioProyectoFinal\backend\main.py", line 516, in test_connection
+    connection = psycopg2.connect(
+        host="localhost",
+    ...<3 lines>...
+        password="Alumno1234"
+    )
+  File "C:\Users\fabio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf3 in position 85: invalid continuation byte
+
+2025-05-05 23:57:13,086 - 127.0.0.1 - - [05/May/2025 23:57:13] "[35m[1mGET /test_connection HTTP/1.1[0m" 500 -
+2025-05-05 23:57:14,871 - Traceback (most recent call last):
+  File "C:\Users\fabio\Desktop\FabioProyectoFinal\backend\main.py", line 516, in test_connection
+    connection = psycopg2.connect(
+        host="localhost",
+    ...<3 lines>...
+        password="Alumno1234"
+    )
+  File "C:\Users\fabio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf3 in position 85: invalid continuation byte
+
+2025-05-05 23:57:14,872 - 127.0.0.1 - - [05/May/2025 23:57:14] "[35m[1mGET /test_connection HTTP/1.1[0m" 500 -
+2025-05-05 23:57:16,007 - Traceback (most recent call last):
+  File "C:\Users\fabio\Desktop\FabioProyectoFinal\backend\main.py", line 516, in test_connection
+    connection = psycopg2.connect(
+        host="localhost",
+    ...<3 lines>...
+        password="Alumno1234"
+    )
+  File "C:\Users\fabio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf3 in position 85: invalid continuation byte
+
+2025-05-05 23:57:16,008 - 127.0.0.1 - - [05/May/2025 23:57:16] "[35m[1mGET /test_connection HTTP/1.1[0m" 500 -
+2025-05-05 23:57:16,813 - Traceback (most recent call last):
+  File "C:\Users\fabio\Desktop\FabioProyectoFinal\backend\main.py", line 516, in test_connection
+    connection = psycopg2.connect(
+        host="localhost",
+    ...<3 lines>...
+        password="Alumno1234"
+    )
+  File "C:\Users\fabio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf3 in position 85: invalid continuation byte
+
+2025-05-05 23:57:16,814 - 127.0.0.1 - - [05/May/2025 23:57:16] "[35m[1mGET /test_connection HTTP/1.1[0m" 500 -
+2025-05-05 23:57:19,279 - Traceback (most recent call last):
+  File "C:\Users\fabio\Desktop\FabioProyectoFinal\backend\main.py", line 516, in test_connection
+    connection = psycopg2.connect(
+        host="localhost",
+    ...<3 lines>...
+        password="Alumno1234"
+    )
+  File "C:\Users\fabio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf3 in position 85: invalid continuation byte
+
+2025-05-05 23:57:19,279 - 127.0.0.1 - - [05/May/2025 23:57:19] "[35m[1mGET /test_connection HTTP/1.1[0m" 500 -
+2025-05-05 23:57:20,299 - Traceback (most recent call last):
+  File "C:\Users\fabio\Desktop\FabioProyectoFinal\backend\main.py", line 516, in test_connection
+    connection = psycopg2.connect(
+        host="localhost",
+    ...<3 lines>...
+        password="Alumno1234"
+    )
+  File "C:\Users\fabio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf3 in position 85: invalid continuation byte
+
+2025-05-05 23:57:20,299 - 127.0.0.1 - - [05/May/2025 23:57:20] "[35m[1mGET /test_connection HTTP/1.1[0m" 500 -
