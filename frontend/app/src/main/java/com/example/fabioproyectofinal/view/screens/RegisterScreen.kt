@@ -26,6 +26,11 @@ fun RegisterScreen(navController: NavHostController) {
     var confirmPassword by remember { mutableStateOf("") }
     val authViewModel: RegisterViewModel = viewModel()
     val estadoRegistro by authViewModel.registroEstado.collectAsState()
+    val formularioValido = fullname.isNotBlank()
+            && username.isNotBlank()
+            && email.isNotBlank()
+            && password.isNotBlank()
+            && confirmPassword == password
 
     Scaffold(
         containerColor = Color(0xFFFFF9F2)
@@ -134,34 +139,27 @@ fun RegisterScreen(navController: NavHostController) {
 
             Button(
                 onClick = {
-                    if (fullname.isNotBlank() && username.isNotBlank() && email.isNotBlank() &&
-                        password.isNotBlank() && confirmPassword == password) {
-
+                    if (formularioValido) {
                         val nuevoUsuario = UsuarioRegistroRequest(
                             nombre = fullname,
                             email = email,
                             usuario = username,
                             contraseña = password
                         )
-
                         authViewModel.registrarUsuario(nuevoUsuario)
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (formularioValido) Color(0xFFB2C2A4) else Color.Gray
+                ),
                 shape = RoundedCornerShape(6.dp),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(bottom = 36.dp)
-                    .width(160.dp)
+                    .width(160.dp),
+                enabled = formularioValido
             ) {
                 Text("Continuar", color = Color.White)
-            }
-            LaunchedEffect(estadoRegistro) {
-                if (estadoRegistro?.msg != null) {
-                    navController.navigate(AppScreens.LoginScreen.route) {
-                        popUpTo(AppScreens.RegisterScreen.route) { inclusive = true }
-                    }
-                }
             }
         }
     }
