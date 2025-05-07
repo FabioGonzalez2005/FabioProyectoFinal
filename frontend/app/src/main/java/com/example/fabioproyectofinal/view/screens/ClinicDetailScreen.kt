@@ -30,8 +30,8 @@ import com.example.fabioproyectofinal.model.data.model.clinics
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.ClinicActionButton
 import com.example.fabioproyectofinal.view.components.ClinicaCard
-import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.view.components.ProfessionalCard
+import com.example.fabioproyectofinal.view.components.TopBar
 
 @Composable
 fun ClinicDetailScreen(navController: NavHostController) {

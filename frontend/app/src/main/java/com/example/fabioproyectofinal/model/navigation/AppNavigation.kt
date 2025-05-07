@@ -9,6 +9,7 @@ import com.example.fabioproyectofinal.view.screens.RegisterScreen
 import com.example.fabioproyectofinal.view.screens.AppointmentsScreen
 import com.example.fabioproyectofinal.view.screens.MainScreenApp
 import com.example.fabioproyectofinal.view.screens.ClinicDetailScreen
+import com.example.fabioproyectofinal.view.screens.DoctorListScreen
 import com.example.fabioproyectofinal.view.screens.FavouritesScreen
 import com.example.fabioproyectofinal.view.screens.HistoryScreen
 import com.example.fabioproyectofinal.view.screens.LoginScreen
@@ -18,11 +19,14 @@ import com.example.fabioproyectofinal.view.screens.SelectProfessionalScreen
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
-            MainScreenApp(navController)
+            RegisterScreen(navController)
         }
         composable("clinic_screen") { backStackEntry ->
             val clinicId = backStackEntry.arguments?.getString("clinicId")?.toIntOrNull()
             ClinicDetailScreen(navController)
+        }
+        composable("main_screen_app") {
+            MainScreenApp(navController)
         }
         composable("favourites_screen") {
             FavouritesScreen(navController)
@@ -41,6 +45,9 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
         }
         composable("login_screen") {
             LoginScreen(navController)
+        }
+        composable("doctor_list_screen") {
+            DoctorListScreen(navController)
         }
     }
 }

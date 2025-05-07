@@ -1,7 +1,6 @@
 package com.example.fabioproyectofinal.view.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -14,19 +13,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.navigation.AppScreens
-import com.example.fabioproyectofinal.view.components.BottomBar
-import com.example.fabioproyectofinal.view.components.TopBar
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fabioproyectofinal.viewmodel.RegisterViewModel
+import com.example.fabioproyectofinal.model.data.model.UsuarioRegistroRequest
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {
+    var fullname by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    val authViewModel: RegisterViewModel = viewModel()
+    val estadoRegistro by authViewModel.registroEstado.collectAsState()
 
     Scaffold(
-        topBar = { TopBar("Fabio González Waschkowitz", navController) {} },
-        bottomBar = { BottomBar(navController) },
         containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
@@ -86,6 +87,17 @@ fun RegisterScreen(navController: NavHostController) {
             )
 
             OutlinedTextField(
+                value = fullname,
+                onValueChange = { fullname  = it },
+                label = { Text("Introduce tu nombre completo", color = Color(0xFF7C8B6B)) },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF7C8B6B),
+                    unfocusedBorderColor = Color(0xFF7C8B6B)
+                )
+            )
+
+            OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Introduce tu correo electrónico", color = Color(0xFF7C8B6B)) },
@@ -121,7 +133,20 @@ fun RegisterScreen(navController: NavHostController) {
             )
 
             Button(
-                onClick = { /* Acción registro */ },
+                onClick = {
+                    if (fullname.isNotBlank() && username.isNotBlank() && email.isNotBlank() &&
+                        password.isNotBlank() && confirmPassword == password) {
+
+                        val nuevoUsuario = UsuarioRegistroRequest(
+                            nombre = fullname,
+                            email = email,
+                            usuario = username,
+                            contraseña = password
+                        )
+
+                        authViewModel.registrarUsuario(nuevoUsuario)
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                 shape = RoundedCornerShape(6.dp),
                 modifier = Modifier
@@ -130,6 +155,13 @@ fun RegisterScreen(navController: NavHostController) {
                     .width(160.dp)
             ) {
                 Text("Continuar", color = Color.White)
+            }
+            LaunchedEffect(estadoRegistro) {
+                if (estadoRegistro?.msg != null) {
+                    navController.navigate(AppScreens.LoginScreen.route) {
+                        popUpTo(AppScreens.RegisterScreen.route) { inclusive = true }
+                    }
+                }
             }
         }
     }
