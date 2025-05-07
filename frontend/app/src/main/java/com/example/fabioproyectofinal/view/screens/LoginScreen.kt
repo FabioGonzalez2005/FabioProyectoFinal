@@ -14,17 +14,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.navigation.AppScreens
-import com.example.fabioproyectofinal.view.components.BottomBar
-import com.example.fabioproyectofinal.view.components.TopBar
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fabioproyectofinal.viewmodel.LoginViewModel
+import com.example.fabioproyectofinal.model.data.model.UsuarioLoginRequest
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val loginViewModel: LoginViewModel = viewModel()
+    val estadoLogin by loginViewModel.loginEstado.collectAsState()
 
     Scaffold(
-        topBar = { TopBar("Fabio González Waschkowitz", navController) {} },
-        bottomBar = { BottomBar(navController) },
         containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
@@ -105,7 +106,13 @@ fun LoginScreen(navController: NavHostController) {
             )
 
             Button(
-                onClick = { /* Acción login */ },
+                onClick = {
+                    if (username.isNotBlank() && password.isNotBlank()) {
+                        loginViewModel.login(
+                            UsuarioLoginRequest(usuario = username, contraseña = password)
+                        )
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                 shape = RoundedCornerShape(6.dp),
                 modifier = Modifier
@@ -115,6 +122,14 @@ fun LoginScreen(navController: NavHostController) {
             ) {
                 Text("Continuar", color = Color.White)
             }
+            LaunchedEffect(estadoLogin) {
+                if (estadoLogin?.msg != null) {
+                    navController.navigate(route = AppScreens.MainScreenApp.route) {
+                        popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
+                    }
+                }
+            }
+
         }
     }
 }
