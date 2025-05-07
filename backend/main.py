@@ -1,9 +1,13 @@
 import psycopg2
 from flask import Flask, jsonify, request
+import bcrypt
 
 app = Flask(__name__)
 
 def ejecutar_sql(sql_text, params=None, es_insert=False):
+    import psycopg2
+    from flask import jsonify
+
     host = "localhost"
     port = "5432"
     dbname = "fabioapi"
@@ -19,28 +23,130 @@ def ejecutar_sql(sql_text, params=None, es_insert=False):
     )
     cursor = connection.cursor()
 
-    if params:
-        cursor.execute(sql_text, params)
-    else:
-        cursor.execute(sql_text)
+    try:
+        if params:
+            cursor.execute(sql_text, params)
+        else:
+            cursor.execute(sql_text)
 
-    if es_insert:
-        connection.commit()
+        if es_insert:
+            connection.commit()
+            return jsonify({'msg': 'Operación realizada correctamente'})
+
+        # Solo intenta acceder a resultados si hay descripción de columnas (es un SELECT)
+        if cursor.description:
+            columnas = [desc[0] for desc in cursor.description]
+            resultados = cursor.fetchall()
+            datos = [dict(zip(columnas, fila)) for fila in resultados]
+            return jsonify(datos)
+        else:
+            return jsonify({'msg': 'Operación realizada sin resultados'})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    finally:
         cursor.close()
         connection.close()
-        return jsonify({'msg': 'Operación realizada correctamente'})
 
-    columnas = [desc[0] for desc in cursor.description]
-    resultados = cursor.fetchall()
-    datos = [dict(zip(columnas, fila)) for fila in resultados]
-
-    cursor.close()
-    connection.close()
-
-    return jsonify(datos)
 
 
 # ======================= RUTAS =======================
+
+# ======================= LOGIN =======================
+@app.route('/usuario/login', methods=['POST'])
+def login_usuario():
+    datos = request.get_json()
+
+    # Validación de campos obligatorios
+    if 'usuario' not in datos or 'contraseña' not in datos:
+        return jsonify({'error': 'Usuario y contraseña son obligatorios'}), 400
+
+    try:
+        # Conexión directa a la base de datos
+        conexion = psycopg2.connect(
+            host="localhost", port="5432", dbname="fabioapi", user="alumno1234", password="Alumno1234"
+        )
+        cursor = conexion.cursor()
+
+        # Buscar usuario
+        cursor.execute('SELECT id_usuario, nombre, usuario, email, contraseña FROM Usuario WHERE usuario = %s', (datos['usuario'],))
+        usuario_encontrado = cursor.fetchone()
+
+        cursor.close()
+        conexion.close()
+
+        if usuario_encontrado is None:
+            return jsonify({'error': 'Usuario no encontrado'}), 404
+
+        id_usuario, nombre, email, usuario, contraseña_hash = usuario_encontrado
+
+        # Verificar contraseña
+        if bcrypt.checkpw(datos['contraseña'].encode('utf-8'), contraseña_hash.encode('utf-8')):
+            return jsonify({
+                'msg': 'Login exitoso',
+                'id_usuario': id_usuario,
+                'usuario': usuario,
+                'nombre': nombre,
+                'email': email
+            })
+        else:
+            return jsonify({'error': 'Contraseña incorrecta'}), 401
+
+    except Exception as e:
+        return jsonify({'error': f'Error en el login: {str(e)}'}), 500
+
+# ======================= REGISTER =======================
+@app.route('/usuario/registro', methods=['POST'])
+def registrar_usuario():
+    datos = request.get_json()
+
+    try:
+        # Conexión directa a la DB para validaciones
+        conexion = psycopg2.connect(
+            host="localhost", port="5432", dbname="fabioapi", user="alumno1234", password="Alumno1234"
+        )
+        cursor = conexion.cursor()
+
+        # Verificar si ya existe email o usuario
+        cursor.execute('SELECT 1 FROM Usuario WHERE LOWER(email) = LOWER(%s)', (datos['email'],))
+        if cursor.fetchone():
+            cursor.close()
+            conexion.close()
+            return jsonify({'error': 'El email ya está registrado'}), 400
+
+        cursor.execute('SELECT 1 FROM Usuario WHERE LOWER(usuario) = LOWER(%s)', (datos['usuario'],))
+        if cursor.fetchone():
+            cursor.close()
+            conexion.close()
+            return jsonify({'error': 'El nombre de usuario ya está en uso'}), 400
+
+        cursor.close()
+        conexion.close()
+    except Exception as e:
+        return jsonify({'error': f'Error al verificar duplicados: {str(e)}'}), 500
+
+    # Encriptar contraseña
+    password_plano = datos['contraseña'].encode('utf-8')
+    contraseña_encriptada = bcrypt.hashpw(password_plano, bcrypt.gensalt()).decode('utf-8')
+
+    # Insertar nuevo usuario
+    sql = '''
+        INSERT INTO Usuario (nombre, email, usuario, contraseña)
+        VALUES (%s, %s, %s, %s)
+    '''
+    params = (
+        datos['nombre'],
+        datos['email'],
+        datos['usuario'],
+        contraseña_encriptada
+    )
+
+    try:
+        return ejecutar_sql(sql, params, es_insert=True)
+    except Exception as e:
+        return jsonify({'error': f'Error al registrar usuario: {str(e)}'}), 500
+
 
 # ======================= CLINICAS =======================
 # Ver todas las clínicas
@@ -73,16 +179,6 @@ def registrar_paciente():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-# Inicio de sesión
-@app.route('/paciente/login', methods=['POST'])
-def login_paciente():
-    datos = request.get_json()
-    sql = '''
-        SELECT * FROM "Usuario" 
-        WHERE email = %s AND contraseña = %s
-    '''
-    resultado = ejecutar_sql(sql, (datos['email'], datos['contraseña']))
-    return resultado
 
 # Obtener perfil de paciente
 @app.route('/paciente/perfil/<int:id_usuario>', methods=['GET'])
@@ -108,6 +204,11 @@ def editar_perfil(id_usuario):
     return ejecutar_sql(sql, params, es_insert=True)
 
 # ======================= DOCTORES =======================
+
+# Ver todas los doctores
+@app.route('/doctores', methods=['GET'])
+def obtener_doctores():
+    return ejecutar_sql('SELECT * FROM Doctor ORDER BY id_doctor')
 
 # Registro de doctor
 @app.route('/doctor/registro', methods=['POST'])
@@ -445,19 +546,6 @@ def obtener_usuarios():
 @app.route('/roles', methods=['GET'])
 def obtener_roles():
     return ejecutar_sql('SELECT * FROM "Rol" ORDER BY id_rol')
-
-
-# Obtener doctores con clínica y especialidad
-@app.route('/doctores', methods=['GET'])
-def obtener_doctores():
-    return ejecutar_sql('''
-        SELECT d.id_doctor, u.nombre AS nombre_doctor, c.nombre AS clinica, e.nombre AS especialidad
-        FROM "Doctor" d
-        JOIN "Usuario" u ON d.id_usuario = u.id_usuario
-        JOIN "Clinica" c ON d.id_clinica = c.id_clinica
-        JOIN "Doctor_Especialidad" de ON d.id_doctor = de.id_doctor
-        JOIN "Especialidad" e ON de.id_especialidad = e.id_especialidad
-    ''')
 
 
 # Insertar nuevo usuario
