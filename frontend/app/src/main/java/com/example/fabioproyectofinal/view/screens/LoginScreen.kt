@@ -24,6 +24,7 @@ fun LoginScreen(navController: NavHostController) {
     var password by remember { mutableStateOf("") }
     val loginViewModel: LoginViewModel = viewModel()
     val estadoLogin by loginViewModel.loginEstado.collectAsState()
+    val formularioValido = username.isNotBlank() && password.isNotBlank()
 
     Scaffold(
         containerColor = Color(0xFFFFF9F2)
@@ -107,18 +108,21 @@ fun LoginScreen(navController: NavHostController) {
 
             Button(
                 onClick = {
-                    if (username.isNotBlank() && password.isNotBlank()) {
+                    if (formularioValido) {
                         loginViewModel.login(
                             UsuarioLoginRequest(usuario = username, contraseña = password)
                         )
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (formularioValido) Color(0xFFB2C2A4) else Color.Gray
+                ),
                 shape = RoundedCornerShape(6.dp),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(bottom = 36.dp)
-                    .width(160.dp)
+                    .width(160.dp),
+                enabled = formularioValido
             ) {
                 Text("Continuar", color = Color.White)
             }
