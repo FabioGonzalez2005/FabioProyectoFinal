@@ -11,9 +11,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ApiService {
-    @GET("/clinicas")
-    suspend fun getClinics(): List<Clinic>
-
     @GET("/doctores")
     suspend fun getDoctors(): List<Doctor>
 
@@ -23,4 +20,6 @@ interface ApiService {
     @POST("/usuario/login")
     suspend fun loginUsuario(@Body datos: UsuarioLoginRequest): LoginResponse
 
+    @GET("/clinicas")
+    suspend fun getClinics(): List<Clinic>
 }

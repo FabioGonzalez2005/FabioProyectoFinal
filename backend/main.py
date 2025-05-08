@@ -152,9 +152,7 @@ def registrar_usuario():
 # Ver todas las clínicas
 @app.route('/clinicas', methods=['GET'])
 def obtener_clinicas():
-    return ejecutar_sql('SELECT * FROM Clínica ORDER BY id_clínica')
-
-
+    return ejecutar_sql('SELECT * FROM Clinica ORDER BY id_clinica')
 
 # ======================= PACIENTES =======================
 
