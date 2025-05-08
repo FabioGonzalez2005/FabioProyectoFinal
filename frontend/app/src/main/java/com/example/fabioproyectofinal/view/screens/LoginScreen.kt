@@ -19,6 +19,7 @@ import com.example.fabioproyectofinal.model.navigation.AppScreens
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 import com.example.fabioproyectofinal.model.data.model.UsuarioLoginRequest
+import com.example.fabioproyectofinal.model.session.SessionManager
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -136,9 +137,18 @@ fun LoginScreen(navController: NavHostController) {
                 Text("Continuar", color = Color.White)
             }
             LaunchedEffect(estadoLogin) {
-                if (estadoLogin?.msg != null) {
-                    navController.navigate(route = AppScreens.MainScreenApp.route) {
-                        popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
+                estadoLogin?.let { estado ->
+                    if (estado.msg != null) {
+                        // Guardar datos del usuario
+                        SessionManager.idUsuario = estado.id_usuario
+                        SessionManager.nombre = estado.nombre
+                        SessionManager.email = estado.email
+                        SessionManager.username = estado.usuario
+
+                        // Ir a pantalla principal
+                        navController.navigate(route = AppScreens.MainScreenApp.route) {
+                            popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
+                        }
                     }
                 }
             }

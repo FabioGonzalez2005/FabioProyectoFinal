@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.navigation.AppScreens
+import com.example.fabioproyectofinal.model.session.SessionManager
 
 
 // Barra de navegación superior
@@ -47,7 +48,7 @@ fun TopBar(nombre: String, navController: NavHostController, onClick: () -> Unit
         }
         // Nombre del usuario
         Text(
-            text = nombre,
+            text = SessionManager.nombre ?: "Usuario",
             style = TextStyle(
                 color = Color(0xFFACBCA0),
                 fontSize = 14.sp,

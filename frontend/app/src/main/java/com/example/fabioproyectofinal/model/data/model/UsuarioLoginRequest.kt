@@ -8,6 +8,7 @@ data class UsuarioLoginRequest(
 data class LoginResponse(
     val msg: String? = null,
     val id_usuario: Int? = null,
+    val usuario: String? = null,
     val nombre: String? = null,
     val email: String? = null,
     val error: String? = null
