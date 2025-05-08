@@ -1,16 +1,12 @@
 package com.example.fabioproyectofinal.view.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,23 +42,28 @@ fun TopBar(nombre: String, navController: NavHostController, onClick: () -> Unit
                 modifier = Modifier.size(24.dp)
             )
         }
-        // Nombre del usuario
-        Text(
-            text = SessionManager.nombre ?: "Usuario",
-            style = TextStyle(
-                color = Color(0xFFACBCA0),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
-            )
-        )
-        // Icono de usuario
-        Image(
-            painter = painterResource(id = R.drawable.icon_user),
-            contentDescription = "Usuario",
-            modifier = Modifier
-                .size(24.dp)
-                .clickable { navController.navigate(route = AppScreens.RegisterScreen.route) }
-        )
 
+        // Nombre + icono
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = SessionManager.nombre ?: "Usuario",
+                style = TextStyle(
+                    color = Color(0xFFACBCA0),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            )
+            Image(
+                painter = painterResource(id = R.drawable.icon_user),
+                contentDescription = "Usuario",
+                modifier = Modifier
+                    .size(36.dp)
+                    .padding(start = 8.dp)
+                    .clickable {
+                        navController.navigate(route = AppScreens.RegisterScreen.route)
+                    }
+            )
+        }
     }
 }
+

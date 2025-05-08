@@ -23,7 +23,7 @@ class RegisterViewModel : ViewModel() {
             try {
                 val respuesta = ApiServer.apiService.registrarUsuario(usuario)
                 _registroEstado.value = respuesta
-                Log.d("AuthVM", "Registro exitoso: ${respuesta.msg}")
+                Log.d("RegisterVM", "Registro exitoso: ${respuesta.msg}")
             } catch (e: Exception) {
                 var errorMsg = "Error desconocido"
 
@@ -41,7 +41,7 @@ class RegisterViewModel : ViewModel() {
                     errorMsg = e.message ?: "Excepción desconocida"
                 }
 
-                Log.e("AuthVM", "Fallo en registro: $errorMsg", e)
+                Log.e("RegisterVM", "Fallo en registro: $errorMsg", e)
                 _registroEstado.value = MensajeResponse(error = errorMsg)
             }
         }
