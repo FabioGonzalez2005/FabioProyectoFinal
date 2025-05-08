@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.model.Clinic
 import com.example.fabioproyectofinal.model.navigation.AppScreens
+import coil.compose.rememberAsyncImagePainter
 
 // Tarjeta de clínica
 @Composable
@@ -51,15 +52,15 @@ fun ClinicaCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = clinic.src),
-                contentDescription = clinic.name,
+                painter = rememberAsyncImagePainter("http://10.0.2.2:5000/static/img/${clinic.src}"),
+                contentDescription = clinic.nombre,
                 modifier = Modifier
                     .size(110.dp)
                     .padding(end = 16.dp)
             )
             Column {
-                Text(clinic.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(clinic.address, fontSize = 14.sp, color = Color.Gray)
+                Text(clinic.nombre, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(clinic.direccion, fontSize = 14.sp, color = Color.Gray)
 
                 // Mostrar icono solo si está en favoritos
                 if (inFavourites) {
