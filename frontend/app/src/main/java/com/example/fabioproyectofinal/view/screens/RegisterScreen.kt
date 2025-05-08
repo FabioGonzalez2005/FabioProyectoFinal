@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,6 +26,7 @@ fun RegisterScreen(navController: NavHostController) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
     var confirmPassword by remember { mutableStateOf("") }
     val authViewModel: RegisterViewModel = viewModel()
     val estadoRegistro by authViewModel.registroEstado.collectAsState()
@@ -148,6 +151,21 @@ fun RegisterScreen(navController: NavHostController) {
                             contraseña = password
                         )
                         authViewModel.registrarUsuario(nuevoUsuario)
+                    } else {
+                        val errorMsg = when {
+                            username.isBlank() -> "Por favor, escribe tu nombre de usuario"
+                            fullname.isBlank() -> "Por favor, escribe tu nombre completo"
+                            email.isBlank() -> "Por favor, escribe un correo"
+                            password.isBlank() -> "Por favor, escribe una contraseña"
+                            confirmPassword.isBlank() -> "Por favor, confirma la contraseña escribiéndola de nuevo"
+                            !VerificationField.isEmailValid(email) -> "Correo electrónico no válido."
+                            password != confirmPassword -> "Las contraseñas no coinciden"
+                            !VerificationField.isUsernameValid(username) -> "Usuario inválido. Debe tener entre 6 y 20 caracteres, sin espacios"
+                            !VerificationField.isPasswordValid(password) -> "Contraseña inválida. Debe tener al menos 4 letras, un número y solo caracteres válidos"
+                            else -> "Completa todos los campos correctamente"
+                        }
+
+                        Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -157,8 +175,7 @@ fun RegisterScreen(navController: NavHostController) {
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(bottom = 36.dp)
-                    .width(160.dp),
-                enabled = formularioValido
+                    .width(160.dp)
             ) {
                 Text("Continuar", color = Color.White)
             }
