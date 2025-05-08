@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +24,7 @@ import com.example.fabioproyectofinal.model.data.model.UsuarioLoginRequest
 fun LoginScreen(navController: NavHostController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
     val loginViewModel: LoginViewModel = viewModel()
     val estadoLogin by loginViewModel.loginEstado.collectAsState()
     val formularioValido = username.isNotBlank() && password.isNotBlank()
@@ -112,6 +115,13 @@ fun LoginScreen(navController: NavHostController) {
                         loginViewModel.login(
                             UsuarioLoginRequest(usuario = username, contraseña = password)
                         )
+                    } else {
+                        val errorMsg = when {
+                            username.isBlank() -> "Por favor, escribe tu nombre de usuario"
+                            password.isBlank() -> "Por favor, escribe tu contraseña"
+                            else -> "Completa todos los campos correctamente"
+                        }
+                        Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -121,8 +131,7 @@ fun LoginScreen(navController: NavHostController) {
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(bottom = 36.dp)
-                    .width(160.dp),
-                enabled = formularioValido
+                    .width(160.dp)
             ) {
                 Text("Continuar", color = Color.White)
             }
@@ -133,7 +142,6 @@ fun LoginScreen(navController: NavHostController) {
                     }
                 }
             }
-
         }
     }
 }
