@@ -22,10 +22,10 @@ class DoctorViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = ApiServer.apiService.getDoctors()
-                Log.d("TESTBEBE", "Obtuve doctores: ${response.size}")
+                Log.d("DoctorVM", "Obtuve doctores: ${response.size}")
                 _doctors.value = response
             } catch (e: Exception) {
-                Log.e("TESTBEBE", "Error al obtener doctores: ${e.message}", e)
+                Log.e("DoctorVM", "Error al obtener doctores: ${e.message}", e)
             }
         }
     }

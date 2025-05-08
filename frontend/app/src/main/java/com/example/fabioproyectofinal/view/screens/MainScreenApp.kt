@@ -13,19 +13,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.model.Clinic
-import com.example.fabioproyectofinal.model.data.model.clinics
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.TopBar
+import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 
 @Composable
 fun MainScreenApp(navController: NavHostController) {
     var searchText by remember { mutableStateOf("") }
+    val clinicViewModel: ClinicViewModel = viewModel()
+    val clinics by clinicViewModel.clinics.collectAsState()
     val clinicasFiltradas = clinics.filter {
-        it.name.contains(searchText, ignoreCase = true) ||
-                it.address.contains(searchText, ignoreCase = true)
+        it.nombre.contains(searchText, ignoreCase = true) ||
+                it.direccion.contains(searchText, ignoreCase = true)
     }
     Scaffold(
         topBar = {

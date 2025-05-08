@@ -18,23 +18,28 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.R
-import com.example.fabioproyectofinal.model.data.model.clinics
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.ClinicActionButton
 import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.ProfessionalCard
 import com.example.fabioproyectofinal.view.components.TopBar
+import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
+import androidx.compose.runtime.getValue
 
 @Composable
 fun ClinicDetailScreen(navController: NavHostController) {
+    val clinicViewModel: ClinicViewModel = viewModel()
+    val clinics by clinicViewModel.clinics.collectAsState()
     Scaffold(
         topBar = {
             TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
@@ -55,7 +60,9 @@ fun ClinicDetailScreen(navController: NavHostController) {
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
-                ClinicaCard(clinic = clinics.first(), navController, true)
+                clinics.firstOrNull()?.let { clinic ->
+                    ClinicaCard(clinic = clinic, navController = navController, inFavourites = true)
+                }
             }
             // Botones
             Row(

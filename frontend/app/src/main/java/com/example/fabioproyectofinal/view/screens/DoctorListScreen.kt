@@ -13,10 +13,10 @@ import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 @Composable
 fun DoctorListScreen(navController: NavHostController, viewModel: DoctorViewModel = viewModel()) {
     val doctorList by viewModel.doctors.collectAsState()
-    Log.d("TESTBEBE", "Paantalla cargada")
+    Log.d("DoctorListScreen", "Pantalla cargada")
     Column(modifier = Modifier.padding(top = 16.dp)) {
         doctorList.forEach { doctor ->
-            Log.d("TESTBEBE", (doctor.id_doctor).toString())
+            Log.d("DoctorListScreen", (doctor.id_doctor).toString())
 
             ProfessionalCard(
 
