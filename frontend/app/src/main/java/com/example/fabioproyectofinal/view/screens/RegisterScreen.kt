@@ -16,6 +16,7 @@ import com.example.fabioproyectofinal.model.navigation.AppScreens
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fabioproyectofinal.viewmodel.RegisterViewModel
 import com.example.fabioproyectofinal.model.data.model.UsuarioRegistroRequest
+import com.example.fabioproyectofinal.model.utils.VerificationField
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {
@@ -27,10 +28,10 @@ fun RegisterScreen(navController: NavHostController) {
     val authViewModel: RegisterViewModel = viewModel()
     val estadoRegistro by authViewModel.registroEstado.collectAsState()
     val formularioValido = fullname.isNotBlank()
-            && username.isNotBlank()
-            && email.isNotBlank()
-            && password.isNotBlank()
+            && VerificationField.isEmailValid(email)
             && confirmPassword == password
+            && VerificationField.isUsernameValid(username)
+            && VerificationField.isPasswordValid(password)
 
     Scaffold(
         containerColor = Color(0xFFFFF9F2)

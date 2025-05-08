@@ -32,5 +32,10 @@ No puede contener espacios
         return isCorrectLength && hasOnlyAllowedChars && hasNoSpaces
     }
 
+    fun isEmailValid(email: String): Boolean {
+        return email.contains("@") && email.length >= 5
+    }
+
+
 
 }
