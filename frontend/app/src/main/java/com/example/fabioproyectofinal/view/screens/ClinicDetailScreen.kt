@@ -1,5 +1,7 @@
 package com.example.fabioproyectofinal.view.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,11 +37,14 @@ import com.example.fabioproyectofinal.view.components.ProfessionalCard
 import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 
 @Composable
 fun ClinicDetailScreen(navController: NavHostController) {
     val clinicViewModel: ClinicViewModel = viewModel()
     val clinics by clinicViewModel.clinics.collectAsState()
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
@@ -47,7 +52,7 @@ fun ClinicDetailScreen(navController: NavHostController) {
         bottomBar = {
             BottomBar(navController = navController)
         },
-        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+        containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -70,8 +75,12 @@ fun ClinicDetailScreen(navController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 ClinicActionButton("Dirección", R.drawable.icon_map) { /* Acción */ }
-                ClinicActionButton("Llamar", R.drawable.icon_call) { /* Acción */ }
-                ClinicActionButton("Instagram", R.drawable.icon_instagram) { /* Acción */ }
+                ClinicActionButton("Llamar", R.drawable.icon_call) {
+                    val intent = Intent(Intent.ACTION_DIAL)
+                    intent.data = "tel:+(34)689074945".toUri()
+                    context.startActivity(intent)
+                }
+                ClinicActionButton("Web", R.drawable.webpage) { /* Acción */ }
             }
             Spacer(modifier = Modifier.size(24.dp))
             Column(

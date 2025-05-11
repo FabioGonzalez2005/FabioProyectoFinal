@@ -19,6 +19,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fabioproyectofinal.viewmodel.RegisterViewModel
 import com.example.fabioproyectofinal.model.data.model.UsuarioRegistroRequest
 import com.example.fabioproyectofinal.model.utils.VerificationField
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import com.example.fabioproyectofinal.R
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {
@@ -46,6 +49,16 @@ fun RegisterScreen(navController: NavHostController) {
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo de CanariaSS",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp, bottom = 16.dp)
+                    .height(150.dp)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            )
+
             Text("Cuenta", color = Color(0xFFB2C2A4), fontSize = 40.sp)
 
             Row(

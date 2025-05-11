@@ -1,6 +1,7 @@
 package com.example.fabioproyectofinal.view.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,12 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 import com.example.fabioproyectofinal.model.data.model.UsuarioLoginRequest
 import com.example.fabioproyectofinal.model.session.SessionManager
@@ -40,6 +43,16 @@ fun LoginScreen(navController: NavHostController) {
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo de CanariaSS",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp, bottom = 16.dp)
+                    .height(150.dp)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            )
+
             Text("Cuenta", color = Color(0xFFB2C2A4), fontSize = 40.sp)
 
             Row(
