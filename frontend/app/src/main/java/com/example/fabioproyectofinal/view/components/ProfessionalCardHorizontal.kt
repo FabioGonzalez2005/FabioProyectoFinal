@@ -17,7 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fabioproyectofinal.R
@@ -56,24 +59,17 @@ fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
-                Row {
-                    Text(
-                        text = "Precio: ",
-                        fontSize = 12.sp,
-                        color = Color.Gray
-                    )
-                    Text(
-                        text = price,
-                        fontSize = 12.sp,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = " €",
-                        fontSize = 12.sp,
-                        color = Color.Gray
-                    )
-                }
+
+                Text(
+                    buildAnnotatedString {
+                        append("Precio: ")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append(price)
+                        }
+                        append(" €") },
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
             }
         }
     }
