@@ -53,7 +53,7 @@ fun LoginScreen(navController: NavHostController) {
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
 
-            Text("Cuenta", color = Color(0xFFB2C2A4), fontSize = 40.sp)
+            Text("Iniciar sesión", color = Color(0xFFB2C2A4), fontSize = 40.sp)
 
             Row(
                 modifier = Modifier

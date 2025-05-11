@@ -59,7 +59,7 @@ fun RegisterScreen(navController: NavHostController) {
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
 
-            Text("Cuenta", color = Color(0xFFB2C2A4), fontSize = 40.sp)
+            Text("Crea una cuenta", color = Color(0xFFB2C2A4), fontSize = 40.sp)
 
             Row(
                 modifier = Modifier

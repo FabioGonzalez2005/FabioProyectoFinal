@@ -45,6 +45,7 @@ fun ClinicDetailScreen(navController: NavHostController) {
     val clinicViewModel: ClinicViewModel = viewModel()
     val clinics by clinicViewModel.clinics.collectAsState()
     val context = LocalContext.current
+    val clinic = clinics.firstOrNull()
     Scaffold(
         topBar = {
             TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
@@ -65,8 +66,8 @@ fun ClinicDetailScreen(navController: NavHostController) {
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
-                clinics.firstOrNull()?.let { clinic ->
-                    ClinicaCard(clinic = clinic, navController = navController, inFavourites = true)
+                clinic?.let {
+                    ClinicaCard(clinic = it, navController = navController, inFavourites = true)
                 }
             }
             // Botones
@@ -76,11 +77,19 @@ fun ClinicDetailScreen(navController: NavHostController) {
             ) {
                 ClinicActionButton("Dirección", R.drawable.icon_map) { /* Acción */ }
                 ClinicActionButton("Llamar", R.drawable.icon_call) {
-                    val intent = Intent(Intent.ACTION_DIAL)
-                    intent.data = "tel:+(34)689074945".toUri()
-                    context.startActivity(intent)
+                    clinic?.let {
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        intent.data = "tel:+34${it.telefono}".toUri()
+                        context.startActivity(intent)
+                    }
                 }
-                ClinicActionButton("Web", R.drawable.webpage) { /* Acción */ }
+
+                ClinicActionButton("Web", R.drawable.webpage) {
+                    clinic?.let {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.web))
+                        context.startActivity(intent)
+                    }
+                }
             }
             Spacer(modifier = Modifier.size(24.dp))
             Column(
