@@ -8,25 +8,35 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.fabioproyectofinal.model.data.model.Appointment
 import com.example.fabioproyectofinal.model.data.model.AppointmentStatus
-import com.example.fabioproyectofinal.model.data.model.appointments
+import com.example.fabioproyectofinal.model.data.model.Clinic
+import com.example.fabioproyectofinal.model.data.model.Doctor
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.AppointmentCard
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.TopBar
+import com.example.fabioproyectofinal.viewmodel.AppointmentViewModel
+import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
+import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 
 @Composable
 fun AppointmentsScreen(navController: NavHostController) {
-    val confirmedCount = appointments.count { it.status == AppointmentStatus.Confirmado }
-    val pendingCount = appointments.count { it.status == AppointmentStatus.Pendiente }
-    val cancelledCount = appointments.count { it.status == AppointmentStatus.Cancelado }
+    val appointmentViewModel: AppointmentViewModel = viewModel()
+    val appointments by appointmentViewModel.citas.collectAsState()
+    val confirmedCount = appointments.count { it.estado == "Confirmada" }
+    val pendingCount = appointments.count { it.estado == "Pendiente" }
+    val cancelledCount = appointments.count { it.estado == "Cancelada" }
 
     Scaffold(
         topBar = {
@@ -165,14 +175,34 @@ fun AppointmentsScreen(navController: NavHostController) {
 }
 
 @Composable
-fun AppointmentList(navController: NavHostController? = null) {
+fun AppointmentList(
+    navController: NavHostController? = null,
+    viewModel: DoctorViewModel = viewModel()
+) {
+    val appointmentViewModel: AppointmentViewModel = viewModel()
+    val clinicViewModel: ClinicViewModel = viewModel()
+
+    val citas by appointmentViewModel.citas.collectAsState()
+    val doctorList by viewModel.doctors.collectAsState()
+    val clinicas by clinicViewModel.clinics.collectAsState()
+
     LazyColumn(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .fillMaxSize()
     ) {
-        items(appointments) { appointment ->
-            AppointmentCard(appointment = appointment, navController = navController)
+        items(citas) { cita: Appointment ->
+            val doctor: Doctor? = doctorList.find { it.id_doctor == cita.id_doctor }
+            val clinica: Clinic? = doctor?.let { doc ->
+                clinicas.find { it.id_clinica == doc.id_clinica }
+            }
+
+            AppointmentCard(
+                appointment = cita,
+                doctor = doctor,
+                clinic = clinica,
+                navController = navController
+            )
         }
     }
 }

@@ -15,12 +15,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.model.Appointment
 import com.example.fabioproyectofinal.model.data.model.AppointmentStatus
+import com.example.fabioproyectofinal.model.data.model.Clinic
+import com.example.fabioproyectofinal.model.data.model.Doctor
 
 @Composable
-fun AppointmentCard(appointment: Appointment, navController: NavHostController? = null) {
+fun AppointmentCard(
+    appointment: Appointment,
+    doctor: Doctor?,
+    clinic: Clinic?,
+    navController: NavHostController? = null
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
@@ -80,11 +88,10 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
         )
     }
 
-    // Aquí decidimos el color del estado dinámicamente
-    val statusColor = when (appointment.status) {
-        AppointmentStatus.Confirmado -> Color(0xFFB2C2A4) // Verde
-        AppointmentStatus.Cancelado -> Color(0xFFA64646)  // Rojo
-        AppointmentStatus.Pendiente -> Color(0xFFBD8F45)  // Naranja
+    val statusColor = when (appointment.estado) {
+        "Confirmada" -> Color(0xFFB2C2A4)
+        "Cancelada" -> Color(0xFFA64646)
+        "Pendiente" -> Color(0xFFBD8F45)
         else -> Color.Gray
     }
 
@@ -106,8 +113,8 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
-                        painter = painterResource(id = appointment.src),
-                        contentDescription = appointment.name,
+                        painter = rememberAsyncImagePainter("http://10.0.2.2:5000/static/img/${clinic?.src}"),
+                        contentDescription = clinic?.nombre,
                         modifier = Modifier
                             .size(110.dp)
                             .padding(end = 16.dp)
@@ -115,12 +122,12 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = appointment.name,
+                            text = clinic?.nombre ?: "Clínica no disponible",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = appointment.address,
+                            text = clinic?.direccion ?: "Dirección no disponible",
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
@@ -137,7 +144,7 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "${appointment.status}",
+                                text = appointment.estado,
                                 fontSize = 14.sp,
                                 color = statusColor,
                                 fontWeight = FontWeight.Bold
@@ -162,14 +169,14 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = appointment.date,
+                            text = appointment.fecha_cita,
                             fontSize = 18.sp,
                             color = Color(0xFFB2C2A4),
                             fontWeight = FontWeight.Bold
                         )
                     }
                     Text(
-                        text = "13:00",
+                        text = appointment.hora_cita,
                         fontSize = 18.sp,
                         color = Color(0xFFB2C2A4),
                         fontWeight = FontWeight.Bold
@@ -183,29 +190,28 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
                             painter = painterResource(id = R.drawable.icon_user),
-                            contentDescription = appointment.professional,
+                            contentDescription = doctor?.nombre,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
                             Text(
-                                text = appointment.professional,
+                                text = doctor?.nombre ?: "Profesional no disponible",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFFB2C2A4)
                             )
                             Text(
-                                text = appointment.specialty,
+                                text = doctor?.especialidad ?: "Especialidad desconocida",
                                 fontSize = 12.sp,
                                 color = Color.Gray
                             )
                         }
                     }
-                    if (appointment.status == AppointmentStatus.Cancelado) {
+
+                    if (appointment.estado == "Cancelado") {
                         Button(
-                            onClick = {
-                                println("Ver motivos de la cancelación")
-                            },
+                            onClick = { println("Ver motivos de la cancelación") },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                             shape = RoundedCornerShape(8.dp)
                         ) {
@@ -220,7 +226,6 @@ fun AppointmentCard(appointment: Appointment, navController: NavHostController? 
                             Text("Cancelar", color = Color.White)
                         }
                     }
-
                 }
             }
         }
