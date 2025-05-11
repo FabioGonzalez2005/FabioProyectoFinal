@@ -2,6 +2,7 @@ package com.example.fabioproyectofinal.view.screens
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,13 +40,19 @@ import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
+import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 
 @Composable
-fun ClinicDetailScreen(navController: NavHostController) {
+fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewModel = viewModel()) {
     val clinicViewModel: ClinicViewModel = viewModel()
     val clinics by clinicViewModel.clinics.collectAsState()
+    val doctorList by viewModel.doctors.collectAsState()
     val context = LocalContext.current
     val clinic = clinics.firstOrNull()
+    val filteredDoctors = clinic?.let { currentClinic ->
+        doctorList.filter { it.id_clinica == currentClinic.id_clinica }
+    } ?: emptyList()
+
     Scaffold(
         topBar = {
             TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
@@ -115,25 +122,22 @@ fun ClinicDetailScreen(navController: NavHostController) {
                         )
                         Spacer(modifier = Modifier.size(8.dp))
 
-                        // Lista de profesionales
-                        val professionals = listOf(
-                            "Alberto Medina" to "Osteópata",
-                            "Jimena Cáceres" to "Dermatología",
-                            "Armando Pérez" to "Oncología",
-                            "Cristina Morales" to "Rehabilitación",
-                        )
                         LazyColumn {
-                            items(professionals.chunked(2)) { pair ->
+                            items(filteredDoctors.chunked(2)) { pair ->
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    pair.forEach { (name, specialty) ->
+                                    pair.forEach { doctor ->
                                         ProfessionalCard(
-                                            name = name,
-                                            specialty = specialty,
-                                            navController
+                                            name = doctor.nombre,
+                                            specialty = doctor.especialidad,
+                                            navController = navController
                                         ) { /* Acción */ }
+                                        Log.d("DEBUG", "ID clínica actual: ${clinic?.id_clinica}")
+                                        doctorList.forEach {
+                                            Log.d("DEBUG", "Doctor ${it.nombre}, id_clinica: ${it.id_clinica}")
+                                        }
                                     }
                                 }
                                 Spacer(modifier = Modifier.height(12.dp))
