@@ -154,6 +154,36 @@ def registrar_usuario():
 def obtener_clinicas():
     return ejecutar_sql('SELECT * FROM Clinica ORDER BY id_clinica')
 
+# ======================= DISPONIBILIDAD =======================
+# Ver horarios de doctores
+@app.route('/doctor/<int:id_doctor>/disponibilidad/completa', methods=['GET'])
+def ver_disponibilidad_completa(id_doctor):
+    sql = '''
+        SELECT id_disponibilidad, dia_semana, hora_inicio, hora_fin, disponible
+        FROM "Disponibilidad_Doctor"
+        WHERE id_doctor = %s
+        ORDER BY dia_semana, hora_inicio
+    '''
+    return ejecutar_sql(sql, (id_doctor,))
+
+@app.route('/doctor/disponibilidad/reservar', methods=['POST'])
+def reservar_franja():
+    datos = request.get_json()
+    id_disponibilidad = datos.get('id_disponibilidad')
+
+    sql = '''
+        UPDATE "Disponibilidad_Doctor"
+        SET disponible = FALSE
+        WHERE id_disponibilidad = %s
+    '''
+    return ejecutar_sql(sql, (id_disponibilidad,), es_insert=True)
+
+# ======================= CITAS =======================
+# Ver todas las citas
+@app.route('/citas', methods=['GET'])
+def obtener_citas():
+    return ejecutar_sql('SELECT * FROM cita ORDER BY id_cita')
+
 # ======================= PACIENTES =======================
 
 # Registro de paciente
