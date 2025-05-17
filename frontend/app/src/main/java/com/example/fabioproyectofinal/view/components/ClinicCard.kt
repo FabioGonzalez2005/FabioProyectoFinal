@@ -52,7 +52,7 @@ fun ClinicaCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = rememberAsyncImagePainter("http://10.0.2.2:5000/static/img/${clinic.src}"),
+                painter = rememberAsyncImagePainter(clinic.src),
                 contentDescription = clinic.nombre,
                 modifier = Modifier
                     .size(110.dp)

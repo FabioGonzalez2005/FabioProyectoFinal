@@ -37,9 +37,9 @@ import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 fun AppointmentsScreen(navController: NavHostController, loginViewModel: LoginViewModel = viewModel()) {
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val appointments by appointmentViewModel.citas.collectAsState()
-    val confirmedCount = appointments.count { it.estado == "Confirmada" }
+    val confirmedCount = appointments.count { it.estado == "Confirmado" }
     val pendingCount = appointments.count { it.estado == "Pendiente" }
-    val cancelledCount = appointments.count { it.estado == "Cancelada" }
+    val cancelledCount = appointments.count { it.estado == "Cancelado" }
     val loginEstado by loginViewModel.loginEstado.collectAsState()
 
     LaunchedEffect(loginEstado) {

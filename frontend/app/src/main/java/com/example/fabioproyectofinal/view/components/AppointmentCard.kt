@@ -18,9 +18,10 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.model.Appointment
-import com.example.fabioproyectofinal.model.data.model.AppointmentStatus
 import com.example.fabioproyectofinal.model.data.model.Clinic
 import com.example.fabioproyectofinal.model.data.model.Doctor
+import com.example.fabioproyectofinal.model.utils.formatFecha
+import com.example.fabioproyectofinal.model.utils.formatHora
 
 @Composable
 fun AppointmentCard(
@@ -89,8 +90,8 @@ fun AppointmentCard(
     }
 
     val statusColor = when (appointment.estado) {
-        "Confirmada" -> Color(0xFFB2C2A4)
-        "Cancelada" -> Color(0xFFA64646)
+        "Confirmado" -> Color(0xFFB2C2A4)
+        "Cancelado" -> Color(0xFFA64646)
         "Pendiente" -> Color(0xFFBD8F45)
         else -> Color.Gray
     }
@@ -113,7 +114,7 @@ fun AppointmentCard(
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
-                        painter = rememberAsyncImagePainter("http://10.0.2.2:5000/static/img/${clinic?.src}"),
+                        painter = rememberAsyncImagePainter(clinic?.src),
                         contentDescription = clinic?.nombre,
                         modifier = Modifier
                             .size(110.dp)
@@ -168,15 +169,17 @@ fun AppointmentCard(
                             color = Color.Black
                         )
                         Spacer(modifier = Modifier.width(4.dp))
+                        // Fecha
                         Text(
-                            text = appointment.fecha_cita,
+                            text = formatFecha(appointment.fecha_cita),
                             fontSize = 18.sp,
                             color = Color(0xFFB2C2A4),
                             fontWeight = FontWeight.Bold
                         )
                     }
+                    //Hora
                     Text(
-                        text = appointment.fecha_cita,
+                        text = formatHora(appointment.fecha_cita),
                         fontSize = 18.sp,
                         color = Color(0xFFB2C2A4),
                         fontWeight = FontWeight.Bold

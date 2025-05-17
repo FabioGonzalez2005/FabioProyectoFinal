@@ -19,7 +19,7 @@ import com.example.fabioproyectofinal.view.screens.SelectProfessionalScreen
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
-            RegisterScreen(navController)
+            LoginScreen(navController)
         }
         composable("clinic_screen") { backStackEntry ->
             val clinicId = backStackEntry.arguments?.getString("clinicId")?.toIntOrNull()

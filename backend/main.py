@@ -1,6 +1,14 @@
 import psycopg2
 from flask import Flask, jsonify, request
 import bcrypt
+import cloudinary
+import cloudinary.uploader
+
+cloudinary.config(
+    cloud_name='dr8es2ate',
+    api_key='418891476929184',
+    api_secret='YGQKwPgfMByKjXiffUWXlP1g65k'
+)
 
 app = Flask(__name__)
 
@@ -153,6 +161,18 @@ def registrar_usuario():
 @app.route('/clinicas', methods=['GET'])
 def obtener_clinicas():
     return ejecutar_sql('SELECT * FROM Clinica ORDER BY id_clinica')
+
+# Obtener clínicas favoritas de un usuario
+@app.route('/usuarios/<int:id_usuario>/favoritos', methods=['GET'])
+def favoritos_usuario(id_usuario):
+    sql = '''
+        SELECT c.*
+        FROM usuario_favorito uf
+        JOIN favorito f ON uf.id_favorito = f.id_favorito
+        JOIN clinica c ON f.id_clinica = c.id_clinica
+        WHERE uf.id_usuario = %s
+    '''
+    return ejecutar_sql(sql, (id_usuario,))
 
 # ======================= DISPONIBILIDAD =======================
 # Ver horarios de doctores
