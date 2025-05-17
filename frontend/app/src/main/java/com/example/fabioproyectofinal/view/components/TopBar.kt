@@ -26,7 +26,7 @@ import com.example.fabioproyectofinal.model.session.SessionManager
 
 // Barra de navegación superior
 @Composable
-fun TopBar(nombre: String, navController: NavHostController, onClick: () -> Unit) {
+fun TopBar(navController: NavHostController, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

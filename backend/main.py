@@ -179,10 +179,19 @@ def reservar_franja():
     return ejecutar_sql(sql, (id_disponibilidad,), es_insert=True)
 
 # ======================= CITAS =======================
-# Ver todas las citas
+# Ver todas las citas por ID de usuario
 @app.route('/citas', methods=['GET'])
 def obtener_citas():
-    return ejecutar_sql('SELECT * FROM cita ORDER BY id_cita')
+    from flask import request, jsonify
+
+    id_usuario = request.args.get('id_usuario')
+
+    if not id_usuario:
+        return jsonify({'error': 'id_usuario requerido'}), 400
+
+    sql = "SELECT * FROM Cita WHERE id_usuario = %s ORDER BY id_cita"
+    return ejecutar_sql(sql, params=(id_usuario,))
+
 
 # ======================= PACIENTES =======================
 

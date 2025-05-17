@@ -176,7 +176,7 @@ fun AppointmentCard(
                         )
                     }
                     Text(
-                        text = appointment.hora_cita,
+                        text = appointment.fecha_cita,
                         fontSize = 18.sp,
                         color = Color(0xFFB2C2A4),
                         fontWeight = FontWeight.Bold

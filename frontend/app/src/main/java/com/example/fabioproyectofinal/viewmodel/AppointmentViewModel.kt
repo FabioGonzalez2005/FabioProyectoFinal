@@ -14,14 +14,10 @@ class AppointmentViewModel : ViewModel() {
     private val _citas = MutableStateFlow<List<Appointment>>(emptyList())
     val citas: StateFlow<List<Appointment>> = _citas
 
-    init {
-        fetchCitas()
-    }
-
-    private fun fetchCitas() {
+    fun fetchCitas(idUsuario: Int) {
         viewModelScope.launch {
             try {
-                val response = ApiServer.apiService.getCitas()
+                val response = ApiServer.apiService.getCitas(idUsuario)
                 Log.d("CitaVM", "Obtuve citas: ${response.size}")
                 _citas.value = response
             } catch (e: Exception) {

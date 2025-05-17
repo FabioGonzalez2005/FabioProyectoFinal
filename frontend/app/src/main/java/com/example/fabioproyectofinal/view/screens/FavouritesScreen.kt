@@ -30,7 +30,7 @@ fun FavouritesScreen(navController: NavHostController) {
 
     Scaffold(
         topBar = {
-            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
+            TopBar(navController = navController) { /* Acción */ }
         },
         bottomBar = {
             BottomBar(navController = navController)

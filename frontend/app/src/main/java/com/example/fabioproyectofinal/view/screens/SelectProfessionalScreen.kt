@@ -51,7 +51,7 @@ fun SelectProfessionalScreen(navController: NavHostController) {
 
     Scaffold(
         topBar = {
-            TopBar("Fabio González Waschkowitz", navController = navController) { }
+            TopBar(navController = navController) { }
         },
         bottomBar = {
             BottomBar(navController = navController)

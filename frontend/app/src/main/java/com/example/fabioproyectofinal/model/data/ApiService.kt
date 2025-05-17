@@ -11,6 +11,7 @@ import com.example.fabioproyectofinal.model.data.model.UsuarioRegistroRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiService {
     @GET("/doctores")
@@ -29,5 +30,5 @@ interface ApiService {
     suspend fun getDisponibilidadDoctor(@retrofit2.http.Path("id") idDoctor: Int): List<Availability>
 
     @GET("/citas")
-    suspend fun getCitas(): List<Appointment>
+    suspend fun getCitas(@Query("id_usuario") idUsuario: Int): List<Appointment>
 }

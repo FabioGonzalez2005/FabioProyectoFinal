@@ -8,9 +8,8 @@ enum class AppointmentStatus {
 
 data class Appointment(
     val id_cita: Int,
-    val id_paciente: Int,
+    val id_usuario: Int,
     val id_doctor: Int,
     val fecha_cita: String,
-    val hora_cita: String,
     val estado: String
 )

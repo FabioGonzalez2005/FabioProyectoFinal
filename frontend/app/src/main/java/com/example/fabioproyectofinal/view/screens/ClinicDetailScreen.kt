@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,9 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
@@ -38,9 +43,17 @@ import com.example.fabioproyectofinal.view.components.ProfessionalCard
 import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewModel = viewModel()) {
@@ -48,6 +61,7 @@ fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewMo
     val clinics by clinicViewModel.clinics.collectAsState()
     val doctorList by viewModel.doctors.collectAsState()
     val context = LocalContext.current
+    val showMapDialog = remember { mutableStateOf(false) }
     val clinic = clinics.firstOrNull()
     val filteredDoctors = clinic?.let { currentClinic ->
         doctorList.filter { it.id_clinica == currentClinic.id_clinica }
@@ -55,7 +69,7 @@ fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewMo
 
     Scaffold(
         topBar = {
-            TopBar("Fabio González Waschkowitz", navController = navController) { /* Acción */ }
+            TopBar(navController = navController) { /* Acción */ }
         },
         bottomBar = {
             BottomBar(navController = navController)
@@ -82,7 +96,9 @@ fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewMo
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                ClinicActionButton("Dirección", R.drawable.icon_map) { /* Acción */ }
+                ClinicActionButton("Ubicación", R.drawable.icon_map) {
+                    showMapDialog.value = true
+                }
                 ClinicActionButton("Llamar", R.drawable.icon_call) {
                     clinic?.let {
                         val intent = Intent(Intent.ACTION_DIAL)
@@ -136,7 +152,10 @@ fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewMo
                                         ) { /* Acción */ }
                                         Log.d("DEBUG", "ID clínica actual: ${clinic?.id_clinica}")
                                         doctorList.forEach {
-                                            Log.d("DEBUG", "Doctor ${it.nombre}, id_clinica: ${it.id_clinica}")
+                                            Log.d(
+                                                "DEBUG",
+                                                "Doctor ${it.nombre}, id_clinica: ${it.id_clinica}"
+                                            )
                                         }
                                     }
                                 }
@@ -146,6 +165,64 @@ fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewMo
                     }
                 }
             }
+        }
+    }
+    if (showMapDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showMapDialog.value = false },
+            confirmButton = {
+                Button(
+                    onClick = { showMapDialog.value = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB2C2A4)
+                    ),
+                    shape = RoundedCornerShape(6.dp),
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .width(160.dp)
+                ) {
+                    Text("Cerrar", color = Color.White)
+                }
+            },
+            title = {
+                Text(
+                    text = "Ubicación",
+                    color = Color(0xFFB2C2A4),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .background(Color(0xFFFFF9F2))
+                        .padding(top = 8.dp)
+                ) {
+                    GoogleMapView()
+                }
+            },
+            containerColor = Color(0xFFFFF9F2)
+        )
+    }
+}
+
+@Composable
+fun GoogleMapView() {
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(LatLng(28.93, -13.66), 15f)
+    }
+
+    Box(modifier = Modifier
+        .height(300.dp)
+        .fillMaxWidth()) {
+        GoogleMap(
+            modifier = Modifier.matchParentSize(),
+            cameraPositionState = cameraPositionState
+        ) {
+            Marker(
+                state = MarkerState(position = LatLng(28.93, -13.66)),
+                title = "Clínica"
+            )
         }
     }
 }
