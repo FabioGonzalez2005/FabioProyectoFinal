@@ -7,5 +7,5 @@ data class Clinic(
     val src: String,
     val telefono: Int,
     val web: String,
-    val inFavourites: Boolean
+    val inFavourites: Boolean = false
 )

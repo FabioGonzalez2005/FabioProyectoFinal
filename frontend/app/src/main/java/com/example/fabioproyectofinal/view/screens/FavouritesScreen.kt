@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,61 +15,57 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
-import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
+import com.example.fabioproyectofinal.model.session.SessionManager
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.TopBar
+import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
+import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 
 @Composable
 fun FavouritesScreen(navController: NavHostController) {
     var searchText by remember { mutableStateOf("") }
-    val clinicViewModel: ClinicViewModel = viewModel()
-    val clinics by clinicViewModel.clinics.collectAsState()
-    val clinicasFiltradas = clinics.filter {
+    val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
+    val clinics by favouritesViewModel.favoritas.collectAsState()
+    val clinicsConMarca = clinics.map { it.copy(inFavourites = true) }
+
+    LaunchedEffect(Unit) {
+        SessionManager.idUsuario?.let { id ->
+            Log.d("FavouritesScreen", "Cargando favoritos para usuario: $id")
+            favouritesViewModel.fetchFavoritas(id)
+        }
+    }
+
+    val clinicasFiltradas = clinicsConMarca.filter {
         it.nombre.contains(searchText, ignoreCase = true) ||
                 it.direccion.contains(searchText, ignoreCase = true)
     }
 
     Scaffold(
-        topBar = {
-            TopBar(navController = navController) { /* Acción */ }
-        },
-        bottomBar = {
-            BottomBar(navController = navController)
-        },
-        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+        topBar = { TopBar(navController = navController) {} },
+        bottomBar = { BottomBar(navController = navController) },
+        containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFFFF9F2))
-                .height(64.dp)
                 .padding(innerPadding)
         ) {
-            // "Buscador"
             Text(
                 text = "Favoritos",
                 color = Color(0xFFB2C2A4),
                 fontSize = 40.sp,
-                modifier = Modifier
-                    .padding(start = 16.dp, bottom = 16.dp)
+                modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
             )
-            // Buscador de clínicas
+
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
                 leadingIcon = {
-                    Icon(
-                        Icons.Filled.Search,
-                        contentDescription = "Buscar",
-                        modifier = Modifier.size(18.dp)
-                    )
+                    Icon(Icons.Filled.Search, contentDescription = "Buscar", modifier = Modifier.size(18.dp))
                 },
                 placeholder = {
-                    Text(
-                        "Nombre clínica o dirección",
-                        fontSize = 18.sp,
-                        color = Color(0xFFB2C2A4),
-                    )
+                    Text("Nombre clínica o dirección", fontSize = 18.sp, color = Color(0xFFB2C2A4))
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -78,16 +75,10 @@ fun FavouritesScreen(navController: NavHostController) {
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
-                    disabledBorderColor = Color.Transparent,
-                    errorBorderColor = Color.Transparent,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color.White,
-                    errorContainerColor = Color.White,
                     cursorColor = MaterialTheme.colorScheme.primary
                 ),
-                singleLine = true
             )
+
             ClinicList(clinicasFiltradas, navController, true)
         }
     }

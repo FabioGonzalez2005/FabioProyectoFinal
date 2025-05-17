@@ -16,17 +16,37 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.model.Clinic
+import com.example.fabioproyectofinal.model.session.SessionManager
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
+import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
 
 @Composable
 fun MainScreenApp(navController: NavHostController) {
     var searchText by remember { mutableStateOf("") }
     val clinicViewModel: ClinicViewModel = viewModel()
+    val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
+
     val clinics by clinicViewModel.clinics.collectAsState()
-    val clinicasFiltradas = clinics.filter {
+    val favoritas by favouritesViewModel.favoritas.collectAsState()
+
+// Cargar favoritos al entrar
+    LaunchedEffect(Unit) {
+        SessionManager.idUsuario?.let { id ->
+            favouritesViewModel.fetchFavoritas(id)
+        }
+    }
+
+// Marcar favoritas
+    val idsFavoritos = favoritas.map { it.id_clinica }.toSet()
+    val clinicsConMarca = clinics.map { clinica ->
+        clinica.copy(inFavourites = clinica.id_clinica in idsFavoritos)
+    }
+
+// Filtrar por búsqueda
+    val clinicasFiltradas = clinicsConMarca.filter {
         it.nombre.contains(searchText, ignoreCase = true) ||
                 it.direccion.contains(searchText, ignoreCase = true)
     }
