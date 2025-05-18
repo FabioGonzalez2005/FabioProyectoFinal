@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -16,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.data.model.Appointment
 import com.example.fabioproyectofinal.model.data.model.Clinic
@@ -31,6 +34,7 @@ fun AppointmentCard(
     navController: NavHostController? = null
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     if (showDialog) {
         AlertDialog(
@@ -114,7 +118,13 @@ fun AppointmentCard(
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
-                        painter = rememberAsyncImagePainter(clinic?.src),
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(context)
+                                .data(clinic?.src)
+                                .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
+                                .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                                .build()
+                        ),
                         contentDescription = clinic?.nombre,
                         modifier = Modifier
                             .size(110.dp)
@@ -192,7 +202,13 @@ fun AppointmentCard(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
-                            painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp"),
+                            painter = rememberAsyncImagePainter(
+                                ImageRequest.Builder(context)
+                                    .data("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp")
+                                    .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
+                                    .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                                    .build()
+                            ),
                             contentDescription = doctor?.nombre,
                             modifier = Modifier.size(20.dp)
                         )

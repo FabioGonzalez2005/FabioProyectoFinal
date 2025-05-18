@@ -22,6 +22,8 @@ import com.example.fabioproyectofinal.model.utils.VerificationField
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.example.fabioproyectofinal.R
 
 @Composable
@@ -51,7 +53,13 @@ fun RegisterScreen(navController: NavHostController) {
                 .padding(horizontal = 16.dp)
         ) {
             Image(
-                painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/logo_ozj4ng.webp"),
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(context)
+                        .data("https://res.cloudinary.com/dr8es2ate/image/upload/logo_ozj4ng.webp")
+                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
+                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                        .build()
+                ),
                 contentDescription = "Logo de CanariaSS",
                 modifier = Modifier
                     .fillMaxWidth()

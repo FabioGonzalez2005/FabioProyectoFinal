@@ -17,13 +17,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 
 // Botón de acción con ícono y texto
 @Composable
 fun ClinicActionButton(text: String, iconRes: String, onClick: () -> Unit) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .size(width = 112.dp, height = 82.dp)
@@ -39,8 +43,15 @@ fun ClinicActionButton(text: String, iconRes: String, onClick: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+
             Image(
-                painter = rememberAsyncImagePainter(iconRes),
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(context)
+                        .data(iconRes)
+                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
+                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                        .build()
+                ),
                 contentDescription = text,
                 modifier = Modifier.size(40.dp)
             )

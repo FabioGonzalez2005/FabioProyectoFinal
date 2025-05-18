@@ -12,15 +12,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.example.fabioproyectofinal.model.data.model.History
 
 @Composable
 fun HistoryCard(history: History, navController: NavHostController? = null) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,7 +46,13 @@ fun HistoryCard(history: History, navController: NavHostController? = null) {
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
-                        painter = painterResource(id = history.src),
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(context)
+                                .data(history.src)
+                                .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
+                                .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                                .build()
+                        ),
                         contentDescription = history.name,
                         modifier = Modifier
                             .size(110.dp)

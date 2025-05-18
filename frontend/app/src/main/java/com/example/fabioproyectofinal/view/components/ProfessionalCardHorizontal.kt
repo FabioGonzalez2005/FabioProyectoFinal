@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -24,11 +25,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.example.fabioproyectofinal.R
 
 // Tarjeta de profesional en horizontal
 @Composable
 fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,7 +47,13 @@ fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp"),
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(context)
+                        .data("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp")
+                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
+                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                        .build()
+                ),
                 contentDescription = name,
                 modifier = Modifier.size(60.dp)
             )

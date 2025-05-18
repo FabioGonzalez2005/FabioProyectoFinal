@@ -17,18 +17,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 // Tarjeta de profesional en vertical
 @Composable
 fun ProfessionalCard(name: String, specialty: String, navController: NavHostController, onClick: () -> Unit) {
+    val context = LocalContext.current
     Card(
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
@@ -42,7 +46,13 @@ fun ProfessionalCard(name: String, specialty: String, navController: NavHostCont
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp"),
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(context)
+                        .data("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp")
+                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
+                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                        .build()
+                ),
                 contentDescription = name,
                 modifier = Modifier.size(60.dp)
             )
