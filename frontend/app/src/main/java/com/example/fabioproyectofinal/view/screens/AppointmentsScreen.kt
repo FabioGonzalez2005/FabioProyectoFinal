@@ -37,9 +37,23 @@ import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 fun AppointmentsScreen(navController: NavHostController, loginViewModel: LoginViewModel = viewModel()) {
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val appointments by appointmentViewModel.citas.collectAsState()
-    val confirmedCount = appointments.count { it.estado == "Confirmado" }
-    val pendingCount = appointments.count { it.estado == "Pendiente" }
-    val cancelledCount = appointments.count { it.estado == "Cancelado" }
+
+    val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
+    val hoy = java.util.Date()
+
+    val citasFuturas = appointments.filter {
+        try {
+            val citaDate = sdf.parse(it.fecha_cita)
+            citaDate?.after(hoy) == true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    val confirmedCount = citasFuturas.count { it.estado == "Confirmado" }
+    val pendingCount = citasFuturas.count { it.estado == "Pendiente" }
+    val cancelledCount = citasFuturas.count { it.estado == "Cancelado" }
+
     val loginEstado by loginViewModel.loginEstado.collectAsState()
 
     LaunchedEffect(loginEstado) {
@@ -193,7 +207,20 @@ fun AppointmentList(
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val clinicViewModel: ClinicViewModel = viewModel()
 
-    val citas by appointmentViewModel.citas.collectAsState()
+    val allCitas by appointmentViewModel.citas.collectAsState()
+
+    val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
+    val hoy = java.util.Date()
+
+    val citas = allCitas.filter {
+        try {
+            val citaDate = sdf.parse(it.fecha_cita)
+            citaDate?.after(hoy) == true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     val doctorList by viewModel.doctors.collectAsState()
     val clinicas by clinicViewModel.clinics.collectAsState()
 
