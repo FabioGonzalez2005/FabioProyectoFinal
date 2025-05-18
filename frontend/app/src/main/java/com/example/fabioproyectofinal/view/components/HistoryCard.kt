@@ -3,12 +3,21 @@ package com.example.fabioproyectofinal.view.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +32,7 @@ import coil.request.ImageRequest
 import com.example.fabioproyectofinal.model.data.model.Appointment
 import com.example.fabioproyectofinal.model.data.model.Clinic
 import com.example.fabioproyectofinal.model.data.model.Doctor
+import com.example.fabioproyectofinal.model.session.SessionManager
 import com.example.fabioproyectofinal.model.utils.formatFecha
 import com.example.fabioproyectofinal.model.utils.formatHora
 
@@ -33,6 +43,7 @@ fun HistoryCard(
     clinic: Clinic?,
     navController: NavHostController? = null
 ) {
+    var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     Card(
         modifier = Modifier
@@ -128,7 +139,119 @@ fun HistoryCard(
                         color = Color.Black
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = { showDialog = true },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(
+                                ImageRequest.Builder(context)
+                                    .data("https://res.cloudinary.com/dr8es2ate/image/upload/icon_expediente_kb1n0q.webp")
+                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                    .build()
+                            ),
+                            contentDescription = "Icono expediente",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "Ver expediente",
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
             }
         }
+        fun String?.orNoInfo(): String = this ?: "No especificado"
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                confirmButton = {
+                    Button(
+                        onClick = { showDialog = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                        shape = RoundedCornerShape(6.dp),
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    ) {
+                        Text("Cerrar", color = Color.White)
+                    }
+                },
+                title = {
+                    Text(
+                        text = "Expediente",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFB2C2A4)
+                    )
+                },
+                text = {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        SectionTitle("Información del paciente")
+                        InfoLine("Nombre completo", SessionManager.nombre.orNoInfo())
+                        InfoLine("Fecha de nacimiento", SessionManager.fecha_nacimiento.orNoInfo())
+                        InfoLine("Teléfono", SessionManager.telefono.orNoInfo())
+                        InfoLine("Emergencia", SessionManager.contacto_emergencia.orNoInfo())
+
+                        Spacer(Modifier.height(12.dp))
+
+                        SectionTitle("Historial médico")
+                        InfoLine("Condiciones pasadas", appointment.condiciones_pasadas.orNoInfo())
+                        InfoLine("Procedimientos quirúrgicos", appointment.procedimientos_quirurgicos.orNoInfo())
+                        InfoLine("Alergias", appointment.alergias.orNoInfo())
+                        InfoLine("Antecedentes familiares", appointment.antecedentes_familiares.orNoInfo())
+
+                        Spacer(Modifier.height(12.dp))
+
+                        SectionTitle("Notas médicas")
+                        InfoLine("Medicamento y dosis", appointment.medicamento_y_dosis.orNoInfo())
+                        InfoLine("Nota", appointment.nota.orNoInfo())
+                    }
+                },
+                shape = RoundedCornerShape(12.dp),
+                containerColor = Color(0xFFFFF9F2)
+            )
+        }
+    }
+}
+
+@Composable
+fun SectionTitle(text: String) {
+    Text(
+        text = text,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.SemiBold,
+        color = Color(0xFFB2C2A4),
+        modifier = Modifier.padding(vertical = 4.dp)
+    )
+}
+
+@Composable
+fun InfoLine(label: String, value: String) {
+    Column(modifier = Modifier.padding(vertical = 2.dp)) {
+        Text(
+            text = "• $label: ",
+            fontWeight = FontWeight.Medium,
+            color = Color.Black
+        )
+        Text(
+            text = value,
+            color = Color.DarkGray
+        )
     }
 }

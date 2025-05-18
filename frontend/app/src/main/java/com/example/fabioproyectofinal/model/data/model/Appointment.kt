@@ -5,5 +5,11 @@ data class Appointment(
     val id_usuario: Int,
     val id_doctor: Int,
     val fecha_cita: String,
-    val estado: String
+    val estado: String,
+    val condiciones_pasadas: String,
+    val procedimientos_quirurgicos: String,
+    val alergias: String,
+    val antecedentes_familiares: String,
+    val medicamento_y_dosis: String,
+    val nota: String
 )
