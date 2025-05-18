@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,7 +22,6 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.model.session.SessionManager
 
@@ -77,7 +75,7 @@ fun TopBar(navController: NavHostController, onClick: () -> Unit) {
                     .size(36.dp)
                     .padding(start = 8.dp)
                     .clickable {
-                        navController.navigate(route = AppScreens.RegisterScreen.route)
+                        navController.navigate(route = AppScreens.LoginScreen.route)
                     }
             )
         }

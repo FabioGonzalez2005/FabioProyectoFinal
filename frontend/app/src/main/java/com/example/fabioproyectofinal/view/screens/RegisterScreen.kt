@@ -20,11 +20,9 @@ import com.example.fabioproyectofinal.viewmodel.RegisterViewModel
 import com.example.fabioproyectofinal.model.data.model.UsuarioRegistroRequest
 import com.example.fabioproyectofinal.model.utils.VerificationField
 import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.example.fabioproyectofinal.R
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {

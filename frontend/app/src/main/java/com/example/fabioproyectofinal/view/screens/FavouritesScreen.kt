@@ -19,7 +19,6 @@ import com.example.fabioproyectofinal.model.session.SessionManager
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
-import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 
 @Composable
 fun FavouritesScreen(navController: NavHostController) {
