@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.model.session.SessionManager
@@ -37,7 +38,7 @@ fun TopBar(navController: NavHostController, onClick: () -> Unit) {
         // Botón de retroceso
         IconButton(onClick = { navController.popBackStack() }) {
             Image(
-                painter = painterResource(id = R.drawable.icon_back),
+                painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_back_rn6lna.webp"),
                 contentDescription = "Volver",
                 modifier = Modifier.size(24.dp)
             )
@@ -54,7 +55,7 @@ fun TopBar(navController: NavHostController, onClick: () -> Unit) {
                 )
             )
             Image(
-                painter = painterResource(id = R.drawable.icon_user),
+                painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp"),
                 contentDescription = "Usuario",
                 modifier = Modifier
                     .size(36.dp)

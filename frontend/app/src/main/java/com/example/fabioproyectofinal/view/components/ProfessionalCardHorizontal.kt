@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.fabioproyectofinal.R
 
 // Tarjeta de profesional en horizontal
@@ -42,7 +43,7 @@ fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.icon_user),
+                painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp"),
                 contentDescription = name,
                 modifier = Modifier.size(60.dp)
             )

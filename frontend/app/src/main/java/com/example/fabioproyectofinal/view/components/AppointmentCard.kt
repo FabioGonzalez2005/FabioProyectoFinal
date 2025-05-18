@@ -192,7 +192,7 @@ fun AppointmentCard(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
-                            painter = painterResource(id = R.drawable.icon_user),
+                            painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp"),
                             contentDescription = doctor?.nombre,
                             modifier = Modifier.size(20.dp)
                         )

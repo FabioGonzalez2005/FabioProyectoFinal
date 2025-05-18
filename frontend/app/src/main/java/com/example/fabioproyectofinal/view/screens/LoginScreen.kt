@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 import com.example.fabioproyectofinal.model.data.model.UsuarioLoginRequest
@@ -44,7 +47,13 @@ fun LoginScreen(navController: NavHostController) {
                 .padding(horizontal = 16.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo),
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(context)
+                        .data("https://res.cloudinary.com/dr8es2ate/image/upload/logo_ozj4ng.webp")
+                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
+                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                        .build()
+                ),
                 contentDescription = "Logo de CanariaSS",
                 modifier = Modifier
                     .fillMaxWidth()

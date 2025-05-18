@@ -21,6 +21,7 @@ import com.example.fabioproyectofinal.model.data.model.UsuarioRegistroRequest
 import com.example.fabioproyectofinal.model.utils.VerificationField
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
+import coil.compose.rememberAsyncImagePainter
 import com.example.fabioproyectofinal.R
 
 @Composable
@@ -50,7 +51,7 @@ fun RegisterScreen(navController: NavHostController) {
                 .padding(horizontal = 16.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo),
+                painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/logo_ozj4ng.webp"),
                 contentDescription = "Logo de CanariaSS",
                 modifier = Modifier
                     .fillMaxWidth()

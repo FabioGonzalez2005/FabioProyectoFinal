@@ -47,6 +47,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
+import coil.compose.rememberAsyncImagePainter
 import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -96,10 +97,10 @@ fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewMo
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                ClinicActionButton("Ubicación", R.drawable.icon_map) {
+                ClinicActionButton("Ubicación", "https://res.cloudinary.com/dr8es2ate/image/upload/icon_map_fc9rco.webp") {
                     showMapDialog.value = true
                 }
-                ClinicActionButton("Llamar", R.drawable.icon_call) {
+                ClinicActionButton("Llamar", "https://res.cloudinary.com/dr8es2ate/image/upload/icon_call_qbnahd.webp") {
                     clinic?.let {
                         val intent = Intent(Intent.ACTION_DIAL)
                         intent.data = "tel:+34${it.telefono}".toUri()
@@ -107,7 +108,7 @@ fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewMo
                     }
                 }
 
-                ClinicActionButton("Web", R.drawable.webpage) {
+                ClinicActionButton("Web", "https://res.cloudinary.com/dr8es2ate/image/upload/icon_web_yygyly.webp") {
                     clinic?.let {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.web))
                         context.startActivity(intent)
@@ -168,48 +169,51 @@ fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewMo
         }
     }
     if (showMapDialog.value) {
-        AlertDialog(
-            onDismissRequest = { showMapDialog.value = false },
-            confirmButton = {
-                Button(
-                    onClick = { showMapDialog.value = false },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFB2C2A4)
-                    ),
-                    shape = RoundedCornerShape(6.dp),
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .width(160.dp)
-                ) {
-                    Text("Cerrar", color = Color.White)
-                }
-            },
-            title = {
-                Text(
-                    text = "Ubicación",
-                    color = Color(0xFFB2C2A4),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            text = {
-                Column(
-                    modifier = Modifier
-                        .background(Color(0xFFFFF9F2))
-                        .padding(top = 8.dp)
-                ) {
-                    GoogleMapView()
-                }
-            },
-            containerColor = Color(0xFFFFF9F2)
-        )
+        clinic?.let { c ->
+            Log.d("MAPA", "Latitud: ${c.lat}, Longitud: ${c.lng}")
+            AlertDialog(
+                onDismissRequest = { showMapDialog.value = false },
+                confirmButton = {
+                    Button(
+                        onClick = { showMapDialog.value = false },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFB2C2A4)
+                        ),
+                        shape = RoundedCornerShape(6.dp),
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .width(160.dp)
+                    ) {
+                        Text("Cerrar", color = Color.White)
+                    }
+                },
+                title = {
+                    Text(
+                        text = "Ubicación",
+                        color = Color(0xFFB2C2A4),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                text = {
+                    Column(
+                        modifier = Modifier
+                            .background(Color(0xFFFFF9F2))
+                            .padding(top = 8.dp)
+                    ) {
+                        GoogleMapView(lat = c.lat, lng = c.lng)
+                    }
+                },
+                containerColor = Color(0xFFFFF9F2)
+            )
+        }
     }
 }
 
 @Composable
-fun GoogleMapView() {
+fun GoogleMapView(lat: Double, lng: Double) {
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(28.93, -13.66), 15f)
+        position = CameraPosition.fromLatLngZoom(LatLng(lat, lng), 15f)
     }
 
     Box(modifier = Modifier
@@ -220,7 +224,7 @@ fun GoogleMapView() {
             cameraPositionState = cameraPositionState
         ) {
             Marker(
-                state = MarkerState(position = LatLng(28.93, -13.66)),
+                state = MarkerState(position = LatLng(lat, lng)),
                 title = "Clínica"
             )
         }

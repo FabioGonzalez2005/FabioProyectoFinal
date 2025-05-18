@@ -66,7 +66,7 @@ fun ClinicaCard(
                 if (inFavourites) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Image(
-                        painter = painterResource(id = R.drawable.icon_favourite),
+                        painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_favourite_lxpak3.webp"),
                         contentDescription = "Favorito",
                         modifier = Modifier.size(24.dp)
                     )
