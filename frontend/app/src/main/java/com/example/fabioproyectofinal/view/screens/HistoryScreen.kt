@@ -26,6 +26,20 @@ import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 @Composable
 fun HistoryScreen(navController: NavHostController) {
     val appointmentViewModel: AppointmentViewModel = viewModel()
+    val appointments by appointmentViewModel.citas.collectAsState()
+
+    val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
+    val hoy = java.util.Date()
+
+    val appointmentsCount = appointments.count {
+        try {
+            val citaDate = sdf.parse(it.fecha_cita)
+            citaDate?.before(hoy) == true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     LaunchedEffect(Unit) {
         SessionManager.idUsuario?.let { id ->
             appointmentViewModel.fetchCitas(id)
@@ -76,7 +90,7 @@ fun HistoryScreen(navController: NavHostController) {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = "Últimas citas:",
+                        text = "Últimas citas: $appointmentsCount",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFFB2C2A4),
