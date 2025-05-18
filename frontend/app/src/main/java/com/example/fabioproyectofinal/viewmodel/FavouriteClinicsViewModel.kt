@@ -25,4 +25,14 @@ class FavouriteClinicsViewModel : ViewModel() {
             }
         }
     }
+    fun buscarPorEspecialidadEnFavoritos(especialidad: String) {
+        viewModelScope.launch {
+            try {
+                val resultado = ApiServer.apiService.getClinicasPorEspecialidad(especialidad)
+                _favoritas.value = resultado
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 }

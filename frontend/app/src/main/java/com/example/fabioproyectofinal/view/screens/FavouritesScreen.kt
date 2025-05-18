@@ -27,16 +27,23 @@ fun FavouritesScreen(navController: NavHostController) {
     val clinics by favouritesViewModel.favoritas.collectAsState()
     val clinicsConMarca = clinics.map { it.copy(inFavourites = true) }
 
-    LaunchedEffect(Unit) {
-        SessionManager.idUsuario?.let { id ->
-            Log.d("FavouritesScreen", "Cargando favoritos para usuario: $id")
-            favouritesViewModel.fetchFavoritas(id)
+    LaunchedEffect(searchText) {
+        if (searchText.length >= 3) {
+            favouritesViewModel.buscarPorEspecialidadEnFavoritos(searchText)
+        } else {
+            SessionManager.idUsuario?.let { id ->
+                Log.d("FavouritesScreen", "Cargando favoritos para usuario: $id")
+                favouritesViewModel.fetchFavoritas(id)
+            }
         }
     }
 
+    // Filtrar por búsqueda
     val clinicasFiltradas = clinicsConMarca.filter {
+        Log.d("FiltroEspecialidad", "especialidad de ${it.nombre}: ${it.especialidad}")
         it.nombre.contains(searchText, ignoreCase = true) ||
-                it.direccion.contains(searchText, ignoreCase = true)
+                it.direccion.contains(searchText, ignoreCase = true) ||
+                it.especialidad?.contains(searchText, ignoreCase = true) == true
     }
 
     Scaffold(
@@ -64,7 +71,7 @@ fun FavouritesScreen(navController: NavHostController) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar", modifier = Modifier.size(18.dp))
                 },
                 placeholder = {
-                    Text("Nombre clínica o dirección", fontSize = 18.sp, color = Color(0xFFB2C2A4))
+                    Text("Clínica, especialidad o dirección", fontSize = 18.sp, color = Color(0xFFB2C2A4))
                 },
                 modifier = Modifier
                     .fillMaxWidth()
