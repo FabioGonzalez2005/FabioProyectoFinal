@@ -174,6 +174,23 @@ def favoritos_usuario(id_usuario):
     '''
     return ejecutar_sql(sql, (id_usuario,))
 
+# Buscar clínicas por especialidad:
+@app.route('/clinicas/por-especialidad', methods=['GET'])
+def buscar_clinicas_por_especialidad():
+    from flask import request
+    especialidad = request.args.get('especialidad')
+    print("Especialidad recibida:", especialidad)
+    if not especialidad:
+        return jsonify({'error': 'Se requiere parámetro de especialidad'}), 400
+
+    sql = '''
+        SELECT DISTINCT c.*, d.especialidad
+        FROM Clinica c
+        JOIN Doctor d ON c.id_clinica = d.id_clinica
+        WHERE LOWER(d.especialidad) LIKE LOWER(%s)
+    '''
+    return ejecutar_sql(sql, (f'%{especialidad}%',))
+
 # ======================= DISPONIBILIDAD =======================
 # Ver horarios de doctores
 @app.route('/doctor/<int:id_doctor>/disponibilidad/completa', methods=['GET'])
