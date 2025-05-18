@@ -36,4 +36,6 @@ interface ApiService {
     @GET("/usuarios/{id_usuario}/favoritos")
     suspend fun getClinicasFavoritas(@Path("id_usuario") idUsuario: Int): List<Clinic>
 
+    @GET("/clinicas/por-especialidad")
+    suspend fun getClinicasPorEspecialidad(@Query("especialidad") especialidad: String): List<Clinic>
 }

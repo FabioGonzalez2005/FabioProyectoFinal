@@ -16,11 +16,22 @@ class ClinicViewModel : ViewModel() {
         fetchClinics()
     }
 
-    private fun fetchClinics() {
+    fun fetchClinics() {
         viewModelScope.launch {
             try {
                 val result = ApiServer.apiService.getClinics()
                 _clinics.value = result
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun buscarPorEspecialidad(especialidad: String) {
+        viewModelScope.launch {
+            try {
+                val resultado = ApiServer.apiService.getClinicasPorEspecialidad(especialidad)
+                _clinics.value = resultado
             } catch (e: Exception) {
                 e.printStackTrace()
             }

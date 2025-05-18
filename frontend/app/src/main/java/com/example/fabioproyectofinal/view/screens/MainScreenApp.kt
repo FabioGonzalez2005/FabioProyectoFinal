@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,11 +26,20 @@ import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
 
 @Composable
 fun MainScreenApp(navController: NavHostController) {
-    var searchText by remember { mutableStateOf("") }
     val clinicViewModel: ClinicViewModel = viewModel()
-    val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
-
     val clinics by clinicViewModel.clinics.collectAsState()
+
+    var searchText by remember { mutableStateOf("") }
+
+    LaunchedEffect(searchText) {
+        if (searchText.length >= 3) {
+            clinicViewModel.buscarPorEspecialidad(searchText)
+        } else {
+            clinicViewModel.fetchClinics()
+        }
+    }
+
+    val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
     val favoritas by favouritesViewModel.favoritas.collectAsState()
 
 // Cargar favoritos al entrar
@@ -47,8 +57,10 @@ fun MainScreenApp(navController: NavHostController) {
 
 // Filtrar por búsqueda
     val clinicasFiltradas = clinicsConMarca.filter {
+        Log.d("FiltroEspecialidad", "especialidad de ${it.nombre}: ${it.especialidad}")
         it.nombre.contains(searchText, ignoreCase = true) ||
-                it.direccion.contains(searchText, ignoreCase = true)
+                it.direccion.contains(searchText, ignoreCase = true) ||
+                it.especialidad?.contains(searchText, ignoreCase = true) == true
     }
     Scaffold(
         topBar = {
@@ -88,7 +100,7 @@ fun MainScreenApp(navController: NavHostController) {
                 },
                 placeholder = {
                     Text(
-                        "Nombre clínica o dirección",
+                        "Clínica, especialidad o dirección",
                         fontSize = 18.sp,
                         color = Color(0xFFB2C2A4),
                     )
