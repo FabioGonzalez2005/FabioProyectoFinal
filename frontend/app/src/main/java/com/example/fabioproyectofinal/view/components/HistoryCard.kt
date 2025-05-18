@@ -20,10 +20,19 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.example.fabioproyectofinal.model.data.model.History
+import com.example.fabioproyectofinal.model.data.model.Appointment
+import com.example.fabioproyectofinal.model.data.model.Clinic
+import com.example.fabioproyectofinal.model.data.model.Doctor
+import com.example.fabioproyectofinal.model.utils.formatFecha
+import com.example.fabioproyectofinal.model.utils.formatHora
 
 @Composable
-fun HistoryCard(history: History, navController: NavHostController? = null) {
+fun HistoryCard(
+    appointment: Appointment,
+    doctor: Doctor?,
+    clinic: Clinic?,
+    navController: NavHostController? = null
+) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
@@ -47,12 +56,12 @@ fun HistoryCard(history: History, navController: NavHostController? = null) {
                     Image(
                         painter = rememberAsyncImagePainter(
                             ImageRequest.Builder(context)
-                                .data(history.src)
+                                .data(clinic?.src)
                                 .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
                                 .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
                                 .build()
                         ),
-                        contentDescription = history.name,
+                        contentDescription = clinic?.nombre,
                         modifier = Modifier
                             .size(110.dp)
                             .padding(end = 16.dp)
@@ -60,12 +69,12 @@ fun HistoryCard(history: History, navController: NavHostController? = null) {
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = history.name,
+                            text = clinic?.nombre.toString(),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = history.address,
+                            text = clinic?.direccion.toString(),
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
@@ -88,14 +97,14 @@ fun HistoryCard(history: History, navController: NavHostController? = null) {
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = history.date,
+                            text = formatFecha(appointment.fecha_cita),
                             fontSize = 18.sp,
                             color = Color(0xFFB2C2A4),
                             fontWeight = FontWeight.Bold
                         )
                     }
                     Text(
-                        text = "13:00",
+                        text = formatHora(appointment.fecha_cita),
                         fontSize = 18.sp,
                         color = Color(0xFFB2C2A4),
                         fontWeight = FontWeight.Bold
@@ -114,7 +123,7 @@ fun HistoryCard(history: History, navController: NavHostController? = null) {
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = history.professional + " (" + history.specialty + ")",
+                        text = doctor?.nombre + " (" + doctor?.especialidad + ")",
                         fontSize = 12.sp,
                         color = Color.Black
                     )

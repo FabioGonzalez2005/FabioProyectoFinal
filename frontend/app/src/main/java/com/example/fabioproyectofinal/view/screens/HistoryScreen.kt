@@ -13,14 +13,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.fabioproyectofinal.model.data.model.pastAppointments
+import com.example.fabioproyectofinal.model.session.SessionManager
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.HistoryCard
 import com.example.fabioproyectofinal.view.components.TopBar
+import com.example.fabioproyectofinal.viewmodel.AppointmentViewModel
+import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
+import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 
 @Composable
 fun HistoryScreen(navController: NavHostController) {
+    val appointmentViewModel: AppointmentViewModel = viewModel()
+    LaunchedEffect(Unit) {
+        SessionManager.idUsuario?.let { id ->
+            appointmentViewModel.fetchCitas(id)
+        }
+    }
     Scaffold(
         topBar = {
             TopBar(navController = navController) { /* Acción */ }
@@ -82,13 +92,40 @@ fun HistoryScreen(navController: NavHostController) {
 
 @Composable
 fun HistoryCardList(navController: NavHostController? = null) {
+    val appointmentViewModel: AppointmentViewModel = viewModel()
+    val doctorViewModel: DoctorViewModel = viewModel()
+    val clinicViewModel: ClinicViewModel = viewModel()
+
+    val citas by appointmentViewModel.citas.collectAsState()
+    val doctorList by doctorViewModel.doctors.collectAsState()
+    val clinicas by clinicViewModel.clinics.collectAsState()
+
+    val citasPasadas = citas.filter {
+        try {
+            val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
+            val citaDate = sdf.parse(it.fecha_cita)
+            val hoy = java.util.Date()
+            citaDate?.before(hoy) == true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     LazyColumn(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .fillMaxSize()
     ) {
-        items(pastAppointments) { history ->
-            HistoryCard(history = history, navController = navController)
+        items(citasPasadas) { cita ->
+            val doctor = doctorList.find { it.id_doctor == cita.id_doctor }
+            val clinica = doctor?.let { d -> clinicas.find { it.id_clinica == d.id_clinica } }
+
+            HistoryCard(
+                appointment = cita,
+                doctor = doctor,
+                clinic = clinica,
+                navController = navController
+            )
         }
     }
 }
