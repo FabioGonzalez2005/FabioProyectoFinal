@@ -33,7 +33,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.text.style.TextAlign
 
 
 // Barra de navegación superior
@@ -81,10 +85,9 @@ fun TopBar(navController: NavHostController, onClick: () -> Unit) {
 fun UserMenuIcon(navController: NavHostController) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
-    Box(
-        modifier = Modifier.wrapContentSize(Alignment.TopStart)
-    ) {
+    Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
         Image(
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(context)
@@ -109,7 +112,7 @@ fun UserMenuIcon(navController: NavHostController) {
                 text = { Text("Editar perfil", color = Color(0xFFB2C2A4)) },
                 onClick = {
                     expanded = false
-                    navController.navigate("editar_perfil")
+                    showDialog = true
                 }
             )
             DropdownMenuItem(
@@ -121,4 +124,50 @@ fun UserMenuIcon(navController: NavHostController) {
             )
         }
     }
+
+    if (showDialog) {
+        EditProfileDialog(onDismiss = { showDialog = false })
+    }
+}
+
+@Composable
+fun EditProfileDialog(onDismiss: () -> Unit) {
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text("Editar Perfil",
+                color = Color(0xFFB2C2A4),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth())
+        },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Nombre") }
+                )
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Correo electrónico") }
+                )
+            }
+        },
+        confirmButton = {
+            AnimatedDialogButton(text = "Guardar") {
+                onDismiss()
+            }
+        },
+        dismissButton = {
+            AnimatedDialogButton(text = "Cerrar") {
+                onDismiss()
+            }
+        },
+        containerColor = Color.White,
+        shape = RoundedCornerShape(12.dp)
+    )
 }
