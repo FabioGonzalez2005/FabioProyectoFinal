@@ -179,14 +179,12 @@ fun HistoryCard(
             AlertDialog(
                 onDismissRequest = { showDialog = false },
                 confirmButton = {
-                    Button(
-                        onClick = { showDialog = false },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
-                        shape = RoundedCornerShape(6.dp),
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    ) {
-                        Text("Cerrar", color = Color.White)
-                    }
+                    AnimatedDialogButton(
+                        text = "Cerrar",
+                        onClick = {
+                            showDialog = false
+                        }
+                    )
                 },
                 title = {
                     Text(

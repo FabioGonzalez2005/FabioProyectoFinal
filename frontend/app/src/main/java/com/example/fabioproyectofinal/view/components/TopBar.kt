@@ -1,6 +1,7 @@
 package com.example.fabioproyectofinal.view.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,15 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.model.session.SessionManager
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 
 
 // Barra de navegación superior
@@ -62,23 +72,53 @@ fun TopBar(navController: NavHostController, onClick: () -> Unit) {
                     fontWeight = FontWeight.Medium
                 )
             )
-            Image(
-                painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(context)
-                        .data("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp")
-                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
-                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
-                        .build()
-                ),
-                contentDescription = "Usuario",
-                modifier = Modifier
-                    .size(36.dp)
-                    .padding(start = 8.dp)
-                    .clickable {
-                        navController.navigate(route = AppScreens.LoginScreen.route)
-                    }
-            )
+            UserMenuIcon(navController)
         }
     }
 }
 
+@Composable
+fun UserMenuIcon(navController: NavHostController) {
+    val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier.wrapContentSize(Alignment.TopStart)
+    ) {
+        Image(
+            painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(context)
+                    .data("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp")
+                    .diskCachePolicy(CachePolicy.ENABLED)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .build()
+            ),
+            contentDescription = "Usuario",
+            modifier = Modifier
+                .size(36.dp)
+                .padding(start = 8.dp)
+                .clickable { expanded = true }
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.background(Color(0xFFFFFFFF))
+        ) {
+            DropdownMenuItem(
+                text = { Text("Editar perfil", color = Color(0xFFB2C2A4)) },
+                onClick = {
+                    expanded = false
+                    navController.navigate("editar_perfil")
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("Cerrar sesión", color = Color(0xFFB2C2A4)) },
+                onClick = {
+                    expanded = false
+                    navController.navigate(AppScreens.LoginScreen.route)
+                }
+            )
+        }
+    }
+}
