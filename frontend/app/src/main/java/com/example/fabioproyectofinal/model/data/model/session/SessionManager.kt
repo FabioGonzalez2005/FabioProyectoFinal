@@ -5,11 +5,11 @@ object SessionManager {
     var nombre: String? = null
     var email: String? = null
     var username: String? = null
-    val fecha_nacimiento: String? = null
-    val telefono: String? = null
-    val contacto_emergencia: String? = null
-    val alergias: String? = null
-    val antecedentes_familiares: String? = null
-    val condiciones_pasadas: String? = null
-    val procedimientos_quirurgicos: String? = null
+    var fecha_nacimiento: String? = null
+    var telefono: String? = null
+    var telefono_emergencia: String? = null
+    var alergias: String? = null
+    var antecedentes_familiares: String? = null
+    var condiciones_pasadas: String? = null
+    var procedimientos_quirurgicos: String? = null
 }

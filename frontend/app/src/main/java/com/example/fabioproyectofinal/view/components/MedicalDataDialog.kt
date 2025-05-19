@@ -19,12 +19,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.fabioproyectofinal.model.session.SessionManager
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import com.example.fabioproyectofinal.model.ApiServer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun MedicalDataDialog(onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    val api = ApiServer.apiService
+
     var fechaNacimiento by remember { mutableStateOf(SessionManager.fecha_nacimiento ?: "") }
     var telefono by remember { mutableStateOf(SessionManager.telefono ?: "") }
-    var contactoEmergencia by remember { mutableStateOf(SessionManager.contacto_emergencia ?: "") }
+    var telefonoEmergencia by remember { mutableStateOf(SessionManager.telefono_emergencia ?: "") }
     var alergias by remember { mutableStateOf(SessionManager.alergias ?: "") }
     var antecedentesFamiliares by remember { mutableStateOf(SessionManager.antecedentes_familiares ?: "") }
     var condicionesPasadas by remember { mutableStateOf(SessionManager.condiciones_pasadas ?: "") }
@@ -62,7 +71,7 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
 
                 input("Fecha de nacimiento", fechaNacimiento) { fechaNacimiento = it }
                 input("Teléfono", telefono) { telefono = it }
-                input("Contacto de emergencia", contactoEmergencia) { contactoEmergencia = it }
+                input("Teléfono de emergencia", telefonoEmergencia) { telefonoEmergencia = it }
                 input("Alergias", alergias) { alergias = it }
                 input("Antecedentes familiares", antecedentesFamiliares) { antecedentesFamiliares = it }
                 input("Condiciones pasadas", condicionesPasadas) { condicionesPasadas = it }
@@ -73,18 +82,49 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
             AnimatedDialogButton(
                 text = "Guardar",
                 onClick = {
-                    onDismiss()
+                    val idUsuario = SessionManager.idUsuario ?: return@AnimatedDialogButton
+
+                    val datos = mapOf(
+                        "fecha_nacimiento" to fechaNacimiento,
+                        "telefono" to telefono,
+                        "telefono_emergencia" to telefonoEmergencia,
+                        "alergias" to alergias,
+                        "antecedentes_familiares" to antecedentesFamiliares,
+                        "condiciones_pasadas" to condicionesPasadas,
+                        "procedimientos_quirurgicos" to procedimientosQuirurgicos
+                    )
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            api.actualizarDatosDeInteres(idUsuario, datos)
+
+                            // Actualizar SessionManager local
+                            SessionManager.fecha_nacimiento = fechaNacimiento
+                            SessionManager.telefono = telefono
+                            SessionManager.telefono_emergencia = telefonoEmergencia
+                            SessionManager.alergias = alergias
+                            SessionManager.antecedentes_familiares = antecedentesFamiliares
+                            SessionManager.condiciones_pasadas = condicionesPasadas
+                            SessionManager.procedimientos_quirurgicos = procedimientosQuirurgicos
+
+                            CoroutineScope(Dispatchers.Main).launch {
+                                Toast.makeText(context, "Datos de interés actualizados correctamente", Toast.LENGTH_SHORT).show()
+                                onDismiss()
+                            }
+                        } catch (e: Exception) {
+                            CoroutineScope(Dispatchers.Main).launch {
+                                Toast.makeText(context, "Error al guardar los datos", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
                 },
                 modifier = Modifier.padding(horizontal = 0.dp)
             )
-
         },
         dismissButton = {
             AnimatedDialogButton(
                 text = "Cerrar",
-                onClick = {
-                    onDismiss()
-                },
+                onClick = onDismiss,
                 modifier = Modifier.padding(horizontal = 0.dp)
             )
         },
@@ -92,3 +132,4 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
         shape = RoundedCornerShape(12.dp)
     )
 }
+

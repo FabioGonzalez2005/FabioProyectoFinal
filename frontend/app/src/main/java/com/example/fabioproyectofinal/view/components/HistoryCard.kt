@@ -204,7 +204,7 @@ fun HistoryCard(
                         InfoLine("Nombre completo", SessionManager.nombre.orNoInfo())
                         InfoLine("Fecha de nacimiento", SessionManager.fecha_nacimiento.orNoInfo())
                         InfoLine("Teléfono", SessionManager.telefono.orNoInfo())
-                        InfoLine("Emergencia", SessionManager.contacto_emergencia.orNoInfo())
+                        InfoLine("Emergencia", SessionManager.telefono_emergencia.orNoInfo())
 
                         Spacer(Modifier.height(12.dp))
 

@@ -306,7 +306,7 @@ def editar_datos_de_interes(id_usuario):
     campos_validos = [
         "fecha_nacimiento",
         "telefono",
-        "contacto_emergencia",
+        "telefono_emergencia",
         "alergias",
         "antecedentes_familiares",
         "condiciones_pasadas",
