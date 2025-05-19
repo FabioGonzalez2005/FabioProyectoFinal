@@ -18,7 +18,11 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 @Composable
-fun AnimatedDialogButton(text: String, onClick: () -> Unit) {
+fun AnimatedDialogButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var pressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
         targetValue = if (pressed) 0.92f else 1f,
@@ -29,7 +33,7 @@ fun AnimatedDialogButton(text: String, onClick: () -> Unit) {
         onClick = {
             pressed = true
         },
-        modifier = Modifier
+        modifier = modifier
             .graphicsLayer {
                 scaleX = scale
                 scaleY = scale

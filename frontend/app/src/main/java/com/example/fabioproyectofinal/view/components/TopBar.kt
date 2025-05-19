@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,7 +37,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 
 
@@ -132,42 +138,91 @@ fun UserMenuIcon(navController: NavHostController) {
 
 @Composable
 fun EditProfileDialog(onDismiss: () -> Unit) {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf(SessionManager.nombre ?: "") }
+    var username by remember { mutableStateOf(SessionManager.email ?: "") }
+    var email by remember { mutableStateOf(SessionManager.username ?: "") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text("Editar Perfil",
+            Text(
+                "Editar Perfil",
                 color = Color(0xFFB2C2A4),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth())
+                modifier = Modifier.fillMaxWidth()
+            )
         },
         text = {
             Column {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Nombre") }
+                    label = { Text("Nombre", color = Color(0xFF7C8B6B)) },
+                    textStyle = TextStyle(color = Color(0xFF7C8B6B)),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF7C8B6B),
+                        unfocusedBorderColor = Color(0xFF7C8B6B)
+                    ),
+                    singleLine = true
                 )
+
+                OutlinedTextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    label = { Text("Usuario", color = Color(0xFF7C8B6B)) },
+                    textStyle = TextStyle(color = Color(0xFF7C8B6B)),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF7C8B6B),
+                        unfocusedBorderColor = Color(0xFF7C8B6B)
+                    ),
+                    singleLine = true
+                )
+
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Correo electrónico") }
+                    label = { Text("Correo electrónico", color = Color(0xFF7C8B6B)) },
+                    textStyle = TextStyle(color = Color(0xFF7C8B6B)),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF7C8B6B),
+                        unfocusedBorderColor = Color(0xFF7C8B6B)
+                    ),
+                    singleLine = true
+                )
+                AnimatedDialogButton(
+                    text = "Datos de interés",
+                    onClick = {
+                        onDismiss()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
         },
         confirmButton = {
-            AnimatedDialogButton(text = "Guardar") {
-                onDismiss()
-            }
+            AnimatedDialogButton(
+                text = "Guardar",
+                onClick = {
+                    onDismiss()
+                },
+                modifier = Modifier.padding(horizontal = 0.dp)
+            )
+
         },
         dismissButton = {
-            AnimatedDialogButton(text = "Cerrar") {
-                onDismiss()
-            }
+            AnimatedDialogButton(
+                text = "Cerrar",
+                onClick = {
+                    onDismiss()
+                },
+                modifier = Modifier.padding(horizontal = 0.dp)
+            )
         },
-        containerColor = Color.White,
+        containerColor = Color(0xFFFFF9F2),
         shape = RoundedCornerShape(12.dp)
     )
 }
