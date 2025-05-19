@@ -229,6 +229,75 @@ def obtener_citas():
     sql = "SELECT * FROM Cita WHERE id_usuario = %s ORDER BY id_cita"
     return ejecutar_sql(sql, params=(id_usuario,))
 
+# ======================= USUARIOS =======================
+# Editar perfil de paciente
+@app.route('/perfil/<int:id_usuario>', methods=['PUT'])
+def editar_perfil(id_usuario):
+    datos = request.get_json() or {}
+    nombre = datos.get("nombre")
+    email = datos.get("email")
+    usuario = datos.get("usuario")
+
+    connection = psycopg2.connect(
+        host="localhost",
+        port="5432",
+        dbname="fabioapi",
+        user="alumno1234",
+        password="Alumno1234"
+    )
+    cursor = connection.cursor()
+
+    # Verificar si el usuario existe
+    cursor.execute("SELECT 1 FROM Usuario WHERE id_usuario = %s", (id_usuario,))
+    if not cursor.fetchone():
+        cursor.close()
+        connection.close()
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Validar unicidad de email
+    if email:
+        cursor.execute("SELECT 1 FROM Usuario WHERE email = %s AND id_usuario != %s", (email, id_usuario))
+        if cursor.fetchone():
+            cursor.close()
+            connection.close()
+            return jsonify({"error": "El email ya está en uso"}), 400
+
+    # Validar unicidad de nombre de usuario
+    if usuario:
+        cursor.execute("SELECT 1 FROM Usuario WHERE usuario = %s AND id_usuario != %s", (usuario, id_usuario))
+        if cursor.fetchone():
+            cursor.close()
+            connection.close()
+            return jsonify({"error": "El nombre de usuario ya está en uso"}), 400
+
+    # Construir actualización dinámica
+    campos_actualizar = []
+    valores = []
+
+    if nombre is not None:
+        campos_actualizar.append("nombre = %s")
+        valores.append(nombre)
+    if email:
+        campos_actualizar.append("email = %s")
+        valores.append(email)
+    if usuario:
+        campos_actualizar.append("usuario = %s")
+        valores.append(usuario)
+
+    if campos_actualizar:
+        valores.append(id_usuario)
+        cursor.execute(f"""
+            UPDATE Usuario
+            SET {', '.join(campos_actualizar)}
+            WHERE id_usuario = %s
+        """, tuple(valores))
+        connection.commit()
+
+    cursor.close()
+    connection.close()
+
+    return jsonify({"mensaje": "Perfil actualizado correctamente"}), 200
+
 
 # ======================= PACIENTES =======================
 
@@ -264,18 +333,6 @@ def perfil_paciente(id_usuario):
         WHERE u.id_usuario = %s
     '''
     return ejecutar_sql(sql, (id_usuario,))
-
-# Editar perfil de paciente
-@app.route('/paciente/perfil/<int:id_usuario>', methods=['PUT'])
-def editar_perfil(id_usuario):
-    datos = request.get_json()
-    sql = '''
-        UPDATE Usuario
-        SET nombre = %s, email = %s, contraseña = %s
-        WHERE id_usuario = %s
-    '''
-    params = (datos['nombre'], datos['email'], datos['contraseña'], id_usuario)
-    return ejecutar_sql(sql, params, es_insert=True)
 
 # ======================= DOCTORES =======================
 
