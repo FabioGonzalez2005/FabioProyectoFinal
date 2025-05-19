@@ -38,4 +38,16 @@ interface ApiService {
 
     @GET("/clinicas/por-especialidad")
     suspend fun getClinicasPorEspecialidad(@Query("especialidad") especialidad: String): List<Clinic>
+
+    @retrofit2.http.PUT("/perfil/{id_usuario}")
+    suspend fun actualizarPerfil(
+        @Path("id_usuario") idUsuario: Int,
+        @Body datos: Map<String, String>
+    ): MensajeResponse
+
+    @retrofit2.http.PUT("/perfil/datos-de-interes/{id_usuario}")
+    suspend fun actualizarDatosDeInteres(
+        @Path("id_usuario") idUsuario: Int,
+        @Body datos: Map<String, String?>
+    ): MensajeResponse
 }

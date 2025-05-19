@@ -21,13 +21,51 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.fabioproyectofinal.model.session.SessionManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import com.example.fabioproyectofinal.model.ApiServer
 
 @Composable
 fun EditProfileDialog(onDismiss: () -> Unit) {
+    val context = LocalContext.current
     var name by remember { mutableStateOf(SessionManager.nombre ?: "") }
-    var username by remember { mutableStateOf(SessionManager.email ?: "") }
-    var email by remember { mutableStateOf(SessionManager.username ?: "") }
+    var username by remember { mutableStateOf(SessionManager.username ?: "") }
+    var email by remember { mutableStateOf(SessionManager.email ?: "") }
     var showMedicalDialog by remember { mutableStateOf(false) }
+
+    fun guardarCambios() {
+        val api = ApiServer.apiService
+        val idUsuario = SessionManager.idUsuario ?: return
+
+        val datos = mutableMapOf<String, String>()
+        if (name.isNotBlank()) datos["nombre"] = name
+        if (email.isNotBlank()) datos["email"] = email
+        if (username.isNotBlank()) datos["usuario"] = username
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                api.actualizarPerfil(idUsuario, datos)
+
+                // Actualizar SessionManager local
+                SessionManager.nombre = name
+                SessionManager.email = email
+                SessionManager.username = username
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    Toast.makeText(context, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show()
+                    onDismiss()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace() // Esto imprimirá el error en Logcat
+                CoroutineScope(Dispatchers.Main).launch {
+                    Toast.makeText(context, "Error al actualizar perfil: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -94,11 +132,10 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
             AnimatedDialogButton(
                 text = "Guardar",
                 onClick = {
-                    onDismiss()
+                    guardarCambios()
                 },
                 modifier = Modifier.padding(horizontal = 0.dp)
             )
-
         },
         dismissButton = {
             AnimatedDialogButton(

@@ -298,6 +298,66 @@ def editar_perfil(id_usuario):
 
     return jsonify({"mensaje": "Perfil actualizado correctamente"}), 200
 
+# Editar datos de interés de un usuario
+@app.route('/perfil/datos-de-interes/<int:id_usuario>', methods=['PUT'])
+def editar_datos_de_interes(id_usuario):
+    datos = request.get_json() or {}
+
+    campos_validos = [
+        "fecha_nacimiento",
+        "telefono",
+        "contacto_emergencia",
+        "alergias",
+        "antecedentes_familiares",
+        "condiciones_pasadas",
+        "procedimientos_quirurgicos"
+    ]
+
+    # Filtrar solo los campos válidos que se hayan enviado
+    campos_actualizar = []
+    valores = []
+
+    for campo in campos_validos:
+        if campo in datos:
+            campos_actualizar.append(f"{campo} = %s")
+            valores.append(datos[campo])
+
+    if not campos_actualizar:
+        return jsonify({"error": "No se proporcionaron campos válidos para actualizar"}), 400
+
+    # Conexión a la DB
+    import psycopg2
+    connection = psycopg2.connect(
+        host="localhost",
+        port="5432",
+        dbname="fabioapi",
+        user="alumno1234",
+        password="Alumno1234"
+    )
+    cursor = connection.cursor()
+
+    # Verificar si el usuario existe
+    cursor.execute("SELECT 1 FROM Usuario WHERE id_usuario = %s", (id_usuario,))
+    if not cursor.fetchone():
+        cursor.close()
+        connection.close()
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Ejecutar UPDATE dinámico
+    valores.append(id_usuario)
+    sql = f"""
+        UPDATE Usuario
+        SET {', '.join(campos_actualizar)}
+        WHERE id_usuario = %s
+    """
+    cursor.execute(sql, tuple(valores))
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+    return jsonify({"mensaje": "Datos de interés actualizados correctamente"}), 200
+
 
 # ======================= PACIENTES =======================
 
