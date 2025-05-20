@@ -123,7 +123,7 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                 ),
                 singleLine = true
             )
-            ClinicList(clinicasFiltradas, navController, false)
+            ClinicList(clinicasFiltradas, navController, userId = userId ?: -1, false)
         }
     }
 }
@@ -133,6 +133,7 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
 fun ClinicList(
     clinicasFiltradas: List<Clinic>,
     navController: NavHostController,
+    userId: Int?,
     showFavouritesOnly: Boolean
 ) {
     val clinicasAMostrar = if (showFavouritesOnly) {
@@ -150,6 +151,7 @@ fun ClinicList(
             ClinicaCard(
                 clinic = clinic,
                 navController = navController,
+                userId = userId ?: -1,
                 inFavourites = clinic.inFavourites
             )
         }

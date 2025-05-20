@@ -23,6 +23,7 @@ fun DoctorListScreen(navController: NavHostController, userId: Int?, viewModel: 
                 name = "Doctor ${doctor.id_doctor}",
                 specialty = "Clinica ID: ${doctor.id_clinica}",
                 navController = navController,
+                userId = userId ?: -1,
                 onClick = {
                 }
             )

@@ -87,7 +87,7 @@ fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 clinic?.let {
-                    ClinicaCard(clinic = it, navController = navController, inFavourites = true)
+                    ClinicaCard(clinic = it, navController = navController, userId = userId ?: -1, inFavourites = true)
                 }
             }
             // Botones
@@ -147,7 +147,8 @@ fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel
                                         ProfessionalCard(
                                             name = doctor.nombre,
                                             specialty = doctor.especialidad,
-                                            navController = navController
+                                            navController = navController,
+                                            userId = userId ?: -1,
                                         ) { /* Acción */ }
                                         Log.d("DEBUG", "ID clínica actual: ${clinic?.id_clinica}")
                                         doctorList.forEach {

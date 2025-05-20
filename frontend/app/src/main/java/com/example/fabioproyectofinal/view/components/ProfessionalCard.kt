@@ -27,13 +27,13 @@ import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 // Tarjeta de profesional en vertical
 @Composable
-fun ProfessionalCard(name: String, specialty: String, navController: NavHostController, onClick: () -> Unit) {
+fun ProfessionalCard(name: String, specialty: String, navController: NavHostController, userId: Int?, onClick: () -> Unit) {
     val context = LocalContext.current
     Card(
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
-            .clickable { navController.navigate(route = AppScreens.SelectProfessionalScreen.route) },
+            .clickable { navController.navigate(route = AppScreens.AppointmentsScreen.route.replace("{id_usuario}", userId.toString())) },
         colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
         Column(

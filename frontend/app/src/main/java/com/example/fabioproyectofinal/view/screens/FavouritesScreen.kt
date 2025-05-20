@@ -86,7 +86,7 @@ fun FavouritesScreen(navController: NavHostController, userId: Int?) {
                 ),
             )
 
-            ClinicList(clinicasFiltradas, navController, true)
+            ClinicList(clinicasFiltradas, navController, userId = userId ?: -1, true)
         }
     }
 }

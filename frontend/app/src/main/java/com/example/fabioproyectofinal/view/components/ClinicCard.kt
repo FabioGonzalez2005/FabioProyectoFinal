@@ -30,6 +30,7 @@ import coil.compose.rememberAsyncImagePainter
 fun ClinicaCard(
     clinic: Clinic,
     navController: NavHostController? = null,
+    userId: Int?,
     inFavourites: Boolean
 ) {
     Card(
@@ -37,7 +38,7 @@ fun ClinicaCard(
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable {
-                navController?.navigate(route = AppScreens.ClinicDetailScreen.route)
+                navController?.navigate(route = AppScreens.ClinicDetailScreen.route.replace("{id_usuario}", userId.toString()))
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
