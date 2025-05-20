@@ -37,7 +37,7 @@ import com.example.fabioproyectofinal.R
 
 @Composable
 fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
-    val afacadFont = FontFamily(Font(R.font.afacadFont, FontWeight.Normal))
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val appointments by appointmentViewModel.citas.collectAsState()
 
@@ -112,6 +112,7 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
                             text = "Historial",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
+                            fontFamily = afacadFont,
                             color = Color(0xFFB2C2A4),
                         )
                     }
@@ -136,6 +137,7 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
                         text = "Confirmadas: $confirmedCount",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
+                        fontFamily = afacadFont,
                         color = Color(0xFFB2C2A4),
                         modifier = Modifier.padding(start = 8.dp)
                     )
@@ -162,6 +164,7 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
                         text = "Pendientes: $pendingCount",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
+                        fontFamily = afacadFont,
                         color = Color(0xFFB2C2A4),
                         modifier = Modifier.padding(start = 8.dp)
                     )
@@ -188,6 +191,7 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
                         text = "Canceladas: $cancelledCount",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
+                        fontFamily = afacadFont,
                         color = Color(0xFFB2C2A4),
                         modifier = Modifier.padding(start = 8.dp)
                     )

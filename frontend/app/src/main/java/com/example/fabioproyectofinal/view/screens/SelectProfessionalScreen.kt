@@ -21,10 +21,13 @@ import com.example.fabioproyectofinal.model.utils.CalendarComponent
 import com.example.fabioproyectofinal.viewmodel.AvailabilityViewModel
 import com.example.fabioproyectofinal.view.components.*
 import java.time.LocalDate
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
 
 @Composable
 fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
-
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var selectedSlot by remember { mutableStateOf<String?>(null) }
     var buttonColor by remember { mutableStateOf(Color(0xFFF4F4F4)) }
@@ -85,6 +88,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                             Text(
                                 text = "Disponibilidad:",
                                 fontSize = 16.sp,
+                                fontFamily = afacadFont,
                                 fontWeight = FontWeight.SemiBold,
                                 color = Color(0xFFB2C2A4),
                                 modifier = Modifier.padding(start = 8.dp)
@@ -110,7 +114,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
                 ) {
-                    Text(text = "Aceptar", color = Color.White)
+                    Text(text = "Aceptar", fontFamily = afacadFont, color = Color.White)
                 }
             }
         }

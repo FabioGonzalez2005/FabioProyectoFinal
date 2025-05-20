@@ -23,9 +23,14 @@ import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun MainScreenApp(navController: NavHostController, userId: Int?) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val clinicViewModel: ClinicViewModel = viewModel()
     val clinics by clinicViewModel.clinics.collectAsState()
 
@@ -83,6 +88,7 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                 text = "Buscador",
                 color = Color(0xFFB2C2A4),
                 fontSize = 40.sp,
+                fontFamily = afacadFont,
                 modifier = Modifier
                     .padding(start = 16.dp, bottom = 16.dp)
             )
@@ -101,6 +107,7 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                 placeholder = {
                     Text(
                         "Clínica, especialidad o dirección",
+                        fontFamily = afacadFont,
                         fontSize = 18.sp,
                         color = Color(0xFFB2C2A4),
                     )

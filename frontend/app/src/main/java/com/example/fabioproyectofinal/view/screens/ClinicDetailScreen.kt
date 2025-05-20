@@ -53,9 +53,13 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.example.fabioproyectofinal.R
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 
 @Composable
 fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel: DoctorViewModel = viewModel()) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val clinicViewModel: ClinicViewModel = viewModel()
     val clinics by clinicViewModel.clinics.collectAsState()
     val doctorList by viewModel.doctors.collectAsState()
@@ -132,6 +136,7 @@ fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel
                         Text(
                             "Escoge profesional:",
                             fontWeight = FontWeight.SemiBold,
+                            fontFamily = afacadFont,
                             fontSize = 16.sp,
                             color = Color(0xFFB2C2A4)
                         )
@@ -183,7 +188,7 @@ fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel
                             .padding(bottom = 16.dp)
                             .width(160.dp)
                     ) {
-                        Text("Cerrar", color = Color.White)
+                        Text("Cerrar", color = Color.White, fontFamily = afacadFont,)
                     }
                 },
                 title = {
@@ -191,6 +196,7 @@ fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel
                         text = "Ubicación",
                         color = Color(0xFFB2C2A4),
                         fontSize = 20.sp,
+                        fontFamily = afacadFont,
                         fontWeight = FontWeight.Bold
                     )
                 },

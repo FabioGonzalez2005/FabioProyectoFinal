@@ -71,7 +71,6 @@ fun CalendarComponent(
 
     val canGoToNextMonth = displayedYearMonth.isBefore(maxAllowedMonth)
 
-    val defaultFont = FontFamily(Font(R.font.default_font, FontWeight.Normal))
 
     Column {
         Row(
@@ -102,7 +101,6 @@ fun CalendarComponent(
                     .replaceFirstChar { it.uppercase() }} ${displayedYearMonth.year}",
                 color = Color.White,
                 style = androidx.compose.ui.text.TextStyle(
-                    fontFamily = defaultFont,
                     fontWeight = FontWeight.Bold
                 ),
                 fontSize = 30.sp

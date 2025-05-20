@@ -18,9 +18,14 @@ import androidx.compose.runtime.getValue
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import com.example.fabioproyectofinal.R
 
 @Composable
 fun FavouritesScreen(navController: NavHostController, userId: Int?) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var searchText by remember { mutableStateOf("") }
     val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
     val clinics by favouritesViewModel.favoritas.collectAsState()
@@ -62,6 +67,7 @@ fun FavouritesScreen(navController: NavHostController, userId: Int?) {
                 text = "Favoritos",
                 color = Color(0xFFB2C2A4),
                 fontSize = 40.sp,
+                fontFamily = afacadFont,
                 modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
             )
 
@@ -72,7 +78,7 @@ fun FavouritesScreen(navController: NavHostController, userId: Int?) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar", modifier = Modifier.size(18.dp))
                 },
                 placeholder = {
-                    Text("Clínica, especialidad o dirección", fontSize = 18.sp, color = Color(0xFFB2C2A4))
+                    Text("Clínica, especialidad o dirección", fontSize = 18.sp, fontFamily = afacadFont, color = Color(0xFFB2C2A4))
                 },
                 modifier = Modifier
                     .fillMaxWidth()

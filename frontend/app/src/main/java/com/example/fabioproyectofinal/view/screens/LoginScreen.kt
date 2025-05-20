@@ -24,9 +24,14 @@ import coil.request.ImageRequest
 import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 import com.example.fabioproyectofinal.model.data.model.UsuarioLoginRequest
 import com.example.fabioproyectofinal.model.session.SessionManager
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -60,7 +65,7 @@ fun LoginScreen(navController: NavHostController) {
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
 
-            Text("Iniciar sesión", color = Color(0xFFB2C2A4), fontSize = 40.sp)
+            Text("Iniciar sesión", color = Color(0xFFB2C2A4), fontFamily = afacadFont, fontSize = 40.sp)
 
             Row(
                 modifier = Modifier
@@ -75,7 +80,7 @@ fun LoginScreen(navController: NavHostController) {
                     elevation = ButtonDefaults.buttonElevation(0.dp),
                     shape = RoundedCornerShape(6.dp),
                 ) {
-                    Text("Iniciar sesión", color = Color.White, modifier = Modifier.padding(vertical = 9.dp))
+                    Text("Iniciar sesión", color = Color.White, fontFamily = afacadFont, modifier = Modifier.padding(vertical = 9.dp))
                 }
                 Button(
                     onClick = {
@@ -94,14 +99,14 @@ fun LoginScreen(navController: NavHostController) {
                     shape = RoundedCornerShape(6.dp),
                 )
                 {
-                    Text("Crea una cuenta", color = Color(0xFFB2C2A4), modifier = Modifier.padding(vertical = 9.dp))
+                    Text("Crea una cuenta", color = Color(0xFFB2C2A4), fontFamily = afacadFont, modifier = Modifier.padding(vertical = 9.dp))
                 }
             }
 
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Introduce tu usuario", color = Color(0xFF7C8B6B)) },
+                label = { Text("Introduce tu usuario", fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF7C8B6B),
@@ -112,7 +117,7 @@ fun LoginScreen(navController: NavHostController) {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Introduce tu contraseña", color = Color(0xFF7C8B6B)) },
+                label = { Text("Introduce tu contraseña", fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -124,6 +129,7 @@ fun LoginScreen(navController: NavHostController) {
             Text(
                 text = "He olvidado mi contraseña",
                 color = Color.Gray,
+                fontFamily = afacadFont,
                 fontSize = 12.sp,
                 modifier = Modifier
                     .padding(bottom = 24.dp)
@@ -154,7 +160,7 @@ fun LoginScreen(navController: NavHostController) {
                     .padding(bottom = 36.dp)
                     .width(160.dp)
             ) {
-                Text("Continuar", color = Color.White)
+                Text("Continuar", fontFamily = afacadFont, color = Color.White)
             }
             LaunchedEffect(estadoLogin) {
                 estadoLogin?.let { estado ->

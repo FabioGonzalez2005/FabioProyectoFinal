@@ -22,9 +22,13 @@ import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.viewmodel.AppointmentViewModel
 import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
 
 @Composable
 fun HistoryScreen(navController: NavHostController, userId: Int?) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val appointments by appointmentViewModel.citas.collectAsState()
 
@@ -72,6 +76,7 @@ fun HistoryScreen(navController: NavHostController, userId: Int?) {
                     text = "Historial",
                     color = Color(0xFFB2C2A4),
                     fontSize = 40.sp,
+                    fontFamily = afacadFont,
                     modifier = Modifier
                         .padding(start = 16.dp, bottom = 16.dp)
                 )
@@ -93,6 +98,7 @@ fun HistoryScreen(navController: NavHostController, userId: Int?) {
                     Text(
                         text = "Últimas citas: $appointmentsCount",
                         fontSize = 18.sp,
+                        fontFamily = afacadFont,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFFB2C2A4),
                         modifier = Modifier.padding(start = 8.dp)

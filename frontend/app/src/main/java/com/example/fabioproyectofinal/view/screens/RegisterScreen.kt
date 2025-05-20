@@ -23,9 +23,14 @@ import androidx.compose.foundation.Image
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var fullname by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -66,7 +71,7 @@ fun RegisterScreen(navController: NavHostController) {
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
 
-            Text("Crea una cuenta", color = Color(0xFFB2C2A4), fontSize = 40.sp)
+            Text("Crea una cuenta", fontFamily = afacadFont, color = Color(0xFFB2C2A4), fontSize = 40.sp)
 
             Row(
                 modifier = Modifier
@@ -91,7 +96,7 @@ fun RegisterScreen(navController: NavHostController) {
                     shape = RoundedCornerShape(6.dp),
                 )
                 {
-                    Text("Iniciar sesión", color = Color(0xFFB2C2A4), modifier = Modifier.padding(vertical = 9.dp))
+                    Text("Iniciar sesión", color = Color(0xFFB2C2A4), fontFamily = afacadFont, modifier = Modifier.padding(vertical = 9.dp))
                 }
                 Button(
                     onClick = { /* Ya está en register */ },
@@ -100,14 +105,14 @@ fun RegisterScreen(navController: NavHostController) {
                     elevation = ButtonDefaults.buttonElevation(0.dp),
                     shape = RoundedCornerShape(6.dp),
                 ) {
-                    Text("Crea una cuenta", color = Color.White, modifier = Modifier.padding(vertical = 9.dp))
+                    Text("Crea una cuenta", color = Color.White, fontFamily = afacadFont, modifier = Modifier.padding(vertical = 9.dp))
                 }
             }
 
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Introduce tu usuario", color = Color(0xFF7C8B6B)) },
+                label = { Text("Introduce tu usuario", fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF7C8B6B),
@@ -118,7 +123,7 @@ fun RegisterScreen(navController: NavHostController) {
             OutlinedTextField(
                 value = fullname,
                 onValueChange = { fullname  = it },
-                label = { Text("Introduce tu nombre completo", color = Color(0xFF7C8B6B)) },
+                label = { Text("Introduce tu nombre completo", fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF7C8B6B),
@@ -129,7 +134,7 @@ fun RegisterScreen(navController: NavHostController) {
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Introduce tu correo electrónico", color = Color(0xFF7C8B6B)) },
+                label = { Text("Introduce tu correo electrónico", fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF7C8B6B),
@@ -140,7 +145,7 @@ fun RegisterScreen(navController: NavHostController) {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Introduce tu contraseña", color = Color(0xFF7C8B6B)) },
+                label = { Text("Introduce tu contraseña", fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -152,7 +157,7 @@ fun RegisterScreen(navController: NavHostController) {
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirma tu contraseña", color = Color(0xFF7C8B6B)) },
+                label = { Text("Confirma tu contraseña", fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -197,7 +202,7 @@ fun RegisterScreen(navController: NavHostController) {
                     .padding(bottom = 36.dp)
                     .width(160.dp)
             ) {
-                Text("Continuar", color = Color.White)
+                Text("Continuar", fontFamily = afacadFont, color = Color.White)
             }
         }
     }
