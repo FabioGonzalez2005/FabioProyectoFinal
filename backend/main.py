@@ -1,8 +1,11 @@
 import psycopg2
 from flask import Flask, jsonify, request
 import bcrypt
-import cloudinary
 import cloudinary.uploader
+import os
+import jwt as pyjwt
+from datetime import datetime, timedelta, timezone
+from dotenv import load_dotenv
 
 cloudinary.config(
     cloud_name='dr8es2ate',
@@ -67,31 +70,57 @@ def login_usuario():
     datos = request.get_json()
     print(f"datos {datos}")
 
-    # Validación de campos obligatorios
     if 'usuario' not in datos or 'contraseña' not in datos:
         return jsonify({'error': 'Usuario y contraseña son obligatorios'}), 400
 
     try:
-        # Conexión directa a la base de datos
         conexion = psycopg2.connect(
             host="localhost", port="5432", dbname="fabioapi", user="alumno1234", password="Alumno1234"
         )
         cursor = conexion.cursor()
 
-        # Buscar usuario
-        cursor.execute('SELECT id_usuario, nombre, email, usuario, contraseña, fecha_nacimiento, telefono, telefono_emergencia, alergias, antecedentes_familiares, condiciones_pasadas, procedimientos_quirurgicos FROM Usuario WHERE usuario = %s', (datos['usuario'],))
-        usuario_encontrado = cursor.fetchone()
+        cursor.execute('''
+            SELECT id_usuario, nombre, email, usuario, contraseña, 
+                   fecha_nacimiento, telefono, telefono_emergencia, 
+                   alergias, antecedentes_familiares, condiciones_pasadas, 
+                   procedimientos_quirurgicos
+            FROM Usuario
+            WHERE usuario = %s
+        ''', (datos['usuario'],))
 
+        usuario_encontrado = cursor.fetchone()
         cursor.close()
         conexion.close()
 
         if usuario_encontrado is None:
             return jsonify({'error': 'Usuario no encontrado'}), 404
 
-        id_usuario, nombre, email, usuario, contraseña_hash, fecha_nacimiento, telefono, telefono_emergencia, alergias, antecedentes_familiares, condiciones_pasadas, procedimientos_quirurgicos = usuario_encontrado
+        (
+            id_usuario, nombre, email, usuario, contraseña_hash,
+            fecha_nacimiento, telefono, telefono_emergencia,
+            alergias, antecedentes_familiares, condiciones_pasadas,
+            procedimientos_quirurgicos
+        ) = usuario_encontrado
 
         # Verificar contraseña
         if bcrypt.checkpw(datos['contraseña'].encode('utf-8'), contraseña_hash.encode('utf-8')):
+            # ✅ Cargar la clave secreta y generar token
+            load_dotenv()
+            SECRET_KEY = os.getenv("SECRET_KEY")
+            if not SECRET_KEY:
+                return jsonify({'error': 'SECRET_KEY no definido en .env'}), 500
+
+            exp_time = datetime.now(timezone.utc) + timedelta(days=7)
+            token = pyjwt.encode(
+                {
+                    "usuarioid": id_usuario,
+                    "usuario": usuario,
+                    "exp": exp_time
+                },
+                SECRET_KEY,
+                algorithm="HS256"
+            )
+
             return jsonify({
                 'msg': 'Login exitoso',
                 'id_usuario': id_usuario,
@@ -104,9 +133,9 @@ def login_usuario():
                 'alergias': alergias,
                 'antecedentes_familiares': antecedentes_familiares,
                 'condiciones_pasadas': condiciones_pasadas,
-                'procedimientos_quirurgicos': procedimientos_quirurgicos
-
-            })
+                'procedimientos_quirurgicos': procedimientos_quirurgicos,
+                'token': token
+            }), 200
         else:
             return jsonify({'error': 'Contraseña incorrecta'}), 401
 
