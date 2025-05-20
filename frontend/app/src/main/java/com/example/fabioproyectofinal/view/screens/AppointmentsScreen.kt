@@ -94,7 +94,7 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
                     modifier = Modifier
                         .size(width = 120.dp, height = 45.dp)
                         .padding(end = 16.dp)
-                        .clickable { navController.navigate(route = AppScreens.HistoryScreen.route) },
+                        .clickable { navController.navigate(route = AppScreens.HistoryScreen.route.replace("{id_usuario}", userId.toString())) },
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {

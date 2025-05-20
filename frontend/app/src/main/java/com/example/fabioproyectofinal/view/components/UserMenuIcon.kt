@@ -20,17 +20,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.fabioproyectofinal.model.navigation.AppScreens
+import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 
 @Composable
 fun UserMenuIcon(navController: NavHostController) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
+    val loginViewModel: LoginViewModel = viewModel()
 
     Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
         Image(
@@ -64,7 +67,10 @@ fun UserMenuIcon(navController: NavHostController) {
                 text = { Text("Cerrar sesión", color = Color(0xFFB2C2A4)) },
                 onClick = {
                     expanded = false
-                    navController.navigate(AppScreens.LoginScreen.route)
+                    loginViewModel.logout()
+                    navController.navigate(AppScreens.LoginScreen.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }

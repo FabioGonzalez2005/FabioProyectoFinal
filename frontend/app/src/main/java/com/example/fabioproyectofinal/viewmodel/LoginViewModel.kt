@@ -53,6 +53,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
     fun getTokenFlow() = tokenManager.token
     fun getUserIdFlow() = tokenManager.userId
 
