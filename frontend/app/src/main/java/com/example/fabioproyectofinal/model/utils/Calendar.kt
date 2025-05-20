@@ -1,4 +1,4 @@
-package com.haircloud.utils
+package com.example.fabioproyectofinal.model.utils
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,15 +38,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.haircloud.R
-import com.haircloud.data.model.AvailableSlot
+import com.example.fabioproyectofinal.R
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
 
 @Composable
-fun CalendarMonth(
+fun CalendarComponent(
     selectedDate: LocalDate?,
     onDateSelected: (LocalDate) -> Unit,
     workingDays: List<Int> = listOf(1, 2, 3, 4, 5),
@@ -246,57 +245,6 @@ fun CalendarMonth(
                             }
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun AvailableSlotsGrid(
-    slots: List<AvailableSlot>,
-    onSlotSelected: (AvailableSlot) -> Unit,
-    selectedSlot: AvailableSlot?,
-    modifier: Modifier = Modifier
-) {
-    val columns = 4
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(columns),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)
-            .heightIn(max = 300.dp)
-    ) {
-        items(slots.size) { index ->
-            val slot = slots[index]
-            val isSelected = slot == selectedSlot
-
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
-                    .background(
-                        when {
-                            isSelected -> Color(0xFFDADADA)
-                            else -> Color.White
-                        }
-                    )
-                    .border(
-                        if (!isSelected) 0.dp else
-                            2.dp, color = Color(0xFF5AB641), shape = RoundedCornerShape(5.dp)
-                    )
-                    .clickable(enabled = true) { onSlotSelected(slot) }
-                    .padding(vertical = 8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = slot.desde,
-                        color = if (isSelected) Color.Black else Color.DarkGray,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 25.sp
-                    )
                 }
             }
         }

@@ -15,6 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,9 +33,11 @@ import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.viewmodel.AppointmentViewModel
 import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
+import com.example.fabioproyectofinal.R
 
 @Composable
 fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
+    val afacadFont = FontFamily(Font(R.font.afacadFont, FontWeight.Normal))
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val appointments by appointmentViewModel.citas.collectAsState()
 
@@ -85,6 +90,7 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
                     text = "Citas",
                     color = Color(0xFFB2C2A4),
                     fontSize = 40.sp,
+                    fontFamily = afacadFont,
                     modifier = Modifier
                         .padding(start = 16.dp, bottom = 16.dp)
                 )
