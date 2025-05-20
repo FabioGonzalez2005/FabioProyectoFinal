@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,6 +35,7 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
     var name by remember { mutableStateOf(SessionManager.nombre ?: "") }
     var username by remember { mutableStateOf(SessionManager.username ?: "") }
     var email by remember { mutableStateOf(SessionManager.email ?: "") }
+    Log.i("Prueba", "$username $email")
     var showMedicalDialog by remember { mutableStateOf(false) }
 
     fun guardarCambios() {
@@ -42,8 +44,8 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
 
         val datos = mutableMapOf<String, String>()
         if (name.isNotBlank()) datos["nombre"] = name
-        if (email.isNotBlank()) datos["email"] = email
         if (username.isNotBlank()) datos["usuario"] = username
+        if (email.isNotBlank()) datos["email"] = email
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -51,8 +53,8 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
 
                 // Actualizar SessionManager local
                 SessionManager.nombre = name
-                SessionManager.email = email
                 SessionManager.username = username
+                SessionManager.email = email
 
                 CoroutineScope(Dispatchers.Main).launch {
                     Toast.makeText(context, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show()

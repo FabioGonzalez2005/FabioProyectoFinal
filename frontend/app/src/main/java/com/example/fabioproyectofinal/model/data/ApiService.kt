@@ -45,6 +45,11 @@ interface ApiService {
         @Body datos: Map<String, String>
     ): MensajeResponse
 
+    @GET("/perfil/datos-de-interes/{id_usuario}")
+    suspend fun obtenerDatosDeInteres(
+        @Path("id_usuario") idUsuario: Int
+    ): List<Map<String, String?>>
+
     @retrofit2.http.PUT("/perfil/datos-de-interes/{id_usuario}")
     suspend fun actualizarDatosDeInteres(
         @Path("id_usuario") idUsuario: Int,

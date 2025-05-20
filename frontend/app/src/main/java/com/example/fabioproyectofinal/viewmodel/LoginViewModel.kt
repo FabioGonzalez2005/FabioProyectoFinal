@@ -24,6 +24,8 @@ class LoginViewModel : ViewModel() {
                 val respuesta = ApiServer.apiService.loginUsuario(usuario)
                 _loginEstado.value = respuesta
                 Log.d("LoginVM", "Login exitoso: ${respuesta.msg}")
+                Log.d("LoginVM", "Login exitoso: ${respuesta.email} ${respuesta.usuario}")
+
             } catch (e: Exception) {
                 var errorMsg = "Error desconocido"
 
