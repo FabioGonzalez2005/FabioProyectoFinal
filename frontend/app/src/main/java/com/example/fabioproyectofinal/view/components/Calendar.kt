@@ -1,7 +1,6 @@
-package com.example.fabioproyectofinal.model.utils
+package com.example.fabioproyectofinal.view.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -39,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fabioproyectofinal.R
+
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -54,6 +53,7 @@ fun CalendarComponent(
     diasConCitas: List<LocalDate> = emptyList(),
     allowPreviousMonth: Boolean = false
 ) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val today = remember { LocalDate.now() }
     val currentActualMonth = remember { YearMonth.from(today) }
     val startMonth = initialMonth ?: currentActualMonth
@@ -100,6 +100,7 @@ fun CalendarComponent(
                 text = "${displayedYearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
                     .replaceFirstChar { it.uppercase() }} ${displayedYearMonth.year}",
                 color = Color.White,
+                fontFamily = afacadFont,
                 style = androidx.compose.ui.text.TextStyle(
                     fontWeight = FontWeight.Bold
                 ),
@@ -138,6 +139,7 @@ fun CalendarComponent(
                 ) {
                     Text(
                         text = day,
+                        fontFamily = afacadFont,
                         color = Color(0xFF9D9D9D),
                         fontWeight = FontWeight.Bold
                     )
@@ -199,6 +201,7 @@ fun CalendarComponent(
                             Text(
                                 text = "${day + 1}",
                                 color = textColor,
+                                fontFamily = afacadFont,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
                             )
@@ -209,6 +212,7 @@ fun CalendarComponent(
                                 Text(
                                     text = "HOY",
                                     color = textColor,
+                                    fontFamily = afacadFont,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = if (hasCita) 10.sp else 12.sp,
                                     modifier = Modifier.padding(top = 1.dp)
@@ -229,6 +233,7 @@ fun CalendarComponent(
                             Text(
                                 text = "${day + 1}",
                                 color = textColor,
+                                fontFamily = afacadFont,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 16.sp
                             )
