@@ -65,6 +65,7 @@ def ejecutar_sql(sql_text, params=None, es_insert=False):
 @app.route('/usuario/login', methods=['POST'])
 def login_usuario():
     datos = request.get_json()
+    print(f"datos {datos}")
 
     # Validación de campos obligatorios
     if 'usuario' not in datos or 'contraseña' not in datos:
@@ -78,7 +79,7 @@ def login_usuario():
         cursor = conexion.cursor()
 
         # Buscar usuario
-        cursor.execute('SELECT id_usuario, nombre, usuario, email, contraseña FROM Usuario WHERE usuario = %s', (datos['usuario'],))
+        cursor.execute('SELECT id_usuario, nombre, email, usuario, contraseña, fecha_nacimiento, telefono, telefono_emergencia, alergias, antecedentes_familiares, condiciones_pasadas, procedimientos_quirurgicos FROM Usuario WHERE usuario = %s', (datos['usuario'],))
         usuario_encontrado = cursor.fetchone()
 
         cursor.close()
@@ -87,7 +88,7 @@ def login_usuario():
         if usuario_encontrado is None:
             return jsonify({'error': 'Usuario no encontrado'}), 404
 
-        id_usuario, nombre, email, usuario, contraseña_hash = usuario_encontrado
+        id_usuario, nombre, email, usuario, contraseña_hash, fecha_nacimiento, telefono, telefono_emergencia, alergias, antecedentes_familiares, condiciones_pasadas, procedimientos_quirurgicos = usuario_encontrado
 
         # Verificar contraseña
         if bcrypt.checkpw(datos['contraseña'].encode('utf-8'), contraseña_hash.encode('utf-8')):
@@ -96,12 +97,21 @@ def login_usuario():
                 'id_usuario': id_usuario,
                 'usuario': usuario,
                 'nombre': nombre,
-                'email': email
+                'email': email,
+                'fecha_nacimiento': fecha_nacimiento,
+                'telefono': telefono,
+                'telefono_emergencia': telefono_emergencia,
+                'alergias': alergias,
+                'antecedentes_familiares': antecedentes_familiares,
+                'condiciones_pasadas': condiciones_pasadas,
+                'procedimientos_quirurgicos': procedimientos_quirurgicos
+
             })
         else:
             return jsonify({'error': 'Contraseña incorrecta'}), 401
 
     except Exception as e:
+        print(str(e))
         return jsonify({'error': f'Error en el login: {str(e)}'}), 500
 
 # ======================= REGISTER =======================
@@ -121,7 +131,7 @@ def registrar_usuario():
         if cursor.fetchone():
             cursor.close()
             conexion.close()
-            return jsonify({'error': 'El email ya está registrado'}), 400
+            return jsonify({'error': 'El email ya está registrado'}), 401
 
         cursor.execute('SELECT 1 FROM Usuario WHERE LOWER(usuario) = LOWER(%s)', (datos['usuario'],))
         if cursor.fetchone():
@@ -297,6 +307,18 @@ def editar_perfil(id_usuario):
     connection.close()
 
     return jsonify({"mensaje": "Perfil actualizado correctamente"}), 200
+
+
+# Obtener datos de interés
+@app.route('/perfil/datos-de-interes/<int:id_usuario>', methods=['GET'])
+def obtener_datos_de_interes(id_usuario):
+    sql = '''
+        SELECT fecha_nacimiento, telefono, telefono_emergencia, alergias,
+               antecedentes_familiares, condiciones_pasadas, procedimientos_quirurgicos
+        FROM Usuario
+        WHERE id_usuario = %s
+    '''
+    return ejecutar_sql(sql, (id_usuario,))
 
 # Editar datos de interés de un usuario
 @app.route('/perfil/datos-de-interes/<int:id_usuario>', methods=['PUT'])
