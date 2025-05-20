@@ -97,8 +97,11 @@ dependencies {
 
     //Corrutinas
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
-
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.maps.android:maps-compose:4.1.1")
     implementation("androidx.compose.material:material:1.6.1")
+
+    // Iconos
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 }
+
