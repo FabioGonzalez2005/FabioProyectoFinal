@@ -24,7 +24,7 @@ import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 
 @Composable
-fun HistoryScreen(navController: NavHostController) {
+fun HistoryScreen(navController: NavHostController, userId: Int?) {
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val appointments by appointmentViewModel.citas.collectAsState()
 
@@ -40,17 +40,18 @@ fun HistoryScreen(navController: NavHostController) {
         }
     }
 
-    LaunchedEffect(Unit) {
-        SessionManager.idUsuario?.let { id ->
+    LaunchedEffect(userId) {
+        userId?.let { id ->
             appointmentViewModel.fetchCitas(id)
         }
     }
+
     Scaffold(
         topBar = {
             TopBar(navController = navController) { /* Acción */ }
         },
         bottomBar = {
-            BottomBar(navController = navController)
+            BottomBar(navController = navController, userId = userId ?: -1)
         },
         containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
     ) { innerPadding ->

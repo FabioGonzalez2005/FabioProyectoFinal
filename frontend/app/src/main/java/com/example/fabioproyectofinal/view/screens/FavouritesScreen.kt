@@ -15,28 +15,29 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
-import com.example.fabioproyectofinal.model.session.SessionManager
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
 
 @Composable
-fun FavouritesScreen(navController: NavHostController) {
+fun FavouritesScreen(navController: NavHostController, userId: Int?) {
     var searchText by remember { mutableStateOf("") }
     val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
     val clinics by favouritesViewModel.favoritas.collectAsState()
     val clinicsConMarca = clinics.map { it.copy(inFavourites = true) }
 
-    LaunchedEffect(searchText) {
+    LaunchedEffect(searchText, userId) {
+        Log.d("FavouritesScreen", "Cargando favoritos para usuario: $userId")
         if (searchText.length >= 3) {
             favouritesViewModel.buscarPorEspecialidadEnFavoritos(searchText)
         } else {
-            SessionManager.idUsuario?.let { id ->
+            userId?.let { id ->
                 Log.d("FavouritesScreen", "Cargando favoritos para usuario: $id")
                 favouritesViewModel.fetchFavoritas(id)
             }
         }
     }
+
 
     // Filtrar por búsqueda
     val clinicasFiltradas = clinicsConMarca.filter {
@@ -48,7 +49,7 @@ fun FavouritesScreen(navController: NavHostController) {
 
     Scaffold(
         topBar = { TopBar(navController = navController) {} },
-        bottomBar = { BottomBar(navController = navController) },
+        bottomBar = { BottomBar(navController = navController, userId = userId ?: -1) },
         containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(

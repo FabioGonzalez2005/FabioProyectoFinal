@@ -55,7 +55,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
-fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewModel = viewModel()) {
+fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel: DoctorViewModel = viewModel()) {
     val clinicViewModel: ClinicViewModel = viewModel()
     val clinics by clinicViewModel.clinics.collectAsState()
     val doctorList by viewModel.doctors.collectAsState()
@@ -71,7 +71,7 @@ fun ClinicDetailScreen(navController: NavHostController, viewModel: DoctorViewMo
             TopBar(navController = navController) { /* Acción */ }
         },
         bottomBar = {
-            BottomBar(navController = navController)
+            BottomBar(navController = navController, userId = userId ?: -1)
         },
         containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->

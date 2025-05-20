@@ -25,7 +25,7 @@ import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
 
 @Composable
-fun MainScreenApp(navController: NavHostController) {
+fun MainScreenApp(navController: NavHostController, userId: Int?) {
     val clinicViewModel: ClinicViewModel = viewModel()
     val clinics by clinicViewModel.clinics.collectAsState()
 
@@ -43,8 +43,8 @@ fun MainScreenApp(navController: NavHostController) {
     val favoritas by favouritesViewModel.favoritas.collectAsState()
 
 // Cargar favoritos al entrar
-    LaunchedEffect(Unit) {
-        SessionManager.idUsuario?.let { id ->
+    LaunchedEffect(userId) {
+        userId?.let { id ->
             favouritesViewModel.fetchFavoritas(id)
         }
     }
@@ -67,7 +67,7 @@ fun MainScreenApp(navController: NavHostController) {
             TopBar(navController = navController) { /* Acción */ }
         },
         bottomBar = {
-            BottomBar(navController = navController)
+            BottomBar(navController = navController, userId = userId ?: -1)
         },
         containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
     ) { innerPadding ->

@@ -11,7 +11,7 @@ import com.example.fabioproyectofinal.view.components.ProfessionalCard
 import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 
 @Composable
-fun DoctorListScreen(navController: NavHostController, viewModel: DoctorViewModel = viewModel()) {
+fun DoctorListScreen(navController: NavHostController, userId: Int?, viewModel: DoctorViewModel = viewModel()) {
     val doctorList by viewModel.doctors.collectAsState()
     Log.d("DoctorListScreen", "Pantalla cargada")
     Column(modifier = Modifier.padding(top = 16.dp)) {

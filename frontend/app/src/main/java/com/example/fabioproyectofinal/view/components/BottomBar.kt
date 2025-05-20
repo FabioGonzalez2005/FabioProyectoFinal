@@ -27,7 +27,7 @@ import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 // Barra de navegación inferior
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(navController: NavHostController, userId: Int) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,15 +52,16 @@ fun BottomBar(navController: NavHostController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Botón Favoritos
-                IconButton(onClick = { navController.navigate(route = AppScreens.FavouritesScreen.route)}) {
+
+                IconButton(onClick = { navController.navigate(route = AppScreens.FavouritesScreen.route.replace("{id_usuario}", userId.toString()))}) {
                     Icon(Icons.Default.FavoriteBorder, contentDescription = "Favoritos", modifier = Modifier.size(32.dp), tint = Color.White)
                 }
                 // Botón Home
-                IconButton(onClick = { navController.navigate(route = AppScreens.MainScreenApp.route)}) {
+                IconButton(onClick = { navController.navigate(route = AppScreens.MainScreenApp.route.replace("{id_usuario}", userId.toString()))}) {
                     Icon(Icons.Default.Home, contentDescription = "Inicio", modifier = Modifier.size(32.dp), tint = Color.White)
                 }
                 // Botón Calendario
-                IconButton(onClick = { navController.navigate(route = AppScreens.AppointmentsScreen.route)}) {
+                IconButton(onClick = { navController.navigate(route = AppScreens.AppointmentsScreen.route.replace("{id_usuario}", userId.toString()))}) {
                     Icon(Icons.Default.DateRange, contentDescription = "Calendario", modifier = Modifier.size(32.dp), tint = Color.White)
                 }
             }

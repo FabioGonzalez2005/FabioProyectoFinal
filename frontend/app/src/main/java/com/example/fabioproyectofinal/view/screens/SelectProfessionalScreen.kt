@@ -21,7 +21,7 @@ import com.example.fabioproyectofinal.viewmodel.AvailabilityViewModel
 import com.example.fabioproyectofinal.view.components.*
 
 @Composable
-fun SelectProfessionalScreen(navController: NavHostController) {
+fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
     val dias = (1..31).map { it.toString().padStart(2, '0') }
     val meses = listOf(
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -54,7 +54,7 @@ fun SelectProfessionalScreen(navController: NavHostController) {
             TopBar(navController = navController) { }
         },
         bottomBar = {
-            BottomBar(navController = navController)
+            BottomBar(navController = navController, userId = userId ?: -1)
         },
         containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->

@@ -24,17 +24,15 @@ import com.example.fabioproyectofinal.model.data.model.Appointment
 import com.example.fabioproyectofinal.model.data.model.Clinic
 import com.example.fabioproyectofinal.model.data.model.Doctor
 import com.example.fabioproyectofinal.model.navigation.AppScreens
-import com.example.fabioproyectofinal.model.session.SessionManager
 import com.example.fabioproyectofinal.view.components.AppointmentCard
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.TopBar
 import com.example.fabioproyectofinal.viewmodel.AppointmentViewModel
 import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
-import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 
 @Composable
-fun AppointmentsScreen(navController: NavHostController, loginViewModel: LoginViewModel = viewModel()) {
+fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val appointments by appointmentViewModel.citas.collectAsState()
 
@@ -54,12 +52,10 @@ fun AppointmentsScreen(navController: NavHostController, loginViewModel: LoginVi
     val pendingCount = citasFuturas.count { it.estado == "Pendiente" }
     val cancelledCount = citasFuturas.count { it.estado == "Cancelado" }
 
-    val loginEstado by loginViewModel.loginEstado.collectAsState()
-
-    LaunchedEffect(loginEstado) {
-        SessionManager.idUsuario?.let { idUsuario ->
-            Log.d("AppointmentsScreen", "Llamando a fetchCitas con id: $idUsuario")
-            appointmentViewModel.fetchCitas(idUsuario)
+    LaunchedEffect(userId) {
+        userId?.let { id ->
+            Log.d("AppointmentsScreen", "Llamando a fetchCitas con id: $id")
+            appointmentViewModel.fetchCitas(id)
         }
     }
 
@@ -68,7 +64,7 @@ fun AppointmentsScreen(navController: NavHostController, loginViewModel: LoginVi
             TopBar(navController = navController) { /* Acción */ }
         },
         bottomBar = {
-            BottomBar(navController = navController)
+            BottomBar(navController = navController, userId = userId ?: -1)
         },
         containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
