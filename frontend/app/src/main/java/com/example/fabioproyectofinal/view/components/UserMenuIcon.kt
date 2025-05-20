@@ -27,9 +27,14 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.viewmodel.LoginViewModel
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun UserMenuIcon(navController: NavHostController) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
@@ -57,14 +62,14 @@ fun UserMenuIcon(navController: NavHostController) {
             modifier = Modifier.background(Color(0xFFFFFFFF))
         ) {
             DropdownMenuItem(
-                text = { Text("Editar perfil", color = Color(0xFFB2C2A4)) },
+                text = { Text("Editar perfil", fontFamily = afacadFont, color = Color(0xFFB2C2A4)) },
                 onClick = {
                     expanded = false
                     showDialog = true
                 }
             )
             DropdownMenuItem(
-                text = { Text("Cerrar sesión", color = Color(0xFFB2C2A4)) },
+                text = { Text("Cerrar sesión", fontFamily = afacadFont, color = Color(0xFFB2C2A4)) },
                 onClick = {
                     expanded = false
                     loginViewModel.logout()

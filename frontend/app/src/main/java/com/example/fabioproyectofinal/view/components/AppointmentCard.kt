@@ -23,6 +23,9 @@ import com.example.fabioproyectofinal.model.data.model.Clinic
 import com.example.fabioproyectofinal.model.data.model.Doctor
 import com.example.fabioproyectofinal.model.utils.formatFecha
 import com.example.fabioproyectofinal.model.utils.formatHora
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
 
 @Composable
 fun AppointmentCard(
@@ -31,6 +34,7 @@ fun AppointmentCard(
     clinic: Clinic?,
     navController: NavHostController? = null
 ) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -52,6 +56,7 @@ fun AppointmentCard(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFB2C2A4),
+                        fontFamily = afacadFont,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -60,6 +65,7 @@ fun AppointmentCard(
                         text = "¿Estás seguro de que deseas cancelar la cita?",
                         fontSize = 14.sp,
                         color = Color.Gray,
+                        fontFamily = afacadFont,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -133,11 +139,13 @@ fun AppointmentCard(
                         Text(
                             text = clinic?.nombre ?: "Clínica no disponible",
                             fontSize = 18.sp,
+                            fontFamily = afacadFont,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = clinic?.direccion ?: "Dirección no disponible",
                             fontSize = 14.sp,
+                            fontFamily = afacadFont,
                             color = Color.Gray
                         )
                         Row(
@@ -148,6 +156,7 @@ fun AppointmentCard(
                             Text(
                                 text = "Estado:",
                                 fontSize = 14.sp,
+                                fontFamily = afacadFont,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black
                             )
@@ -155,6 +164,7 @@ fun AppointmentCard(
                             Text(
                                 text = appointment.estado,
                                 fontSize = 14.sp,
+                                fontFamily = afacadFont,
                                 color = statusColor,
                                 fontWeight = FontWeight.Bold
                             )
@@ -173,6 +183,7 @@ fun AppointmentCard(
                         Text(
                             text = "Cita:",
                             fontSize = 18.sp,
+                            fontFamily = afacadFont,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
@@ -181,6 +192,7 @@ fun AppointmentCard(
                         Text(
                             text = formatFecha(appointment.fecha_cita),
                             fontSize = 18.sp,
+                            fontFamily = afacadFont,
                             color = Color(0xFFB2C2A4),
                             fontWeight = FontWeight.Bold
                         )
@@ -189,6 +201,7 @@ fun AppointmentCard(
                     Text(
                         text = formatHora(appointment.fecha_cita),
                         fontSize = 18.sp,
+                        fontFamily = afacadFont,
                         color = Color(0xFFB2C2A4),
                         fontWeight = FontWeight.Bold
                     )
@@ -215,12 +228,14 @@ fun AppointmentCard(
                             Text(
                                 text = doctor?.nombre ?: "Profesional no disponible",
                                 fontSize = 14.sp,
+                                fontFamily = afacadFont,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFFB2C2A4)
                             )
                             Text(
                                 text = doctor?.especialidad ?: "Especialidad desconocida",
                                 fontSize = 12.sp,
+                                fontFamily = afacadFont,
                                 color = Color.Gray
                             )
                         }
@@ -232,7 +247,7 @@ fun AppointmentCard(
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                             shape = RoundedCornerShape(8.dp)
                         ) {
-                            Text("Ver motivos", color = Color.White)
+                            Text("Ver motivos", fontFamily = afacadFont, color = Color.White)
                         }
                     } else {
                         Button(
@@ -240,7 +255,7 @@ fun AppointmentCard(
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                             shape = RoundedCornerShape(8.dp)
                         ) {
-                            Text("Cancelar", color = Color.White)
+                            Text("Cancelar", fontFamily = afacadFont, color = Color.White)
                         }
                     }
                 }

@@ -24,6 +24,10 @@ import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.model.Clinic
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import coil.compose.rememberAsyncImagePainter
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+import androidx.compose.ui.text.font.FontWeight
 
 // Tarjeta de clínica
 @Composable
@@ -33,6 +37,7 @@ fun ClinicaCard(
     userId: Int?,
     inFavourites: Boolean
 ) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -58,8 +63,8 @@ fun ClinicaCard(
                     .padding(end = 16.dp)
             )
             Column {
-                Text(clinic.nombre, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(clinic.direccion, fontSize = 14.sp, color = Color.Gray)
+                Text(clinic.nombre, fontFamily = afacadFont, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(clinic.direccion, fontFamily = afacadFont, fontSize = 14.sp, color = Color.Gray)
 
                 // Mostrar icono solo si está en favoritos
                 if (inFavourites) {

@@ -24,10 +24,15 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.fabioproyectofinal.model.navigation.AppScreens
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+
 
 // Tarjeta de profesional en vertical
 @Composable
 fun ProfessionalCard(name: String, specialty: String, navController: NavHostController, userId: Int?, onClick: () -> Unit) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
     Card(
         shape = RoundedCornerShape(12.dp),
@@ -57,11 +62,13 @@ fun ProfessionalCard(name: String, specialty: String, navController: NavHostCont
                 text = name,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = afacadFont,
                 color = Color(0xFFB2C2A4)
             )
             Text(
                 text = specialty,
                 fontSize = 12.sp,
+                fontFamily = afacadFont,
                 color = Color.Gray
             )
         }

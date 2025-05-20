@@ -16,9 +16,14 @@ import com.example.fabioproyectofinal.model.session.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun MedicalDataDialog(onDismiss: () -> Unit) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
     val api = ApiServer.apiService
 
@@ -93,6 +98,7 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
             Text(
                 "Editar Datos Médicos",
                 color = Color(0xFFB2C2A4),
+                fontFamily = afacadFont,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -129,10 +135,11 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
 
 @Composable
 private fun buildTextField(label: String, value: String, onValueChange: (String) -> Unit) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label, color = Color(0xFF7C8B6B)) },
+        label = { Text(label, fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
         textStyle = TextStyle(color = Color(0xFF7C8B6B)),
         modifier = Modifier
             .fillMaxWidth()

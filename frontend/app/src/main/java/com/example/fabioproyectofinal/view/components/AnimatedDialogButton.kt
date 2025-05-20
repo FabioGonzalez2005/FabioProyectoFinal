@@ -27,6 +27,7 @@ fun AnimatedDialogButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var pressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
         targetValue = if (pressed) 0.92f else 1f,
@@ -45,7 +46,7 @@ fun AnimatedDialogButton(
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
         shape = RoundedCornerShape(8.dp)
     ) {
-        Text(text, color = Color.White)
+        Text(text, fontFamily = afacadFont, color = Color.White)
     }
 
     LaunchedEffect(pressed) {

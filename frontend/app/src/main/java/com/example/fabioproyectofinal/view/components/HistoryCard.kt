@@ -35,6 +35,9 @@ import com.example.fabioproyectofinal.model.data.model.Doctor
 import com.example.fabioproyectofinal.model.session.SessionManager
 import com.example.fabioproyectofinal.model.utils.formatFecha
 import com.example.fabioproyectofinal.model.utils.formatHora
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
 
 @Composable
 fun HistoryCard(
@@ -43,6 +46,7 @@ fun HistoryCard(
     clinic: Clinic?,
     navController: NavHostController? = null
 ) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     Card(
@@ -82,11 +86,13 @@ fun HistoryCard(
                         Text(
                             text = clinic?.nombre.toString(),
                             fontSize = 18.sp,
+                            fontFamily = afacadFont,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = clinic?.direccion.toString(),
                             fontSize = 14.sp,
+                            fontFamily = afacadFont,
                             color = Color.Gray
                         )
                     }
@@ -103,6 +109,7 @@ fun HistoryCard(
                         Text(
                             text = "Cita:",
                             fontSize = 18.sp,
+                            fontFamily = afacadFont,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
@@ -110,6 +117,7 @@ fun HistoryCard(
                         Text(
                             text = formatFecha(appointment.fecha_cita),
                             fontSize = 18.sp,
+                            fontFamily = afacadFont,
                             color = Color(0xFFB2C2A4),
                             fontWeight = FontWeight.Bold
                         )
@@ -117,6 +125,7 @@ fun HistoryCard(
                     Text(
                         text = formatHora(appointment.fecha_cita),
                         fontSize = 18.sp,
+                        fontFamily = afacadFont,
                         color = Color(0xFFB2C2A4),
                         fontWeight = FontWeight.Bold
                     )
@@ -130,12 +139,14 @@ fun HistoryCard(
                     Text(
                         text = "Profesional:",
                         fontSize = 14.sp,
+                        fontFamily = afacadFont,
                         color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = doctor?.nombre + " (" + doctor?.especialidad + ")",
                         fontSize = 12.sp,
+                        fontFamily = afacadFont,
                         color = Color.Black
                     )
                 }
@@ -166,6 +177,7 @@ fun HistoryCard(
                         Text(
                             text = "Ver expediente",
                             color = Color.White,
+                            fontFamily = afacadFont,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -190,6 +202,7 @@ fun HistoryCard(
                     Text(
                         text = "Expediente",
                         fontSize = 20.sp,
+                        fontFamily = afacadFont,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFB2C2A4)
                     )
@@ -230,9 +243,11 @@ fun HistoryCard(
 
 @Composable
 fun SectionTitle(text: String) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     Text(
         text = text,
         fontSize = 16.sp,
+        fontFamily = afacadFont,
         fontWeight = FontWeight.SemiBold,
         color = Color(0xFFB2C2A4),
         modifier = Modifier.padding(vertical = 4.dp)
@@ -241,14 +256,17 @@ fun SectionTitle(text: String) {
 
 @Composable
 fun InfoLine(label: String, value: String) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     Column(modifier = Modifier.padding(vertical = 2.dp)) {
         Text(
             text = "• $label: ",
+            fontFamily = afacadFont,
             fontWeight = FontWeight.Medium,
             color = Color.Black
         )
         Text(
             text = value,
+            fontFamily = afacadFont,
             color = Color.DarkGray
         )
     }

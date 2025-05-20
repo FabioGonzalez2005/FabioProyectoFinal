@@ -23,10 +23,16 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+import androidx.compose.ui.text.font.FontWeight
 
 // Botón de acción con ícono y texto
 @Composable
 fun ClinicActionButton(text: String, iconRes: String, onClick: () -> Unit) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
+
     val context = LocalContext.current
     Card(
         modifier = Modifier
@@ -58,6 +64,7 @@ fun ClinicActionButton(text: String, iconRes: String, onClick: () -> Unit) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = text,
+                fontFamily = afacadFont,
                 fontSize = 12.sp,
                 maxLines = 1
             )

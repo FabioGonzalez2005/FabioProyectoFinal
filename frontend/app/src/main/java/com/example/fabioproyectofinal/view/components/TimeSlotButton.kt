@@ -13,6 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+import androidx.compose.ui.text.font.FontWeight
 
 // Botón con horarios disponibles
 @Composable
@@ -22,6 +26,7 @@ fun TimeSlotButton(
     isAvailable: Boolean,
     onClick: () -> Unit
 ) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val backgroundColor = when {
         !isAvailable -> Color(0xFFD32F2F) // Rojo cuando no está disponible
         isSelected -> Color(0xFF859A72)   // Verde oscuro cuando está seleccionado
@@ -41,6 +46,7 @@ fun TimeSlotButton(
         Text(
             text = time,
             color = Color.White,
+            fontFamily = afacadFont,
             fontSize = 14.sp
         )
     }

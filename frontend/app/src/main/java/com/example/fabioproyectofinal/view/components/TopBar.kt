@@ -24,31 +24,16 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.model.session.SessionManager
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
 
 
 // Barra de navegación superior
 @Composable
 fun TopBar(navController: NavHostController, onClick: () -> Unit) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -79,6 +64,7 @@ fun TopBar(navController: NavHostController, onClick: () -> Unit) {
                 style = TextStyle(
                     color = Color(0xFFACBCA0),
                     fontSize = 14.sp,
+                    fontFamily = afacadFont,
                     fontWeight = FontWeight.Medium
                 )
             )

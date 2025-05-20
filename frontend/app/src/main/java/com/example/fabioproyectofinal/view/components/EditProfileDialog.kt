@@ -28,9 +28,14 @@ import kotlinx.coroutines.launch
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import com.example.fabioproyectofinal.model.ApiServer
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun EditProfileDialog(onDismiss: () -> Unit) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
     var name by remember { mutableStateOf(SessionManager.nombre ?: "") }
     var username by remember { mutableStateOf(SessionManager.username ?: "") }
@@ -75,6 +80,7 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
             Text(
                 "Editar Perfil",
                 color = Color(0xFFB2C2A4),
+                fontFamily = afacadFont,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -84,7 +90,7 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Nombre", color = Color(0xFF7C8B6B)) },
+                    label = { Text("Nombre", fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
                     textStyle = TextStyle(color = Color(0xFF7C8B6B)),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -97,7 +103,7 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
                 OutlinedTextField(
                     value = username,
                     onValueChange = { username = it },
-                    label = { Text("Usuario", color = Color(0xFF7C8B6B)) },
+                    label = { Text("Usuario", fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
                     textStyle = TextStyle(color = Color(0xFF7C8B6B)),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -110,7 +116,7 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Correo electrónico", color = Color(0xFF7C8B6B)) },
+                    label = { Text("Correo electrónico", fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
                     textStyle = TextStyle(color = Color(0xFF7C8B6B)),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
                     colors = OutlinedTextFieldDefaults.colors(

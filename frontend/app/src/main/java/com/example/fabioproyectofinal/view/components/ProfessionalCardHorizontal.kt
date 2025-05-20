@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -27,11 +26,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 
 // Tarjeta de profesional en horizontal
 @Composable
 fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
+    val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
     Card(
         modifier = Modifier
@@ -62,12 +64,14 @@ fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
                 Text(
                     text = name,
                     fontSize = 14.sp,
+                    fontFamily = afacadFont,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFFB2C2A4)
                 )
                 Text(
                     text = specialty,
                     fontSize = 12.sp,
+                    fontFamily = afacadFont,
                     color = Color.Gray
                 )
 
@@ -79,6 +83,7 @@ fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
                         }
                         append(" €") },
                     fontSize = 12.sp,
+                    fontFamily = afacadFont,
                     color = Color.Gray
                 )
             }
