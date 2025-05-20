@@ -2,13 +2,13 @@ package com.example.fabioproyectofinal.model.navigation
 
 sealed class AppScreens(val route: String) {
     // Pantallas
-    object MainScreenApp: AppScreens("main_screen_app")
-    object FavouritesScreen: AppScreens("favourites_screen")
-    object AppointmentsScreen: AppScreens("appointments_screen")
-    object HistoryScreen: AppScreens("history_screen")
-    object ClinicDetailScreen: AppScreens("clinic_screen")
-    object SelectProfessionalScreen: AppScreens("select_professional_screen")
-    object RegisterScreen: AppScreens("register_screen")
-    object LoginScreen: AppScreens("login_screen")
-    object DoctorListScreen: AppScreens("doctor_list_screen")
+    object MainScreenApp: AppScreens("main_screen_app/{id_usuario}")
+    object FavouritesScreen: AppScreens("favourites_screen/{id_usuario}")
+    object AppointmentsScreen: AppScreens("appointments_screen/{id_usuario}")
+    object HistoryScreen: AppScreens("history_screen/{id_usuario}")
+    object ClinicDetailScreen: AppScreens("clinic_screen/{id_usuario}")
+    object SelectProfessionalScreen: AppScreens("select_professional_screen/{id_usuario}")
+    object RegisterScreen: AppScreens("register_screen/{id_usuario}")
+    object LoginScreen: AppScreens("login_screen/{id_usuario}")
+    object DoctorListScreen: AppScreens("doctor_list_screen/{id_usuario}")
 }
