@@ -159,19 +159,22 @@ fun LoginScreen(navController: NavHostController) {
             LaunchedEffect(estadoLogin) {
                 estadoLogin?.let { estado ->
                     if (estado.msg != null) {
-                        // Guardar datos del usuario
+                        // Login correcto
                         SessionManager.idUsuario = estado.id_usuario
                         SessionManager.nombre = estado.nombre
                         SessionManager.email = estado.email
                         SessionManager.username = estado.usuario
 
-                        // Ir a pantalla principal
-                        navController.navigate(route = AppScreens.MainScreenApp.route) {
+                        navController.navigate(route = AppScreens.MainScreenApp.route.replace("{id_usuario}", estado.id_usuario.toString())) {
                             popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
                         }
+                    } else if (estado.error != null) {
+                        // Login fallido
+                        Toast.makeText(context, estado.error, Toast.LENGTH_LONG).show()
                     }
                 }
             }
+
         }
     }
 }
