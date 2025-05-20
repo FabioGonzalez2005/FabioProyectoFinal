@@ -55,4 +55,9 @@ interface ApiService {
         @Path("id_usuario") idUsuario: Int,
         @Body datos: Map<String, String?>
     ): MensajeResponse
+
+    @GET("/perfil/{id_usuario}")
+    suspend fun obtenerPerfil(
+        @Path("id_usuario") idUsuario: Int
+    ): List<LoginResponse>
 }

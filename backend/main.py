@@ -96,19 +96,18 @@ def login_usuario():
             return jsonify({'error': 'Usuario no encontrado'}), 404
 
         (
-            id_usuario, nombre, email, usuario, contraseña_hash,
+            id_usuario, nombre, email, usuario, contrasena_hash,
             fecha_nacimiento, telefono, telefono_emergencia,
             alergias, antecedentes_familiares, condiciones_pasadas,
             procedimientos_quirurgicos
         ) = usuario_encontrado
 
         # Verificar contraseña
-        if bcrypt.checkpw(datos['contraseña'].encode('utf-8'), contraseña_hash.encode('utf-8')):
-            # ✅ Cargar la clave secreta y generar token
+        if bcrypt.checkpw(datos['contraseña'].encode('utf-8'), contrasena_hash.encode('utf-8')):
             load_dotenv()
             SECRET_KEY = os.getenv("SECRET_KEY")
             if not SECRET_KEY:
-                return jsonify({'error': 'SECRET_KEY no definido en .env'}), 500
+                return jsonify({'error': 'SECRET_KEY no definido en .env'}), 505
 
             exp_time = datetime.now(timezone.utc) + timedelta(days=7)
             token = pyjwt.encode(
@@ -175,7 +174,7 @@ def registrar_usuario():
 
     # Encriptar contraseña
     password_plano = datos['contraseña'].encode('utf-8')
-    contraseña_encriptada = bcrypt.hashpw(password_plano, bcrypt.gensalt()).decode('utf-8')
+    contrasena_encriptada = bcrypt.hashpw(password_plano, bcrypt.gensalt()).decode('utf-8')
 
     # Insertar nuevo usuario
     sql = '''
@@ -186,7 +185,7 @@ def registrar_usuario():
         datos['nombre'],
         datos['email'],
         datos['usuario'],
-        contraseña_encriptada
+        contrasena_encriptada
     )
 
     try:
@@ -194,6 +193,17 @@ def registrar_usuario():
     except Exception as e:
         return jsonify({'error': f'Error al registrar usuario: {str(e)}'}), 500
 
+# ======================= USUARIOS =======================
+# Obtener perfil de un usuario
+@app.route('/perfil/<int:id_usuario>', methods=['GET'])
+def obtener_perfil(id_usuario):
+    sql = '''
+        SELECT id_usuario, nombre, email, usuario, fecha_nacimiento, telefono, telefono_emergencia,
+               alergias, antecedentes_familiares, condiciones_pasadas, procedimientos_quirurgicos
+        FROM Usuario
+        WHERE id_usuario = %s
+    '''
+    return ejecutar_sql(sql, (id_usuario,))
 
 # ======================= CLINICAS =======================
 # Ver todas las clínicas
