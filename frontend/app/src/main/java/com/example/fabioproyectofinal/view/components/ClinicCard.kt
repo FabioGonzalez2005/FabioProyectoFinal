@@ -27,7 +27,6 @@ import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
-import androidx.compose.ui.text.font.FontWeight
 
 // Tarjeta de clínica
 @Composable

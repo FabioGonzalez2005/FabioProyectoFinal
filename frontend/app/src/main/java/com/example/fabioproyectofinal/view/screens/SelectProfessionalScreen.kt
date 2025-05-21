@@ -110,7 +110,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
                 ) {
-                    Text(text = "Aceptar", fontFamily = afacadFont, color = Color.White)
+                    Text(text = "Buscar cita", fontFamily = afacadFont, color = Color.White)
                 }
             }
         }

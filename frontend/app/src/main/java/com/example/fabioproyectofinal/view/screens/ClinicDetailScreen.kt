@@ -23,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -221,17 +222,32 @@ fun GoogleMapView(lat: Double, lng: Double) {
         position = CameraPosition.fromLatLngZoom(LatLng(lat, lng), 15f)
     }
 
-    Box(modifier = Modifier
-        .height(300.dp)
-        .fillMaxWidth()) {
+    val isMapLoading = remember { mutableStateOf(true) }
+
+    Box(
+        modifier = Modifier
+            .height(300.dp)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
         GoogleMap(
             modifier = Modifier.matchParentSize(),
-            cameraPositionState = cameraPositionState
+            cameraPositionState = cameraPositionState,
+            onMapLoaded = {
+                isMapLoading.value = false
+            }
         ) {
             Marker(
                 state = MarkerState(position = LatLng(lat, lng)),
                 title = "Clínica"
             )
         }
+
+        if (isMapLoading.value) {
+            CircularProgressIndicator(
+                color = Color(0xFFB2C2A4)
+            )
+        }
     }
 }
+
