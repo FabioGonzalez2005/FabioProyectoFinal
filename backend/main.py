@@ -294,6 +294,35 @@ def agregar_favorito(id_usuario):
     return ejecutar_sql(sql_insertar_usuario_fav, (id_usuario, id_favorito), es_insert=True)
 
 
+# Eliminar clínica de favoritos
+@app.route('/usuarios/<int:id_usuario>/favoritos/eliminar', methods=['DELETE'])
+def eliminar_favorito(id_usuario):
+    datos = request.get_json()
+    id_clinica = datos.get('id_clinica')
+
+    if not id_clinica:
+        return jsonify({'error': 'id_clinica es requerido'}), 400
+
+    # Paso 1: Obtener id_favorito
+    sql_select_fav = '''
+        SELECT id_favorito FROM Favorito WHERE id_clinica = %s
+    '''
+    resultado = ejecutar_sql(sql_select_fav, (id_clinica,))
+    if isinstance(resultado, tuple):
+        return resultado
+
+    lista_favoritos = resultado.get_json()
+    if not lista_favoritos:
+        return jsonify({'error': 'La clínica no está en favoritos'}), 404
+
+    id_favorito = lista_favoritos[0]['id_favorito']
+
+    # Paso 2: Eliminar la relación usuario-favorito
+    sql_delete_relacion = '''
+        DELETE FROM Usuario_favorito
+        WHERE id_usuario = %s AND id_favorito = %s
+    '''
+    return ejecutar_sql(sql_delete_relacion, (id_usuario, id_favorito), es_insert=True)
 
 
 # ======================= DISPONIBILIDAD =======================
