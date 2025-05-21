@@ -209,7 +209,12 @@ def obtener_perfil(id_usuario):
 # Ver todas las clínicas
 @app.route('/clinicas', methods=['GET'])
 def obtener_clinicas():
-    return ejecutar_sql('SELECT * FROM Clinica ORDER BY id_clinica')
+    sql = '''
+        SELECT DISTINCT c.*, d.especialidad
+        FROM Clinica c
+        LEFT JOIN Doctor d ON c.id_clinica = d.id_clinica
+    '''
+    return ejecutar_sql(sql)
 
 # Obtener clínicas favoritas de un usuario
 @app.route('/usuarios/<int:id_usuario>/favoritos', methods=['GET'])
@@ -277,6 +282,31 @@ def obtener_citas():
 
     sql = "SELECT * FROM Cita WHERE id_usuario = %s ORDER BY id_cita"
     return ejecutar_sql(sql, params=(id_usuario,))
+
+# Eliminar una cita
+@app.route('/citas/eliminar', methods=['DELETE'])
+def eliminar_cita():
+    datos = request.get_json()
+    id_usuario = datos.get("id_usuario")
+    id_cita = datos.get("id_cita")
+
+    if not id_usuario or not id_cita:
+        return jsonify({"error": "Se requieren id_usuario e id_cita"}), 400
+
+    # Verifica que la cita le pertenece al usuario antes de eliminar
+    sql_verificar = "SELECT 1 FROM Cita WHERE id_cita = %s AND id_usuario = %s"
+    resultado = ejecutar_sql(sql_verificar, (id_cita, id_usuario))
+
+    if isinstance(resultado, tuple) and resultado[1] == 500:
+        return resultado  # Error interno desde ejecutar_sql
+
+    if not resultado.get_json():  # Si no hay resultados, la cita no existe o no pertenece al usuario
+        return jsonify({"error": "Cita no encontrada o no pertenece al usuario"}), 404
+
+    # Procede a eliminar la cita
+    sql_eliminar = "DELETE FROM Cita WHERE id_cita = %s"
+    return ejecutar_sql(sql_eliminar, (id_cita,), es_insert=True)
+
 
 # ======================= USUARIOS =======================
 # Editar perfil de paciente
