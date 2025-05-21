@@ -44,6 +44,7 @@ fun ClinicaCard(
     userId: Int?,
     inFavourites: Boolean,
     isClickable: Boolean,
+    mostrarIconoVacio: Boolean = true
 ) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var estaEnFavoritos by remember { mutableStateOf(inFavourites) }
@@ -83,32 +84,41 @@ fun ClinicaCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 userId?.let { uid ->
-                    val painter = if (estaEnFavoritos)
-                        rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_favourite_lxpak3.webp")
-                    else
-                        rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/favourite_unselected_hq502n.webp")
+                    val mostrarIcono = estaEnFavoritos || mostrarIconoVacio
+                    if (mostrarIcono) {
+                        val painter = if (estaEnFavoritos)
+                            rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_favourite_lxpak3.webp")
+                        else
+                            rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/favourite_unselected_hq502n.webp")
 
-                    Image(
-                        painter = painter,
-                        contentDescription = "Favorito",
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clickable {
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    try {
-                                        val api = ApiServer.apiService
-                                        if (estaEnFavoritos) {
-                                            api.eliminarDeFavoritos(uid, mapOf("id_clinica" to clinic.id_clinica))
-                                        } else {
-                                            api.agregarAFavoritos(uid, mapOf("id_clinica" to clinic.id_clinica))
+                        Image(
+                            painter = painter,
+                            contentDescription = "Favorito",
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clickable {
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        try {
+                                            val api = ApiServer.apiService
+                                            if (estaEnFavoritos) {
+                                                api.eliminarDeFavoritos(
+                                                    uid,
+                                                    mapOf("id_clinica" to clinic.id_clinica)
+                                                )
+                                            } else {
+                                                api.agregarAFavoritos(
+                                                    uid,
+                                                    mapOf("id_clinica" to clinic.id_clinica)
+                                                )
+                                            }
+                                            estaEnFavoritos = !estaEnFavoritos
+                                        } catch (e: Exception) {
+                                            println("Error modificando favoritos: ${e.message}")
                                         }
-                                        estaEnFavoritos = !estaEnFavoritos
-                                    } catch (e: Exception) {
-                                        println("Error modificando favoritos: ${e.message}")
                                     }
                                 }
-                            }
-                    )
+                        )
+                    }
                 }
             }
         }
