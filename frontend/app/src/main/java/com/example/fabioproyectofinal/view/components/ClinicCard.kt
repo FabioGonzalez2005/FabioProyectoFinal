@@ -14,6 +14,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,10 +46,15 @@ fun ClinicaCard(
     userId: Int?,
     inFavourites: Boolean,
     isClickable: Boolean,
-    mostrarIconoVacio: Boolean = true
+    mostrarIconoVacio: Boolean = true,
+    botonFavoritoActivo: Boolean = true
 ) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
-    var estaEnFavoritos = rememberUpdatedState(newValue = inFavourites).value
+    var estaEnFavoritos by remember { mutableStateOf(inFavourites) }
+
+    LaunchedEffect(inFavourites) {
+        estaEnFavoritos = inFavourites
+    }
 
 
     Card(
@@ -98,27 +104,23 @@ fun ClinicaCard(
                             contentDescription = "Favorito",
                             modifier = Modifier
                                 .size(24.dp)
-                                .clickable {
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        try {
-                                            val api = ApiServer.apiService
-                                            if (estaEnFavoritos) {
-                                                api.eliminarDeFavoritos(
-                                                    uid,
-                                                    mapOf("id_clinica" to clinic.id_clinica)
-                                                )
-                                            } else {
-                                                api.agregarAFavoritos(
-                                                    uid,
-                                                    mapOf("id_clinica" to clinic.id_clinica)
-                                                )
+                                .then(
+                                    if (botonFavoritoActivo) Modifier.clickable {
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            try {
+                                                val api = ApiServer.apiService
+                                                if (estaEnFavoritos) {
+                                                    api.eliminarDeFavoritos(uid, mapOf("id_clinica" to clinic.id_clinica))
+                                                } else {
+                                                    api.agregarAFavoritos(uid, mapOf("id_clinica" to clinic.id_clinica))
+                                                }
+                                                estaEnFavoritos = !estaEnFavoritos
+                                            } catch (e: Exception) {
+                                                println("Error modificando favoritos: ${e.message}")
                                             }
-                                            estaEnFavoritos = !estaEnFavoritos
-                                        } catch (e: Exception) {
-                                            println("Error modificando favoritos: ${e.message}")
                                         }
-                                    }
-                                }
+                                    } else Modifier
+                                )
                         )
                     }
                 }

@@ -123,7 +123,8 @@ fun ClinicDetailScreen(
                         userId = userId ?: -1,
                         inFavourites = estaEnFavoritos,
                         isClickable = false,
-                        mostrarIconoVacio = true
+                        mostrarIconoVacio = true,
+                        botonFavoritoActivo = true
                     )
                 }
             }

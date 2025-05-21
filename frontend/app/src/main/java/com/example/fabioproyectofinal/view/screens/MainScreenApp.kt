@@ -156,7 +156,8 @@ fun ClinicList(
                 userId = userId ?: -1,
                 inFavourites = clinic.inFavourites,
                 isClickable = true,
-                mostrarIconoVacio = false
+                mostrarIconoVacio = false,
+                botonFavoritoActivo = false
             )
         }
     }
