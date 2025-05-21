@@ -53,6 +53,7 @@ import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.view.components.GoogleMapView
+import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
 
 @Composable
 fun ClinicDetailScreen(
@@ -78,6 +79,16 @@ fun ClinicDetailScreen(
         doctorList.filter { it.id_clinica == currentClinic.id_clinica }
     } ?: emptyList()
 
+     val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
+     val favoritas by favouritesViewModel.favoritas.collectAsState()
+
+     LaunchedEffect(userId) {
+         userId?.let { id ->
+             favouritesViewModel.fetchFavoritas(id)
+         }
+     }
+     val estaEnFavoritos = favoritas.any { fav -> fav.id_clinica == clinic?.id_clinica }
+
     Scaffold(
         topBar = {
             TopBar(navController = navController) { /* Acción */ }
@@ -99,7 +110,14 @@ fun ClinicDetailScreen(
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 clinic?.let {
-                    ClinicaCard(clinic = it, navController = navController, userId = userId ?: -1, inFavourites = true, isClickable = false)
+                    ClinicaCard(
+                        clinic = clinic,
+                        navController = navController,
+                        userId = userId ?: -1,
+                        inFavourites = estaEnFavoritos,
+                        isClickable = false,
+                        mostrarIconoVacio = true
+                    )
                 }
             }
             // Botones
