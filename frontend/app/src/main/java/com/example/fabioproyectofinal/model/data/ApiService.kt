@@ -25,7 +25,9 @@ interface ApiService {
     suspend fun loginUsuario(@Body datos: UsuarioLoginRequest): LoginResponse
 
     @GET("/clinicas")
-    suspend fun getClinics(): List<Clinic>
+    suspend fun getClinics(
+        @Query("id_usuario") idUsuario: Int? = null
+    ): List<Clinic>
 
     @GET("/doctor/{id}/disponibilidad/completa")
     suspend fun getDisponibilidadDoctor(@retrofit2.http.Path("id") idDoctor: Int): List<Availability>

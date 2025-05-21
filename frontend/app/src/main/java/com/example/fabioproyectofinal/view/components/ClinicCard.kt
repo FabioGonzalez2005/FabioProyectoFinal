@@ -54,7 +54,9 @@ fun ClinicaCard(
             .padding(vertical = 8.dp)
             .then(
                 if (isClickable) Modifier.clickable {
-                    navController?.navigate(route = AppScreens.ClinicDetailScreen.route.replace("{id_usuario}", userId.toString()))
+                    navController?.navigate(
+                        AppScreens.ClinicDetailScreen.createRoute(userId ?: -1, clinic.id_clinica)
+                    )
                 } else Modifier
             ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),

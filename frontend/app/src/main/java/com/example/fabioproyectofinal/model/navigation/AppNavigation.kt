@@ -62,10 +62,12 @@ fun AppNavigation(
         composable("main") {
             LoginScreen(navController)
         }
-        composable("clinic_screen/{id_usuario}") { backStackEntry ->
+        composable("clinic_screen/{id_usuario}/{id_clinica}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("id_usuario")?.toIntOrNull()
-            ClinicDetailScreen(navController, userId)
+            val idClinica = backStackEntry.arguments?.getString("id_clinica")?.toIntOrNull()
+            ClinicDetailScreen(navController, userId, idClinica)
         }
+
         composable("main_screen_app/{id_usuario}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("id_usuario")?.toIntOrNull()
             MainScreenApp(navController, userId)

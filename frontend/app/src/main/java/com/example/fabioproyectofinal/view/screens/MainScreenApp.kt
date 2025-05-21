@@ -41,7 +41,7 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
         if (query.isNotEmpty()) {
             clinicViewModel.buscarClinicas(query)
         } else {
-            clinicViewModel.fetchClinics()
+            clinicViewModel.fetchClinics(usuario_id = userId ?: -1)
         }
     }
 

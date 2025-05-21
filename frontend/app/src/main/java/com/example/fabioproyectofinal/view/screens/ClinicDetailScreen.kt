@@ -27,6 +27,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,15 +55,26 @@ import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.view.components.GoogleMapView
 
 @Composable
-fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel: DoctorViewModel = viewModel()) {
+fun ClinicDetailScreen(
+    navController: NavHostController,
+    userId: Int?,
+    idClinica: Int?,
+    viewModel: DoctorViewModel = viewModel()
+)
+ {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val clinicViewModel: ClinicViewModel = viewModel()
     val clinics by clinicViewModel.clinics.collectAsState()
     val doctorList by viewModel.doctors.collectAsState()
     val context = LocalContext.current
+     LaunchedEffect(userId) {
+         if (userId != null) {
+             clinicViewModel.fetchClinics(userId)
+         }
+     }
     val showMapDialog = remember { mutableStateOf(false) }
-    val clinic = clinics.firstOrNull()
-    val filteredDoctors = clinic?.let { currentClinic ->
+     val clinic = clinics.firstOrNull { it.id_clinica == idClinica }
+     val filteredDoctors = clinic?.let { currentClinic ->
         doctorList.filter { it.id_clinica == currentClinic.id_clinica }
     } ?: emptyList()
 

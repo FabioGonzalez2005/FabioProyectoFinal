@@ -209,12 +209,24 @@ def obtener_perfil(id_usuario):
 # Ver todas las clínicas
 @app.route('/clinicas', methods=['GET'])
 def obtener_clinicas():
+    id_usuario = request.args.get('id_usuario')
+
     sql = '''
-        SELECT DISTINCT c.*, d.especialidad
+        SELECT DISTINCT 
+            c.*, 
+            d.especialidad,
+            CASE 
+                WHEN uf.id_usuario IS NOT NULL THEN TRUE 
+                ELSE FALSE 
+            END AS "inFavourites"
         FROM Clinica c
         LEFT JOIN Doctor d ON c.id_clinica = d.id_clinica
+        LEFT JOIN usuario_favorito uf 
+            ON uf.id_clinica = c.id_clinica AND uf.id_usuario = %s
     '''
-    return ejecutar_sql(sql)
+
+    return ejecutar_sql(sql, (id_usuario,))
+
 
 # Obtener clínicas favoritas de un usuario
 @app.route('/usuarios/<int:id_usuario>/favoritos', methods=['GET'])

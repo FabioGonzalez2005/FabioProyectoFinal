@@ -16,14 +16,10 @@ class ClinicViewModel : ViewModel() {
     // Copia local para filtrar sin llamar a la API cada vez
     private var allClinics: List<Clinic> = emptyList()
 
-    init {
-        fetchClinics()
-    }
-
-    fun fetchClinics() {
+    fun fetchClinics(usuario_id: Int) {
         viewModelScope.launch {
             try {
-                val result = ApiServer.apiService.getClinics()
+                val result = ApiServer.apiService.getClinics(usuario_id)
                 allClinics = result
                 _clinics.value = result
             } catch (e: Exception) {
