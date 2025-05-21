@@ -62,7 +62,7 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
     }
 
 // Filtrar por búsqueda
-    val clinicasFiltradas = clinicsConMarca
+    val clinicasFiltradas = clinicsConMarca.sortedByDescending { it.inFavourites }
     Scaffold(
         topBar = {
             TopBar(navController = navController) { /* Acción */ }
