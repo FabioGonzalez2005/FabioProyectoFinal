@@ -6,15 +6,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -68,57 +73,91 @@ fun CalendarComponent(
 
 
     Column {
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(10.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-            // Mes anterior
-            IconButton(
-                onClick = {
-                    if (canGoToPreviousMonth) {
-                        displayedYearMonth = displayedYearMonth.minusMonths(1)
-                        onMonthChanged(displayedYearMonth)
-                    }
-                },
-                enabled = canGoToPreviousMonth
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    Icons.Default.ArrowBackIosNew,
-                    contentDescription = "Mes anterior",
-                    tint = if (canGoToPreviousMonth) Color.White else Color.Gray.copy(alpha = 0.5f)
+                // Texto "Disponibilidad"
+                Text(
+                    text = "Disponibilidad:",
+                    fontSize = 16.sp,
+                    fontFamily = afacadFont,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFFB2C2A4)
                 )
-            }
 
-            // Nombre del mes y año
-            Text(
-                text = "${displayedYearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-                    .replaceFirstChar { it.uppercase() }} ${displayedYearMonth.year}",
-                color = Color.White,
-                fontFamily = afacadFont,
-                fontSize = 30.sp
-            )
+                Spacer(modifier = Modifier.height(8.dp))
 
-            // Mes siguiente
-            IconButton(
-                onClick = {
-                    if (canGoToNextMonth) {
-                        displayedYearMonth = displayedYearMonth.plusMonths(1)
-                        onMonthChanged(displayedYearMonth)
+                // Row con botones e info de mes
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Botón Mes Anterior
+                    IconButton(
+                        onClick = {
+                            if (canGoToPreviousMonth) {
+                                displayedYearMonth = displayedYearMonth.minusMonths(1)
+                                onMonthChanged(displayedYearMonth)
+                            }
+                        },
+                        enabled = canGoToPreviousMonth
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBackIosNew,
+                            contentDescription = "Mes anterior",
+                            tint = if (canGoToPreviousMonth) Color(0xFFB2C2A4) else Color.Gray.copy(alpha = 0.5f)
+                        )
                     }
-                },
-                enabled = canGoToNextMonth
-            ) {
-                Icon(
-                    Icons.Default.ArrowBackIosNew,
-                    contentDescription = "Mes siguiente",
-                    modifier = Modifier.rotate(180f),
-                    tint = if (canGoToNextMonth) Color.White else Color.Gray.copy(alpha = 0.5f)
-                )
+
+                    // Nombre del mes y año
+                    Text(
+                        text = "${displayedYearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+                            .replaceFirstChar { it.uppercase() }} ${displayedYearMonth.year}",
+                        color = Color(0xFFB2C2A4),
+                        fontFamily = afacadFont,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    // Botón Mes Siguiente
+                    IconButton(
+                        onClick = {
+                            if (canGoToNextMonth) {
+                                displayedYearMonth = displayedYearMonth.plusMonths(1)
+                                onMonthChanged(displayedYearMonth)
+                            }
+                        },
+                        enabled = canGoToNextMonth
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBackIosNew,
+                            contentDescription = "Mes siguiente",
+                            modifier = Modifier.rotate(180f),
+                            tint = if (canGoToNextMonth) Color(0xFFB2C2A4) else Color.Gray.copy(alpha = 0.5f)
+                        )
+                    }
+                }
             }
         }
 
-        // Días de la semana
+
+
+
+    // Días de la semana
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -168,9 +207,9 @@ fun CalendarComponent(
                             when {
                                 isSelected -> Color(0xFFE1E1E1)
                                 !isWorkingDay -> Color(0xFFC47E7E)
-                                isPastDate -> Color(0xFFAFAFAF)
+                                isPastDate -> Color(0xFFD5D5D5)
                                 isToday -> Color(0xFFFFFFFF)
-                                else -> Color(0xFFFFFFFF)
+                                else -> Color(0xFFB2C2A4)
                             }
                         )
                         .clickable(enabled = isEnabled) {

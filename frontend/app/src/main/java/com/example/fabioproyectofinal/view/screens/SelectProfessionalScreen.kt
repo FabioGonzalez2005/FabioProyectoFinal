@@ -63,39 +63,13 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                     price = "45",
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    // "Disponibilidad
-                    Card(
-                        modifier = Modifier
-                            .size(width = 180.dp, height = 45.dp),
-                        shape = RoundedCornerShape(10.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White)
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            Text(
-                                text = "Disponibilidad:",
-                                fontSize = 16.sp,
-                                fontFamily = afacadFont,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(0xFFB2C2A4),
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
-                        }
-                    }
-                    CalendarComponent(
-                        selectedDate = selectedDate,
-                        onDateSelected = { selectedDate = it }
-                    )
-
+                CalendarComponent(
+                    selectedDate = selectedDate,
+                    onDateSelected = { selectedDate = it }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
                 Button(
@@ -115,4 +89,3 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
             }
         }
     }
-}
