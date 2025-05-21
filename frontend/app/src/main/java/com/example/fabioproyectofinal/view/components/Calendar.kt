@@ -6,15 +6,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -31,17 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.fabioproyectofinal.R
-
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.R
+
 
 @Composable
 fun CalendarComponent(
@@ -50,16 +47,14 @@ fun CalendarComponent(
     workingDays: List<Int> = listOf(1, 2, 3, 4, 5),
     onMonthChanged: (YearMonth) -> Unit = {},
     initialMonth: YearMonth? = null,
-    diasConCitas: List<LocalDate> = emptyList(),
-    allowPreviousMonth: Boolean = false
 ) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val today = remember { LocalDate.now() }
     val currentActualMonth = remember { YearMonth.from(today) }
     val startMonth = initialMonth ?: currentActualMonth
 
-    val maxAllowedMonth = remember { currentActualMonth.plusMonths(4) }
-    val minAllowedMonth = if (allowPreviousMonth) currentActualMonth.minusMonths(1) else currentActualMonth
+    val maxAllowedMonth = remember { currentActualMonth.plusMonths(16) }
+    val minAllowedMonth = currentActualMonth
 
     var displayedYearMonth by remember { mutableStateOf(startMonth) }
 
@@ -101,9 +96,6 @@ fun CalendarComponent(
                     .replaceFirstChar { it.uppercase() }} ${displayedYearMonth.year}",
                 color = Color.White,
                 fontFamily = afacadFont,
-                style = androidx.compose.ui.text.TextStyle(
-                    fontWeight = FontWeight.Bold
-                ),
                 fontSize = 30.sp
             )
 
@@ -131,7 +123,7 @@ fun CalendarComponent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            val daysOfWeek = listOf("L", "M", "X", "J", "V", "S", "D")
+            val daysOfWeek = listOf("Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do")
             daysOfWeek.forEach { day ->
                 Box(
                     modifier = Modifier.size(40.dp),
@@ -140,7 +132,7 @@ fun CalendarComponent(
                     Text(
                         text = day,
                         fontFamily = afacadFont,
-                        color = Color(0xFF9D9D9D),
+                        color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -165,8 +157,7 @@ fun CalendarComponent(
                 val isSelected = selectedDate == date
                 val isPastDate = date.isBefore(today)
                 val isToday = date == today
-                val isEnabled = (allowPreviousMonth || !isPastDate || isToday) && isWorkingDay
-                val hasCita = diasConCitas.contains(date)
+                val isEnabled = (!isPastDate || isToday) && isWorkingDay
 
                 Box(
                     modifier = Modifier
@@ -176,12 +167,10 @@ fun CalendarComponent(
                         .background(
                             when {
                                 isSelected -> Color(0xFFE1E1E1)
-                                hasCita && isPastDate -> Color(0xFF5C6E7D).copy(alpha = 0.25f)
-                                hasCita -> Color(0xFF4A89BE).copy(alpha = 0.2f)
-                                !isWorkingDay -> Color.Red.copy(alpha = 0.2f)
-                                isPastDate -> Color.Gray.copy(alpha = 0.3f)
-                                isToday -> Color(0xFF2C93E7).copy(alpha = 0.3f)
-                                else -> Color.Transparent
+                                !isWorkingDay -> Color(0xFFC47E7E)
+                                isPastDate -> Color(0xFFAFAFAF)
+                                isToday -> Color(0xFFFFFFFF)
+                                else -> Color(0xFFFFFFFF)
                             }
                         )
                         .clickable(enabled = isEnabled) {
@@ -191,9 +180,9 @@ fun CalendarComponent(
                 ) {
                     val textColor = when {
                         isSelected -> Color.Black
-                        isPastDate -> Color(0xFFFFFFFF).copy(alpha = 0.6f)
-                        !isWorkingDay -> Color(0xFFE1E1E1)
-                        else -> Color.White
+                        isPastDate -> Color.Black.copy(alpha = 0.6f)
+                        !isWorkingDay -> Color.Black
+                        else -> Color.Black
                     }
 
                     if (isToday) {
@@ -212,20 +201,12 @@ fun CalendarComponent(
                                 Text(
                                     text = "HOY",
                                     color = textColor,
-                                    fontFamily = afacadFont,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = if (hasCita) 10.sp else 12.sp,
+                                    fontFamily = afacadFont,
+                                    fontSize = 12.sp,
                                     modifier = Modifier.padding(top = 1.dp)
                                 )
-                                if (hasCita) {
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Box(
-                                        modifier = Modifier
-                                            .size(5.dp)
-                                            .clip(CircleShape)
-                                            .background(Color(0xFF30D1FF))
-                                    )
-                                }
+
                             }
                         }
                     } else {
@@ -237,15 +218,6 @@ fun CalendarComponent(
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 16.sp
                             )
-                            if (hasCita) {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(top = 2.dp)
-                                        .size(5.dp)
-                                        .clip(CircleShape)
-                                        .background(Color(0xFF30D1FF))
-                                )
-                            }
                         }
                     }
                 }
