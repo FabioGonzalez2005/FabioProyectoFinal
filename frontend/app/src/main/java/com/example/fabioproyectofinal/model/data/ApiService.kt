@@ -60,4 +60,9 @@ interface ApiService {
     suspend fun obtenerPerfil(
         @Path("id_usuario") idUsuario: Int
     ): List<LoginResponse>
+
+    @retrofit2.http.HTTP(method = "DELETE", path = "/citas/eliminar", hasBody = true)
+    suspend fun eliminarCita(
+        @Body datos: Map<String, Int>
+    ): MensajeResponse
 }

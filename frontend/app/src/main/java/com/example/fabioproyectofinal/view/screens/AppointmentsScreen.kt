@@ -200,7 +200,7 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
 
             Spacer(modifier = Modifier.size(12.dp))
 
-            AppointmentList(navController = navController)
+            AppointmentList(navController = navController, userId = userId ?: -1)
         }
     }
 }
@@ -208,7 +208,8 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
 @Composable
 fun AppointmentList(
     navController: NavHostController? = null,
-    viewModel: DoctorViewModel = viewModel()
+    viewModel: DoctorViewModel = viewModel(),
+    userId: Int?
 ) {
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val clinicViewModel: ClinicViewModel = viewModel()
@@ -245,7 +246,9 @@ fun AppointmentList(
                 appointment = cita,
                 doctor = doctor,
                 clinic = clinica,
-                navController = navController
+                navController = navController,
+                userId = userId ?: -1,
+                appointmentViewModel = appointmentViewModel
             )
         }
     }

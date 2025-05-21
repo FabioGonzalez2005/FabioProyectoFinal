@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.components
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,13 +27,21 @@ import com.example.fabioproyectofinal.model.utils.formatHora
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
+import com.example.fabioproyectofinal.model.ApiServer
+import com.example.fabioproyectofinal.viewmodel.AppointmentViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun AppointmentCard(
     appointment: Appointment,
     doctor: Doctor?,
     clinic: Clinic?,
-    navController: NavHostController? = null
+    navController: NavHostController? = null,
+    userId: Int,
+    appointmentViewModel: AppointmentViewModel
 ) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var showDialog by remember { mutableStateOf(false) }
@@ -79,9 +88,33 @@ fun AppointmentCard(
                             text = "Sí",
                             onClick = {
                                 showDialog = false
-                                println("Cita cancelada")
+                                println("Eliminando cita...")
+
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    try {
+                                        val response = ApiServer.apiService.eliminarCita(
+                                            mapOf(
+                                                "id_usuario" to userId,
+                                                "id_cita" to appointment.id_cita
+                                            )
+                                        )
+                                        withContext(Dispatchers.Main) {
+                                            println("Cita eliminada: ${response.msg}")
+
+                                            // Refrescar lista de citas para ese usuario
+                                            appointmentViewModel.fetchCitas(userId)
+
+                                            Toast.makeText(context, "Cita cancelada con éxito", Toast.LENGTH_SHORT).show()
+                                        }
+                                    } catch (e: Exception) {
+                                        withContext(Dispatchers.Main) {
+                                            println("Error eliminando cita: ${e.message}")
+                                        }
+                                    }
+                                }
                             }
                         )
+
                         Spacer(modifier = Modifier.width(16.dp))
                         AnimatedDialogButton(
                             text = "No",
