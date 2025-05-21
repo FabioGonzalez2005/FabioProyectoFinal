@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -73,21 +74,27 @@ fun ClinicDetailScreen(
              clinicViewModel.fetchClinics(userId)
          }
      }
-    val showMapDialog = remember { mutableStateOf(false) }
+     val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
+     val favoritas by favouritesViewModel.favoritas.collectAsState()
+     val showMapDialog = remember { mutableStateOf(false) }
      val clinic = clinics.firstOrNull { it.id_clinica == idClinica }
+
+     val estaEnFavoritos by remember(clinic, favoritas) {
+         derivedStateOf {
+             clinic != null && favoritas.any { it.id_clinica == clinic.id_clinica }
+         }
+     }
      val filteredDoctors = clinic?.let { currentClinic ->
         doctorList.filter { it.id_clinica == currentClinic.id_clinica }
     } ?: emptyList()
 
-     val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
-     val favoritas by favouritesViewModel.favoritas.collectAsState()
+
 
      LaunchedEffect(userId) {
          userId?.let { id ->
              favouritesViewModel.fetchFavoritas(id)
          }
      }
-     val estaEnFavoritos = favoritas.any { fav -> fav.id_clinica == clinic?.id_clinica }
 
     Scaffold(
         topBar = {
@@ -111,7 +118,7 @@ fun ClinicDetailScreen(
             ) {
                 clinic?.let {
                     ClinicaCard(
-                        clinic = clinic,
+                        clinic = it,
                         navController = navController,
                         userId = userId ?: -1,
                         inFavourites = estaEnFavoritos,

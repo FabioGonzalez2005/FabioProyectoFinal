@@ -31,6 +31,7 @@ fun HistoryScreen(navController: NavHostController, userId: Int?) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val appointments by appointmentViewModel.citas.collectAsState()
+    val clinicViewModel: ClinicViewModel = viewModel()
 
     val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
     val hoy = java.util.Date()
@@ -47,6 +48,7 @@ fun HistoryScreen(navController: NavHostController, userId: Int?) {
     LaunchedEffect(userId) {
         userId?.let { id ->
             appointmentViewModel.fetchCitas(id)
+            clinicViewModel.fetchClinics(id)
         }
     }
 

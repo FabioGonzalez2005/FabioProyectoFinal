@@ -36,29 +36,28 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
 
     var searchText by remember { mutableStateOf("") }
 
-    LaunchedEffect(searchText) {
+    val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
+    val favoritas by favouritesViewModel.favoritas.collectAsState()
+
+// Cargar favoritos al entrar
+    LaunchedEffect(userId, searchText) {
         val query = searchText.trim()
         if (query.isNotEmpty()) {
             clinicViewModel.buscarClinicas(query)
         } else {
             clinicViewModel.fetchClinics(usuario_id = userId ?: -1)
         }
-    }
-
-    val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
-    val favoritas by favouritesViewModel.favoritas.collectAsState()
-
-// Cargar favoritos al entrar
-    LaunchedEffect(userId) {
         userId?.let { id ->
             favouritesViewModel.fetchFavoritas(id)
         }
     }
 
 // Marcar favoritas
-    val idsFavoritos = favoritas.map { it.id_clinica }.toSet()
-    val clinicsConMarca = clinics.map { clinica ->
-        clinica.copy(inFavourites = clinica.id_clinica in idsFavoritos)
+    val clinicsConMarca = remember(clinics, favoritas) {
+        val idsFavoritos = favoritas.map { it.id_clinica }.toSet()
+        clinics.map { clinica ->
+            clinica.copy(inFavourites = idsFavoritos.contains(clinica.id_clinica))
+        }
     }
 
 // Filtrar por búsqueda

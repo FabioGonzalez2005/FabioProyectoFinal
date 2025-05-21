@@ -43,6 +43,7 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
 
     val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
     val hoy = java.util.Date()
+    val clinicViewModel: ClinicViewModel = viewModel()
 
     val citasFuturas = appointments.filter {
         try {
@@ -61,6 +62,7 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
         userId?.let { id ->
             Log.d("AppointmentsScreen", "Llamando a fetchCitas con id: $id")
             appointmentViewModel.fetchCitas(id)
+            clinicViewModel.fetchClinics(id)
         }
     }
 
