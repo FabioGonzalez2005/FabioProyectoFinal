@@ -245,6 +245,57 @@ def buscar_clinicas_por_especialidad():
     '''
     return ejecutar_sql(sql, (f'%{especialidad}%',))
 
+# Añadir clínica a favoritos
+@app.route('/usuarios/<int:id_usuario>/favoritos/agregar', methods=['POST'])
+def agregar_favorito(id_usuario):
+    datos = request.get_json()
+    id_clinica = datos.get('id_clinica')
+
+    if not id_clinica:
+        return jsonify({'error': 'id_clinica es requerido'}), 400
+
+    # Paso 1: Verificar si ya existe en favorito
+    sql_buscar_favorito = '''
+        SELECT id_favorito FROM Favorito WHERE id_clinica = %s
+    '''
+    resultado = ejecutar_sql(sql_buscar_favorito, (id_clinica,))
+    if isinstance(resultado, tuple):
+        return resultado
+
+    favoritos = resultado.get_json()
+    if favoritos:
+        id_favorito = favoritos[0]['id_favorito']
+    else:
+        # Crear favorito
+        sql_insertar_favorito = '''
+            INSERT INTO Favorito (id_clinica) VALUES (%s) RETURNING id_favorito
+        '''
+        nuevo = ejecutar_sql(sql_insertar_favorito, (id_clinica,))
+        if isinstance(nuevo, tuple):
+            return nuevo
+        id_favorito = nuevo.get_json()[0]['id_favorito']
+
+    # Paso 2: Verificar si ya está asociado al usuario
+    sql_check_usuario = '''
+        SELECT 1 FROM Usuario_favorito
+        WHERE id_usuario = %s AND id_favorito = %s
+    '''
+    ya_existe = ejecutar_sql(sql_check_usuario, (id_usuario, id_favorito))
+    if isinstance(ya_existe, tuple):
+        return ya_existe
+    if ya_existe.get_json():
+        return jsonify({'msg': 'Ya estaba en favoritos'}), 200
+
+    # Paso 3: Insertar relación
+    sql_insertar_usuario_fav = '''
+        INSERT INTO Usuario_favorito (id_usuario, id_favorito)
+        VALUES (%s, %s)
+    '''
+    return ejecutar_sql(sql_insertar_usuario_fav, (id_usuario, id_favorito), es_insert=True)
+
+
+
+
 # ======================= DISPONIBILIDAD =======================
 # Ver horarios de doctores
 @app.route('/doctor/<int:id_doctor>/disponibilidad/completa', methods=['GET'])
