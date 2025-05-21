@@ -37,8 +37,9 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
     var searchText by remember { mutableStateOf("") }
 
     LaunchedEffect(searchText) {
-        if (searchText.length >= 3) {
-            clinicViewModel.buscarPorEspecialidad(searchText)
+        val query = searchText.trim()
+        if (query.isNotEmpty()) {
+            clinicViewModel.buscarClinicas(query)
         } else {
             clinicViewModel.fetchClinics()
         }
@@ -61,12 +62,7 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
     }
 
 // Filtrar por búsqueda
-    val clinicasFiltradas = clinicsConMarca.filter {
-        Log.d("FiltroEspecialidad", "especialidad de ${it.nombre}: ${it.especialidad}")
-        it.nombre.contains(searchText, ignoreCase = true) ||
-                it.direccion.contains(searchText, ignoreCase = true) ||
-                it.especialidad?.contains(searchText, ignoreCase = true) == true
-    }
+    val clinicasFiltradas = clinicsConMarca
     Scaffold(
         topBar = {
             TopBar(navController = navController) { /* Acción */ }
