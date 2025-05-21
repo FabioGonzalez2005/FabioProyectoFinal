@@ -65,4 +65,16 @@ interface ApiService {
     suspend fun eliminarCita(
         @Body datos: Map<String, Int>
     ): MensajeResponse
+
+    @POST("/usuarios/{id_usuario}/favoritos/agregar")
+    suspend fun agregarAFavoritos(
+        @Path("id_usuario") idUsuario: Int,
+        @Body datos: Map<String, Int>
+    ): MensajeResponse
+
+    @retrofit2.http.HTTP(method = "DELETE", path = "/usuarios/{id_usuario}/favoritos/eliminar", hasBody = true)
+    suspend fun eliminarDeFavoritos(
+        @Path("id_usuario") idUsuario: Int,
+        @Body datos: Map<String, Int>
+    ): MensajeResponse
 }

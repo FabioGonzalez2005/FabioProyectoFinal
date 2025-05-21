@@ -1,6 +1,8 @@
 package com.example.fabioproyectofinal.view.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -23,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 
 // Barra de navegación inferior
@@ -53,9 +56,17 @@ fun BottomBar(navController: NavHostController, userId: Int) {
             ) {
                 // Botón Favoritos
 
-                IconButton(onClick = { navController.navigate(route = AppScreens.FavouritesScreen.route.replace("{id_usuario}", userId.toString()))}) {
-                    Icon(Icons.Default.FavoriteBorder, contentDescription = "Favoritos", modifier = Modifier.size(32.dp), tint = Color.White)
-                }
+                Image(
+                    painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/favourite_white_l9ljec.webp"),
+                    contentDescription = "Favoritos",
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clickable {
+                            navController.navigate(
+                                route = AppScreens.FavouritesScreen.route.replace("{id_usuario}", userId.toString())
+                            )
+                        }
+                )
                 // Botón Home
                 IconButton(onClick = { navController.navigate(route = AppScreens.MainScreenApp.route.replace("{id_usuario}", userId.toString()))}) {
                     Icon(Icons.Default.Home, contentDescription = "Inicio", modifier = Modifier.size(32.dp), tint = Color.White)

@@ -48,15 +48,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.view.components.GoogleMapView
 
 @Composable
 fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel: DoctorViewModel = viewModel()) {
@@ -211,41 +206,6 @@ fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel
                     }
                 },
                 containerColor = Color(0xFFFFF9F2)
-            )
-        }
-    }
-}
-
-@Composable
-fun GoogleMapView(lat: Double, lng: Double) {
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(lat, lng), 15f)
-    }
-
-    val isMapLoading = remember { mutableStateOf(true) }
-
-    Box(
-        modifier = Modifier
-            .height(300.dp)
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        GoogleMap(
-            modifier = Modifier.matchParentSize(),
-            cameraPositionState = cameraPositionState,
-            onMapLoaded = {
-                isMapLoading.value = false
-            }
-        ) {
-            Marker(
-                state = MarkerState(position = LatLng(lat, lng)),
-                title = "Clínica"
-            )
-        }
-
-        if (isMapLoading.value) {
-            CircularProgressIndicator(
-                color = Color(0xFFB2C2A4)
             )
         }
     }

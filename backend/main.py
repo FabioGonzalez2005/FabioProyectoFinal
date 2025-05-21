@@ -222,8 +222,7 @@ def favoritos_usuario(id_usuario):
     sql = '''
         SELECT c.*
         FROM usuario_favorito uf
-        JOIN favorito f ON uf.id_favorito = f.id_favorito
-        JOIN clinica c ON f.id_clinica = c.id_clinica
+        JOIN clinica c ON uf.id_clinica = c.id_clinica
         WHERE uf.id_usuario = %s
     '''
     return ejecutar_sql(sql, (id_usuario,))
@@ -254,44 +253,22 @@ def agregar_favorito(id_usuario):
     if not id_clinica:
         return jsonify({'error': 'id_clinica es requerido'}), 400
 
-    # Paso 1: Verificar si ya existe en favorito
-    sql_buscar_favorito = '''
-        SELECT id_favorito FROM Favorito WHERE id_clinica = %s
+    # Verificar si ya está en favoritos
+    sql_verificar = '''
+        SELECT 1 FROM usuario_favorito WHERE id_usuario = %s AND id_clinica = %s
     '''
-    resultado = ejecutar_sql(sql_buscar_favorito, (id_clinica,))
-    if isinstance(resultado, tuple):
-        return resultado
-
-    favoritos = resultado.get_json()
-    if favoritos:
-        id_favorito = favoritos[0]['id_favorito']
-    else:
-        # Crear favorito
-        sql_insertar_favorito = '''
-            INSERT INTO Favorito (id_clinica) VALUES (%s) RETURNING id_favorito
-        '''
-        nuevo = ejecutar_sql(sql_insertar_favorito, (id_clinica,))
-        if isinstance(nuevo, tuple):
-            return nuevo
-        id_favorito = nuevo.get_json()[0]['id_favorito']
-
-    # Paso 2: Verificar si ya está asociado al usuario
-    sql_check_usuario = '''
-        SELECT 1 FROM Usuario_favorito
-        WHERE id_usuario = %s AND id_favorito = %s
-    '''
-    ya_existe = ejecutar_sql(sql_check_usuario, (id_usuario, id_favorito))
-    if isinstance(ya_existe, tuple):
-        return ya_existe
-    if ya_existe.get_json():
+    existe = ejecutar_sql(sql_verificar, (id_usuario, id_clinica))
+    if isinstance(existe, tuple):
+        return existe
+    if existe.get_json():
         return jsonify({'msg': 'Ya estaba en favoritos'}), 200
 
-    # Paso 3: Insertar relación
-    sql_insertar_usuario_fav = '''
-        INSERT INTO Usuario_favorito (id_usuario, id_favorito)
+    # Insertar directamente en la tabla
+    sql_insertar = '''
+        INSERT INTO usuario_favorito (id_usuario, id_clinica)
         VALUES (%s, %s)
     '''
-    return ejecutar_sql(sql_insertar_usuario_fav, (id_usuario, id_favorito), es_insert=True)
+    return ejecutar_sql(sql_insertar, (id_usuario, id_clinica), es_insert=True)
 
 
 # Eliminar clínica de favoritos
@@ -303,26 +280,11 @@ def eliminar_favorito(id_usuario):
     if not id_clinica:
         return jsonify({'error': 'id_clinica es requerido'}), 400
 
-    # Paso 1: Obtener id_favorito
-    sql_select_fav = '''
-        SELECT id_favorito FROM Favorito WHERE id_clinica = %s
+    sql = '''
+        DELETE FROM usuario_favorito
+        WHERE id_usuario = %s AND id_clinica = %s
     '''
-    resultado = ejecutar_sql(sql_select_fav, (id_clinica,))
-    if isinstance(resultado, tuple):
-        return resultado
-
-    lista_favoritos = resultado.get_json()
-    if not lista_favoritos:
-        return jsonify({'error': 'La clínica no está en favoritos'}), 404
-
-    id_favorito = lista_favoritos[0]['id_favorito']
-
-    # Paso 2: Eliminar la relación usuario-favorito
-    sql_delete_relacion = '''
-        DELETE FROM Usuario_favorito
-        WHERE id_usuario = %s AND id_favorito = %s
-    '''
-    return ejecutar_sql(sql_delete_relacion, (id_usuario, id_favorito), es_insert=True)
+    return ejecutar_sql(sql, (id_usuario, id_clinica), es_insert=True)
 
 
 # ======================= DISPONIBILIDAD =======================
