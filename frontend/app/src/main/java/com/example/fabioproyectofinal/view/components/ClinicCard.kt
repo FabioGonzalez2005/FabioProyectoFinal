@@ -34,16 +34,20 @@ fun ClinicaCard(
     clinic: Clinic,
     navController: NavHostController? = null,
     userId: Int?,
-    inFavourites: Boolean
+    inFavourites: Boolean,
+    isClickable: Boolean,
 ) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable {
-                navController?.navigate(route = AppScreens.ClinicDetailScreen.route.replace("{id_usuario}", userId.toString()))
-            },
+            .then(
+                if (isClickable) Modifier.clickable {
+                    navController?.navigate(route = AppScreens.ClinicDetailScreen.route.replace("{id_usuario}", userId.toString()))
+                } else Modifier
+            ),
+
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)

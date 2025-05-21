@@ -155,7 +155,8 @@ fun ClinicList(
                 clinic = clinic,
                 navController = navController,
                 userId = userId ?: -1,
-                inFavourites = clinic.inFavourites
+                inFavourites = clinic.inFavourites,
+                isClickable = true
             )
         }
     }

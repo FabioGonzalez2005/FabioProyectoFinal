@@ -92,7 +92,7 @@ fun ClinicDetailScreen(navController: NavHostController, userId: Int?, viewModel
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 clinic?.let {
-                    ClinicaCard(clinic = it, navController = navController, userId = userId ?: -1, inFavourites = true)
+                    ClinicaCard(clinic = it, navController = navController, userId = userId ?: -1, inFavourites = true, isClickable = false)
                 }
             }
             // Botones
