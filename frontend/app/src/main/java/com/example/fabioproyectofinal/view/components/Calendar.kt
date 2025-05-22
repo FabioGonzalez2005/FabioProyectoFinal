@@ -203,7 +203,7 @@ fun CalendarComponent(
                         .clip(RoundedCornerShape(3.dp))
                         .background(
                             when {
-                                isSelected -> Color(0xFFC2D3A9)
+                                isSelected -> Color(0xFF859A72)
                                 !isWorkingDay -> Color(0xFFC47E7E)
                                 isPastDate -> Color(0xFFD5D5D5)
                                 isToday -> Color(0xFFB2C2A4)

@@ -36,10 +36,15 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
     val availabilityVM: AvailabilityViewModel = viewModel()
     val disponibilidad by availabilityVM.disponibilidad.collectAsState()
     var selectedAvailability by remember { mutableStateOf<Availability?>(null) }
-
     val idDoctor = 1
+
+    LaunchedEffect(selectedDate) {
+        availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
+    }
+
+
     LaunchedEffect(Unit) {
-        availabilityVM.cargarDisponibilidad(idDoctor)
+        availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
     }
 
     Scaffold(
@@ -71,20 +76,6 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
-
-            Button(
-                onClick = {
-                    availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
-                },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .height(40.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4))
-            ) {
-                Text(text = "Buscar cita", fontFamily = afacadFont, color = Color.White)
-            }
-
-
 
             if (disponibilidad.isNotEmpty()) {
                 Text(
@@ -136,6 +127,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                         }
                     }
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = {
                         selectedAvailability?.let { selected ->
@@ -152,16 +144,21 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                             }
                         }
                     },
+                    enabled = selectedAvailability != null,
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .height(40.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4))
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (selectedAvailability != null) Color(0xFFB2C2A4) else Color(0xFFCCCCCC)
+                    )
                 ) {
-                    Text(text = "Reservar", fontFamily = afacadFont, color = Color.White)
+                    Text(
+                        text = "Reservar",
+                        fontFamily = afacadFont,
+                        color = Color.White
+                    )
                 }
-
             }
-
         }
     }
 }
