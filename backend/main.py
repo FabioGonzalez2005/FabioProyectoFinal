@@ -300,24 +300,49 @@ def eliminar_favorito(id_usuario):
 
 
 # ======================= DISPONIBILIDAD =======================
-# Ver horarios de doctores
+# Ver horarios completos de doctores
 @app.route('/doctor/<int:id_doctor>/disponibilidad/completa', methods=['GET'])
 def ver_disponibilidad_completa(id_doctor):
     sql = '''
-        SELECT id_disponibilidad, dia_semana, hora_inicio, hora_fin, disponible
-        FROM "Disponibilidad_Doctor"
+        SELECT id_disponibilidad, fecha_inicio, fecha_fin, disponible
+        FROM disponibilidad_doctor
         WHERE id_doctor = %s
-        ORDER BY dia_semana, hora_inicio
+        ORDER BY fecha_inicio
     '''
     return ejecutar_sql(sql, (id_doctor,))
 
+# Ver disponibilidad en una fecha específica
+@app.route('/doctor/<int:id_doctor>/disponibilidad/por-dia', methods=['GET'])
+def ver_disponibilidad_por_dia(id_doctor):
+    fecha_str = request.args.get("fecha")  # formato: YYYY-MM-DD
+
+    if not fecha_str:
+        return jsonify({"error": "Parámetro 'fecha' es requerido"}), 400
+
+    try:
+        # Validación segura
+        from datetime import datetime
+        fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+
+        sql = '''
+            SELECT id_disponibilidad, fecha_inicio, fecha_fin, disponible
+            FROM disponibilidad_doctor
+            WHERE id_doctor = %s
+              AND DATE(fecha_inicio) = %s
+            ORDER BY fecha_inicio
+        '''
+        return ejecutar_sql(sql, (id_doctor, fecha))
+    except ValueError:
+        return jsonify({"error": "Formato de fecha inválido, usa YYYY-MM-DD"}), 400
+
+# Reservar una disponibilidad
 @app.route('/doctor/disponibilidad/reservar', methods=['POST'])
 def reservar_franja():
     datos = request.get_json()
     id_disponibilidad = datos.get('id_disponibilidad')
 
     sql = '''
-        UPDATE "Disponibilidad_Doctor"
+        UPDATE disponibilidad_doctor
         SET disponible = FALSE
         WHERE id_disponibilidad = %s
     '''
