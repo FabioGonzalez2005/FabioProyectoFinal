@@ -18,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.fabioproyectofinal.model.navigation.AppScreens
+import com.google.android.gms.maps.CameraUpdateFactory
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("MissingPermission")
@@ -36,12 +38,19 @@ fun GoogleMapWithClinics(
 
     var selectedClinic by remember { mutableStateOf<Clinic?>(null) }
     var lastClickedId by remember { mutableStateOf<Int?>(null) }
+     val coroutineScope = rememberCoroutineScope()
 
-    GoogleMap(
-        modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState,
-        properties = MapProperties(isMyLocationEnabled = false)
-    ) {
+
+     GoogleMap(
+         modifier = Modifier.fillMaxSize(),
+         cameraPositionState = cameraPositionState,
+         properties = MapProperties(isMyLocationEnabled = false),
+         onMapClick = {
+             selectedClinic = null
+             lastClickedId = null
+         }
+     )
+     {
         clinics.forEach { clinic ->
             val position = LatLng(clinic.lat, clinic.lng)
             Marker(
@@ -50,17 +59,25 @@ fun GoogleMapWithClinics(
                 snippet = clinic.direccion,
                 onClick = {
                     if (lastClickedId == clinic.id_clinica) {
-                        navController.navigate(
-                            AppScreens.ClinicDetailScreen.createRoute(userId, clinic.id_clinica)
-                        )
                         lastClickedId = null
                         selectedClinic = null
                     } else {
                         selectedClinic = clinic
                         lastClickedId = clinic.id_clinica
+
+                        coroutineScope.launch {
+                            cameraPositionState.animate(
+                                update = CameraUpdateFactory.newLatLngZoom(
+                                    LatLng(clinic.lat - 0.01, clinic.lng),
+                                    13f
+                                ),
+                                durationMs = 600
+                            )
+                        }
                     }
                     true
                 }
+
             )
         }
     }
