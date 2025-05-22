@@ -655,6 +655,18 @@ def obtener_seguros():
     sql = 'SELECT id_seguro, nombre FROM seguro ORDER BY nombre'
     return ejecutar_sql(sql)
 
+# Ver todos los seguros aceptados de una clínica
+@app.route('/clinicas/<int:id_clinica>/seguros', methods=['GET'])
+def seguros_aceptados_clinica(id_clinica):
+    sql = '''
+        SELECT s.id_seguro, s.nombre
+        FROM clinica_seguro cs
+        JOIN seguro s ON cs.id_seguro = s.id_seguro
+        WHERE cs.id_clinica = %s
+        ORDER BY s.nombre
+    '''
+    return ejecutar_sql(sql, (id_clinica,))
+
 # Obtener los seguros médicos de un usuario
 @app.route('/usuarios/<int:id_usuario>/seguros', methods=['GET'])
 def seguros_usuario(id_usuario):
