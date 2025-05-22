@@ -174,6 +174,7 @@ fun LoginScreen(navController: NavHostController) {
                         navController.navigate(route = AppScreens.MainScreenApp.route.replace("{id_usuario}", estado.id_usuario.toString())) {
                             popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
                         }
+                        Toast.makeText(context, "✅ Login exitoso", Toast.LENGTH_SHORT).show()
                     } else if (estado.error != null) {
                         // Login fallido
                         Toast.makeText(context, estado.error, Toast.LENGTH_LONG).show()

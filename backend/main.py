@@ -648,6 +648,24 @@ def test_connection():
     except Exception as e:
             return jsonify({"message": f"Error en la conexión: {repr(e)}"}), 500
 
+# ======================= DOCTORES =======================
+# Ver todos los seguros
+@app.route('/seguros', methods=['GET'])
+def obtener_seguros():
+    sql = 'SELECT id_seguro, nombre FROM seguro ORDER BY nombre'
+    return ejecutar_sql(sql)
+
+# Obtener los seguros médicos de un usuario
+@app.route('/usuarios/<int:id_usuario>/seguros', methods=['GET'])
+def seguros_usuario(id_usuario):
+    sql = '''
+        SELECT s.id_seguro, s.nombre
+        FROM usuario_seguro us
+        JOIN seguro s ON us.id_seguro = s.id_seguro
+        WHERE us.id_usuario = %s
+        ORDER BY s.nombre
+    '''
+    return ejecutar_sql(sql, (id_usuario,))
 
 # ======================= INICIO APP =======================
 

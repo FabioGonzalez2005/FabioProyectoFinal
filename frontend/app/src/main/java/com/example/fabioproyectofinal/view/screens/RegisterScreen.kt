@@ -176,6 +176,13 @@ fun RegisterScreen(navController: NavHostController) {
                             contraseña = password
                         )
                         authViewModel.registrarUsuario(nuevoUsuario)
+                        navController.navigate(route = AppScreens.LoginScreen.route) {
+                            popUpTo(AppScreens.RegisterScreen.route) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                        Toast.makeText(context, "✅ Registro exitoso", Toast.LENGTH_SHORT).show()
                     } else {
                         val errorMsg = when {
                             username.isBlank() -> "Por favor, escribe tu nombre de usuario"

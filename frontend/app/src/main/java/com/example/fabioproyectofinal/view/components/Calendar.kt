@@ -84,7 +84,7 @@ fun CalendarComponent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Texto "Disponibilidad"
@@ -206,7 +206,7 @@ fun CalendarComponent(
                                 isSelected -> Color(0xFF859A72)
                                 !isWorkingDay -> Color(0xFFC47E7E)
                                 isPastDate -> Color(0xFFD5D5D5)
-                                isToday -> Color(0xFFB2C2A4)
+                                isToday -> Color(0xFF9EC8D5)
                                 else -> Color(0xFFB2C2A4)
                             }
                         )
@@ -222,40 +222,14 @@ fun CalendarComponent(
                         else -> Color.White
                     }
 
-                    if (isToday) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "${day + 1}",
-                                color = textColor,
-                                fontFamily = afacadFont,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
-                            )
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = "HOY",
-                                    color = textColor,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = afacadFont,
-                                    fontSize = 12.sp,
-                                    modifier = Modifier.padding(top = 1.dp)
-                                )
-
-                            }
-                        }
-                    } else {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "${day + 1}",
-                                color = textColor,
-                                fontFamily = afacadFont,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                fontSize = 16.sp
-                            )
-                        }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "${day + 1}",
+                            color = textColor,
+                            fontFamily = afacadFont,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            fontSize = 16.sp
+                        )
                     }
                 }
             }
