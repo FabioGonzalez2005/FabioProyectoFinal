@@ -108,6 +108,9 @@ interface ApiService {
         @Body datos: Map<String, Int>
     ): MensajeResponse
 
+    @GET("/clinicas/{id_clinica}/seguros")
+    suspend fun getSegurosDeClinica(@Path("id_clinica") idClinica: Int): List<Seguro>
+
 
 }
 

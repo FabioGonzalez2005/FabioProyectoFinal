@@ -95,7 +95,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.2.2")
 
 
-    //Corrutinas
+    // Corrutinas
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.maps.android:maps-compose:4.1.1")
@@ -103,5 +103,8 @@ dependencies {
 
     // Iconos
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
+
+    // Más elementos de Compose
+    implementation("androidx.compose.foundation:foundation:1.8.2")
 }
 
