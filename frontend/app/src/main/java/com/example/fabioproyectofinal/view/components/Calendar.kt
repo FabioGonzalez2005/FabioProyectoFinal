@@ -96,8 +96,6 @@ fun CalendarComponent(
                     color = Color(0xFFB2C2A4)
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
                 // Row con botones e info de mes
                 Row(
                     modifier = Modifier
@@ -205,7 +203,7 @@ fun CalendarComponent(
                         .clip(RoundedCornerShape(3.dp))
                         .background(
                             when {
-                                isSelected -> Color(0xFFE1E1E1)
+                                isSelected -> Color(0xFFC2D3A9)
                                 !isWorkingDay -> Color(0xFFC47E7E)
                                 isPastDate -> Color(0xFFD5D5D5)
                                 isToday -> Color(0xFFB2C2A4)
@@ -218,10 +216,10 @@ fun CalendarComponent(
                     contentAlignment = Alignment.Center
                 ) {
                     val textColor = when {
-                        isSelected -> Color.Black
-                        isPastDate -> Color.Black.copy(alpha = 0.6f)
-                        !isWorkingDay -> Color.Black
-                        else -> Color.Black
+                        isSelected -> Color.White
+                        isPastDate -> Color.White
+                        !isWorkingDay -> Color.White
+                        else -> Color.White
                     }
 
                     if (isToday) {

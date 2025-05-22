@@ -22,6 +22,9 @@ import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.utils.formatHora
 import com.example.fabioproyectofinal.model.utils.formatTime
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 
 @Composable
 fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
@@ -59,13 +62,6 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ProfessionalCardHorizontal(
-                    name = "Alberto Medina",
-                    specialty = "Osteópata",
-                    price = "45",
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 CalendarComponent(
                     selectedDate = selectedDate,
@@ -80,8 +76,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                 },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
+                    .height(40.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4))
             ) {
                 Text(text = "Buscar cita", fontFamily = afacadFont, color = Color.White)
@@ -99,15 +94,54 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
-                disponibilidad.forEach { item ->
-                    Text(
-                        text = "Horario: ${formatHora(item.fecha_inicio)} - ${formatHora(item.fecha_fin)}",
-                        fontSize = 16.sp,
-                        fontFamily = afacadFont,
-                        color = if (item.disponible) Color.Black else Color.Gray
-                    )
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .heightIn(max = 400.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    content = {
+                        items(disponibilidad) { item ->
+                            val backgroundColor = if (item.disponible) Color(0xFFB2C2A4) else Color(0xFFC47E7E)
+
+                            Button(
+                                onClick = { /* Acción */ },
+                                enabled = item.disponible,
+                                shape = RoundedCornerShape(12.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(36.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = backgroundColor,
+                                    disabledContainerColor = Color(0xFFC47E7E),
+                                    disabledContentColor = Color.White
+                                )
+                            ) {
+                                Text(
+                                    text = "${formatHora(item.fecha_inicio)} - ${formatHora(item.fecha_fin)}",
+                                    fontSize = 16.sp,
+                                    fontFamily = afacadFont,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+                )
+                Button(
+                    onClick = {
+
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .height(40.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4))
+                ) {
+                    Text(text = "Reservar", fontFamily = afacadFont, color = Color.White)
                 }
             }
+
         }
     }
 }
