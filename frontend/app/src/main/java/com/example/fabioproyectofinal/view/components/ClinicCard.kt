@@ -63,7 +63,11 @@ fun ClinicaCard(
     isClickable: Boolean,
     mostrarIconoVacio: Boolean = true,
     botonFavoritoActivo: Boolean = true,
-    mostrarBotonSeguros: Boolean = true
+    mostrarBotonSeguros: Boolean = true,
+    paddingActivo: Boolean = true,
+    mostrarFavoritos: Boolean = true,
+    mostrarCompatibilidad: Boolean = true,
+    onClick: (() -> Unit)? = null
 ) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var estaEnFavoritos by remember { mutableStateOf(inFavourites) }
@@ -86,10 +90,10 @@ fun ClinicaCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .then(if (paddingActivo) Modifier.padding(vertical = 8.dp) else Modifier)
             .then(
                 if (isClickable) Modifier.clickable {
-                    navController?.navigate(
+                    onClick?.invoke() ?: navController?.navigate(
                         AppScreens.ClinicDetailScreen.createRoute(userId ?: -1, clinic.id_clinica)
                     )
                 } else Modifier
@@ -125,63 +129,70 @@ fun ClinicaCard(
                 ) {
                     userId?.let { uid ->
                         // Icono de favorito
-                        val mostrarIcono = estaEnFavoritos || mostrarIconoVacio
-                        if (mostrarIcono) {
-                            val painter = if (estaEnFavoritos)
-                                rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_favourite_lxpak3.webp")
-                            else
-                                rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/favourite_unselected_hq502n.webp")
+                        if (mostrarFavoritos) {
+                            val mostrarIcono = estaEnFavoritos || mostrarIconoVacio
+                            if (mostrarIcono) {
+                                val painter = if (estaEnFavoritos)
+                                    rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_favourite_lxpak3.webp")
+                                else
+                                    rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/favourite_unselected_hq502n.webp")
 
-                            Image(
-                                painter = painter,
-                                contentDescription = "Favorito",
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .then(
-                                        if (botonFavoritoActivo) Modifier.clickable {
-                                            CoroutineScope(Dispatchers.IO).launch {
-                                                try {
-                                                    val api = ApiServer.apiService
-                                                    if (estaEnFavoritos) {
-                                                        api.eliminarDeFavoritos(uid, mapOf("id_clinica" to clinic.id_clinica))
-                                                    } else {
-                                                        api.agregarAFavoritos(uid, mapOf("id_clinica" to clinic.id_clinica))
+                                Image(
+                                    painter = painter,
+                                    contentDescription = "Favorito",
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .then(
+                                            if (botonFavoritoActivo) Modifier.clickable {
+                                                CoroutineScope(Dispatchers.IO).launch {
+                                                    try {
+                                                        val api = ApiServer.apiService
+                                                        if (estaEnFavoritos) {
+                                                            api.eliminarDeFavoritos(uid, mapOf("id_clinica" to clinic.id_clinica))
+                                                        } else {
+                                                            api.agregarAFavoritos(uid, mapOf("id_clinica" to clinic.id_clinica))
+                                                        }
+                                                        estaEnFavoritos = !estaEnFavoritos
+                                                    } catch (e: Exception) {
+                                                        println("Error modificando favoritos: ${e.message}")
                                                     }
-                                                    estaEnFavoritos = !estaEnFavoritos
-                                                } catch (e: Exception) {
-                                                    println("Error modificando favoritos: ${e.message}")
                                                 }
-                                            }
-                                        } else Modifier
-                                    )
-                            )
+                                            } else Modifier
+                                        )
+                                )
+                            }
                         }
+
 
                         userId?.let { uid ->
-                            val api = ApiServer.apiService
+                            if (mostrarCompatibilidad) {
+                                val idsUsuario = segurosUsuario.map { it.id_seguro }.toSet()
+                                val idsClinica = segurosClinica.map { it.id_seguro }.toSet()
+                                val idsCoincidentes = idsUsuario.intersect(idsClinica)
 
-                            val idsUsuario = segurosUsuario.map { it.id_seguro }.toSet()
-                            val idsClinica = segurosClinica.map { it.id_seguro }.toSet()
-                            val idsCoincidentes = idsUsuario.intersect(idsClinica)
+                                val nombresCoincidentes = segurosUsuario
+                                    .filter { it.id_seguro in idsCoincidentes }
+                                    .map { it.nombre }
 
-                            val nombresCoincidentes = segurosUsuario
-                                .filter { it.id_seguro in idsCoincidentes }
-                                .map { it.nombre }
+                                Text(
+                                    text = when {
+                                        segurosClinica.isEmpty() || segurosUsuario.isEmpty() -> "Cargando seguros..."
+                                        nombresCoincidentes.isNotEmpty() -> "Compatible con: ${
+                                            nombresCoincidentes.joinToString(
+                                                ", "
+                                            )
+                                        }"
 
-
-                            Text(
-                                text = when {
-                                    segurosClinica.isEmpty() || segurosUsuario.isEmpty() -> "Cargando seguros..."
-                                    nombresCoincidentes.isNotEmpty() -> "Compatible con: ${nombresCoincidentes.joinToString(", ")}"
-                                    else -> "No tienes seguros compatibles"
-                                },
-                                fontFamily = afacadFont,
-                                fontSize = 12.sp,
-                                color = Color(0xFF7C8B6B)
-                            )
+                                        else -> "No tienes seguros compatibles"
+                                    },
+                                    fontFamily = afacadFont,
+                                    fontSize = 12.sp,
+                                    color = Color(0xFF7C8B6B)
+                                )
+                            }
                         }
 
-                        // Botón de seguros
+                            // Botón de seguros
                         if (mostrarBotonSeguros) {
                             Button(
                                 onClick = {

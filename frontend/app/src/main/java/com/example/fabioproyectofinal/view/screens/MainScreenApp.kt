@@ -7,9 +7,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -27,6 +31,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.FontWeight
+import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.AnimatedDialogButton
 import com.example.fabioproyectofinal.view.components.GoogleMapWithClinics
 
@@ -80,27 +85,38 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                 .height(64.dp)
                 .padding(innerPadding)
         ) {
+            var showMapDialog by remember { mutableStateOf(false) }
             // "Buscador"
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ){
             Text(
                 text = "Buscador",
                 color = Color(0xFFB2C2A4),
                 fontSize = 40.sp,
                 fontFamily = afacadFont,
-                modifier = Modifier
-                    .padding(start = 16.dp, bottom = 16.dp)
             )
+                Button(
+                    onClick = {
+                        showMapDialog = true
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                    shape = RoundedCornerShape(8.dp),
+                    contentPadding = PaddingValues(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Map,
+                        contentDescription = "Mapa",
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.White
+                    )
+                }
+            }
 
-            var showMapDialog by remember { mutableStateOf(false) }
-
-            AnimatedDialogButton(
-                text = "Mapa",
-                onClick = {
-                    showMapDialog = true
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, bottom = 16.dp)
-            )
 
 
             // Buscador de clínicas
@@ -160,10 +176,19 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                         )
                     },
                     text = {
-                        Box(modifier = Modifier.height(300.dp)) {
-                            GoogleMapWithClinics(clinics = clinics)
+                        Box(modifier = Modifier
+                            .height(450.dp)
+                            .fillMaxWidth()
+                        ) {
+                            GoogleMapWithClinics(
+                                clinics = clinics,
+                                navController = navController,
+                                userId = userId ?: -1,
+                                onDismiss = { showMapDialog = false }
+                            )
                         }
-                    },
+                    }
+                    ,
                     containerColor = Color(0xFFFFF9F2)
                 )
             }

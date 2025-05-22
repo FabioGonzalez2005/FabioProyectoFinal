@@ -11,8 +11,11 @@ import com.example.fabioproyectofinal.model.data.model.Clinic
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 
@@ -62,32 +65,37 @@ fun GoogleMapWithClinics(
         }
     }
 
-    selectedClinic?.let { clinic ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            selectedClinic?.let { clinic ->
-                Box(
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter) // ← aquí sí es válido
-                ) {
-                    ClinicaCard(
-                        clinic = clinic,
-                        navController = navController,
-                        userId = userId,
-                        inFavourites = clinic.inFavourites,
-                        isClickable = true,
-                        mostrarIconoVacio = false,
-                        botonFavoritoActivo = false,
-                        mostrarBotonSeguros = false,
-                        onClick = {
-                            onDismiss()
-                            navController.navigate(AppScreens.ClinicDetailScreen.createRoute(userId, clinic.id_clinica))
-                        }
-                    )
+     selectedClinic?.let { clinic ->
+         Box(
+             modifier = Modifier
+                 .fillMaxSize()
+                 .padding(bottom = 16.dp),
+             contentAlignment = Alignment.BottomCenter
+         ) {
+             Surface(
+                 shape = RoundedCornerShape(12.dp),
+                 color = Color.White
+             ) {
+                 ClinicaCard(
+                     clinic = clinic,
+                     navController = navController,
+                     userId = userId,
+                     inFavourites = clinic.inFavourites,
+                     isClickable = true,
+                     mostrarIconoVacio = false,
+                     botonFavoritoActivo = false,
+                     mostrarBotonSeguros = false,
+                     paddingActivo = false,
+                     mostrarFavoritos = false,
+                     mostrarCompatibilidad = false,
+                     onClick = {
+                         onDismiss()
+                         navController.navigate(AppScreens.ClinicDetailScreen.createRoute(userId, clinic.id_clinica))
+                     }
+                 )
+             }
+         }
+     }
+ }
 
-                }
-            }
-        }
-    }
-}
+
