@@ -208,7 +208,7 @@ fun CalendarComponent(
                                 isSelected -> Color(0xFFE1E1E1)
                                 !isWorkingDay -> Color(0xFFC47E7E)
                                 isPastDate -> Color(0xFFD5D5D5)
-                                isToday -> Color(0xFFFFFFFF)
+                                isToday -> Color(0xFFB2C2A4)
                                 else -> Color(0xFFB2C2A4)
                             }
                         )
