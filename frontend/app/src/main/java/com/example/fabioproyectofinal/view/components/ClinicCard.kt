@@ -69,7 +69,14 @@ fun ClinicaCard(
     var estaEnFavoritos by remember { mutableStateOf(inFavourites) }
 
     val viewModel: InsuranceViewModel = viewModel()
+    val segurosUsuario by viewModel.segurosUsuario.collectAsState()
+    val segurosClinica by viewModel.segurosClinica.collectAsState()
     var showInsuranceDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(userId, clinic.id_clinica) {
+        userId?.let { viewModel.cargarSegurosUsuario(it) }
+        viewModel.cargarSegurosClinica(clinic.id_clinica)
+    }
 
     LaunchedEffect(inFavourites) {
         estaEnFavoritos = inFavourites
@@ -147,6 +154,30 @@ fun ClinicaCard(
                                             }
                                         } else Modifier
                                     )
+                            )
+                        }
+
+                        userId?.let { uid ->
+                            val api = ApiServer.apiService
+
+                            val idsUsuario = segurosUsuario.map { it.id_seguro }.toSet()
+                            val idsClinica = segurosClinica.map { it.id_seguro }.toSet()
+                            val idsCoincidentes = idsUsuario.intersect(idsClinica)
+
+                            val nombresCoincidentes = segurosUsuario
+                                .filter { it.id_seguro in idsCoincidentes }
+                                .map { it.nombre }
+
+
+                            Text(
+                                text = when {
+                                    segurosClinica.isEmpty() || segurosUsuario.isEmpty() -> "Cargando seguros..."
+                                    nombresCoincidentes.isNotEmpty() -> "Compatible con: ${nombresCoincidentes.joinToString(", ")}"
+                                    else -> "No tienes seguros compatibles"
+                                },
+                                fontFamily = afacadFont,
+                                fontSize = 12.sp,
+                                color = Color(0xFF7C8B6B)
                             )
                         }
 

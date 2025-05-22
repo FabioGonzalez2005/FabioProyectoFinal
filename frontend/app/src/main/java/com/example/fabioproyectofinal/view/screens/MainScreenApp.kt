@@ -27,6 +27,8 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.FontWeight
+import com.example.fabioproyectofinal.view.components.AnimatedDialogButton
+import com.example.fabioproyectofinal.view.components.GoogleMapWithClinics
 
 @Composable
 fun MainScreenApp(navController: NavHostController, userId: Int?) {
@@ -88,6 +90,19 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                     .padding(start = 16.dp, bottom = 16.dp)
             )
 
+            var showMapDialog by remember { mutableStateOf(false) }
+
+            AnimatedDialogButton(
+                text = "Mapa",
+                onClick = {
+                    showMapDialog = true
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, bottom = 16.dp)
+            )
+
+
             // Buscador de clínicas
             OutlinedTextField(
                 value = searchText,
@@ -126,6 +141,33 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                 singleLine = true
             )
             ClinicList(clinicasFiltradas, navController, userId = userId ?: -1, false)
+            if (showMapDialog) {
+                AlertDialog(
+                    onDismissRequest = { showMapDialog = false },
+                    confirmButton = {
+                        AnimatedDialogButton(
+                            text = "Cerrar",
+                            onClick = { showMapDialog = false }
+                        )
+                    },
+                    title = {
+                        Text(
+                            "Clínicas en el mapa",
+                            fontSize = 18.sp,
+                            color = Color(0xFF7C8B6B),
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = afacadFont
+                        )
+                    },
+                    text = {
+                        Box(modifier = Modifier.height(300.dp)) {
+                            GoogleMapWithClinics(clinics = clinics)
+                        }
+                    },
+                    containerColor = Color(0xFFFFF9F2)
+                )
+            }
+
         }
     }
 }
