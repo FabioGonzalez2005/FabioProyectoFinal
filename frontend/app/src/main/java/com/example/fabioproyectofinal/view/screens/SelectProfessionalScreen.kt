@@ -28,15 +28,12 @@ import androidx.compose.foundation.lazy.grid.items
 import com.example.fabioproyectofinal.model.data.model.Availability
 
 @Composable
-fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
+fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idDoctor: Int) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
-    var selectedSlot by remember { mutableStateOf<String?>(null) }
-    var buttonColor by remember { mutableStateOf(Color(0xFFF4F4F4)) }
     val availabilityVM: AvailabilityViewModel = viewModel()
     val disponibilidad by availabilityVM.disponibilidad.collectAsState()
     var selectedAvailability by remember { mutableStateOf<Availability?>(null) }
-    val idDoctor = 1
 
     LaunchedEffect(selectedDate) {
         availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)

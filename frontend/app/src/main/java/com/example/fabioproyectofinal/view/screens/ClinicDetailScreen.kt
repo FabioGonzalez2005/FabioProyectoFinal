@@ -53,6 +53,7 @@ import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.GoogleMapView
 import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
 
@@ -183,12 +184,22 @@ fun ClinicDetailScreen(
                                     horizontalArrangement = Arrangement.Center
                                 ) {
                                     pair.forEach { doctor ->
+                                        Log.i("DoctorId", "IdDoctor ${doctor.id_doctor}")
                                         ProfessionalCard(
                                             name = doctor.nombre,
                                             specialty = doctor.especialidad,
                                             navController = navController,
-                                            userId = userId ?: -1,
-                                        ) { /* Acción */ }
+                                            userId = userId ?: -1
+
+                                        ) {
+
+                                            navController.navigate(
+                                                AppScreens.SelectProfessionalScreen.createRoute(
+                                                    idUsuario = userId ?: -1,
+                                                    idDoctor = doctor.id_doctor
+                                                )
+                                            )
+                                        }
                                         Log.d("DEBUG", "ID clínica actual: ${clinic?.id_clinica}")
                                         doctorList.forEach {
                                             Log.d(

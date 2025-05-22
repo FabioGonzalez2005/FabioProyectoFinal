@@ -38,7 +38,7 @@ fun ProfessionalCard(name: String, specialty: String, navController: NavHostCont
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
-            .clickable { navController.navigate(route = AppScreens.SelectProfessionalScreen.route.replace("{id_usuario}", userId.toString())) },
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
         Column(
