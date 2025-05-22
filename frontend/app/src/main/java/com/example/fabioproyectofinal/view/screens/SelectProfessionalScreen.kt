@@ -20,6 +20,8 @@ import java.time.LocalDate
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
+import com.example.fabioproyectofinal.model.utils.formatHora
+import com.example.fabioproyectofinal.model.utils.formatTime
 
 @Composable
 fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
@@ -27,8 +29,8 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var selectedSlot by remember { mutableStateOf<String?>(null) }
     var buttonColor by remember { mutableStateOf(Color(0xFFF4F4F4)) }
-
     val availabilityVM: AvailabilityViewModel = viewModel()
+    val disponibilidad by availabilityVM.disponibilidad.collectAsState()
 
     val idDoctor = 1
     LaunchedEffect(Unit) {
@@ -53,7 +55,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
         ) {
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -72,20 +74,40 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-                Button(
-                    onClick = {
-                        if (selectedSlot != null) {
-                            buttonColor = Color(0xFF859A72)
-                        }
-                    },
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
-                ) {
-                    Text(text = "Buscar cita", fontFamily = afacadFont, color = Color.White)
+            Button(
+                onClick = {
+                    availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
+                },
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4))
+            ) {
+                Text(text = "Buscar cita", fontFamily = afacadFont, color = Color.White)
+            }
+
+
+
+            if (disponibilidad.isNotEmpty()) {
+                Text(
+                    text = "Horarios disponibles:",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = afacadFont,
+                    color = Color(0xFF859A72),
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+
+                disponibilidad.forEach { item ->
+                    Text(
+                        text = "Horario: ${formatHora(item.fecha_inicio)} - ${formatHora(item.fecha_fin)}",
+                        fontSize = 16.sp,
+                        fontFamily = afacadFont,
+                        color = if (item.disponible) Color.Black else Color.Gray
+                    )
                 }
             }
         }
     }
+}

@@ -8,6 +8,7 @@ import com.example.fabioproyectofinal.model.data.model.Availability
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class AvailabilityViewModel : ViewModel() {
 
@@ -25,4 +26,19 @@ class AvailabilityViewModel : ViewModel() {
             }
         }
     }
+
+    fun cargarDisponibilidadPorDia(idDoctor: Int, fecha: LocalDate) {
+        viewModelScope.launch {
+            try {
+                val resultado = ApiServer.apiService.getDisponibilidadPorDia(
+                    idDoctor,
+                    fecha.toString() // se convierte automáticamente a yyyy-MM-dd
+                )
+                _disponibilidad.value = resultado
+            } catch (e: Exception) {
+                Log.e("AvailabilityVM", "Error al cargar disponibilidad por día: ${e.message}")
+            }
+        }
+    }
+
 }

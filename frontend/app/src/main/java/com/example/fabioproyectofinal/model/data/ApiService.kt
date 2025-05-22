@@ -79,4 +79,10 @@ interface ApiService {
         @Path("id_usuario") idUsuario: Int,
         @Body datos: Map<String, Int>
     ): MensajeResponse
+
+    @GET("/doctor/{id}/disponibilidad/por-dia")
+    suspend fun getDisponibilidadPorDia(
+        @Path("id") idDoctor: Int,
+        @Query("fecha") fecha: String  // formato: yyyy-MM-dd
+    ): List<Availability>
 }
