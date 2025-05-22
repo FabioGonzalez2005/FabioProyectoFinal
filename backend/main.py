@@ -648,7 +648,7 @@ def test_connection():
     except Exception as e:
             return jsonify({"message": f"Error en la conexión: {repr(e)}"}), 500
 
-# ======================= DOCTORES =======================
+# ======================= SEGUROS =======================
 # Ver todos los seguros
 @app.route('/seguros', methods=['GET'])
 def obtener_seguros():
@@ -666,6 +666,37 @@ def seguros_usuario(id_usuario):
         ORDER BY s.nombre
     '''
     return ejecutar_sql(sql, (id_usuario,))
+
+# Agregar un seguro a un usuario
+@app.route('/usuarios/<int:id_usuario>/seguros/agregar', methods=['POST'])
+def agregar_seguro_usuario(id_usuario):
+    datos = request.get_json()
+    id_seguro = datos.get('id_seguro')
+
+    if not id_seguro:
+        return jsonify({'error': 'id_seguro es requerido'}), 400
+
+    sql = '''
+        INSERT INTO usuario_seguro (id_usuario, id_seguro)
+        VALUES (%s, %s)
+        ON CONFLICT DO NOTHING
+    '''
+    return ejecutar_sql(sql, (id_usuario, id_seguro), es_insert=True)
+
+# Eliminar un seguro de un usuario
+@app.route('/usuarios/<int:id_usuario>/seguros/eliminar', methods=['DELETE'])
+def eliminar_seguro_usuario(id_usuario):
+    datos = request.get_json()
+    id_seguro = datos.get('id_seguro')
+
+    if not id_seguro:
+        return jsonify({'error': 'id_seguro es requerido'}), 400
+
+    sql = '''
+        DELETE FROM usuario_seguro
+        WHERE id_usuario = %s AND id_seguro = %s
+    '''
+    return ejecutar_sql(sql, (id_usuario, id_seguro), es_insert=True)
 
 # ======================= INICIO APP =======================
 
