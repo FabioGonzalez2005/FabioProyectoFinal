@@ -85,4 +85,7 @@ interface ApiService {
         @Path("id") idDoctor: Int,
         @Query("fecha") fecha: String  // formato: yyyy-MM-dd
     ): List<Availability>
+
+    @POST("/doctor/disponibilidad/reservar")
+    suspend fun reservarFranja(@Body datos: Map<String, Int>): MensajeResponse
 }

@@ -53,7 +53,15 @@ def ejecutar_sql(sql_text, params=None, es_insert=False):
         else:
             return jsonify({'msg': 'Operación realizada sin resultados'})
 
+
     except Exception as e:
+
+        print("SQL ERROR:", sql_text)
+
+        print("PARAMS:", params)
+
+        print("ERROR:", e)
+
         return jsonify({'error': str(e)}), 500
 
     finally:
@@ -336,6 +344,9 @@ def ver_disponibilidad_por_dia(id_doctor):
         return jsonify({"error": "Formato de fecha inválido, usa YYYY-MM-DD"}), 400
 
 # Reservar una disponibilidad
+from datetime import datetime
+from flask import jsonify, request, current_app
+
 @app.route('/doctor/disponibilidad/reservar', methods=['POST'])
 def reservar_franja():
     datos = request.get_json()
@@ -343,50 +354,78 @@ def reservar_franja():
     id_usuario = datos.get('id_usuario')
 
     if not id_disponibilidad or not id_usuario:
+        current_app.logger.error("Faltan datos requeridos")
         return jsonify({"error": "Faltan datos requeridos"}), 400
 
-    # 1. Obtener la disponibilidad
-    sql_get_disponibilidad = '''
-        SELECT fecha_inicio, id_doctor
-        FROM disponibilidad_doctor
-        WHERE id_disponibilidad = %s
-    '''
-    respuesta = ejecutar_sql(sql_get_disponibilidad, (id_disponibilidad,))
+    try:
+        # 1. Obtener la disponibilidad
+        sql_get_disponibilidad = '''
+            SELECT fecha_inicio, id_doctor
+            FROM disponibilidad_doctor
+            WHERE id_disponibilidad = %s
+        '''
+        current_app.logger.info(f"Buscando disponibilidad para id {id_disponibilidad}")
+        respuesta = ejecutar_sql(sql_get_disponibilidad, (id_disponibilidad,))
 
-    # Si hubo error, retornamos directamente
-    if respuesta.status_code != 200:
-        return respuesta
+        if isinstance(respuesta, tuple) and respuesta[1] == 500:
+            current_app.logger.error("Error al obtener disponibilidad")
+            return respuesta
 
-    datos_disponibilidad = respuesta.get_json()
-    if not datos_disponibilidad:
-        return jsonify({"error": "Franja no encontrada"}), 404
+        datos_disponibilidad = respuesta.get_json()
+        if not datos_disponibilidad:
+            current_app.logger.warning("Franja no encontrada")
+            return jsonify({"error": "Franja no encontrada"}), 404
 
-    fecha_cita = datos_disponibilidad[0]['fecha_inicio']
-    id_doctor = datos_disponibilidad[0]['id_doctor']
+        fecha_cita_raw = datos_disponibilidad[0]['fecha_inicio']
+        id_doctor = datos_disponibilidad[0]['id_doctor']
+        current_app.logger.info(f"Fecha cita RAW: {fecha_cita_raw}, doctor: {id_doctor}")
 
-    # 2. Crear cita
-    sql_insert_cita = '''
-        INSERT INTO Cita (
-            id_usuario, id_doctor, fecha_cita, estado
-        ) VALUES (%s, %s, %s, %s)
-    '''
-    response_cita = ejecutar_sql(sql_insert_cita, (id_usuario, id_doctor, fecha_cita, 'Confirmado'), es_insert=True)
+        fecha_cita_clean = fecha_cita_raw.replace(" GMT", "")
+        fecha_cita = datetime.strptime(fecha_cita_clean, "%a, %d %b %Y %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
 
-    if response_cita.status_code != 200:
-        return response_cita
+        # 2. Insertar la cita con todos los campos requeridos
+        sql_insert_cita = '''
+            INSERT INTO cita (
+                id_usuario, id_doctor, fecha_cita, estado,
+                condiciones_pasadas, procedimientos_quirurgicos,
+                alergias, antecedentes_familiares, medicamento_y_dosis, nota
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        '''
+        current_app.logger.info(f"Inserting cita con: usuario={id_usuario}, doctor={id_doctor}, fecha={fecha_cita}")
 
-    # 3. Actualizar franja como no disponible
-    sql_update_dispo = '''
-        UPDATE disponibilidad_doctor
-        SET disponible = FALSE
-        WHERE id_disponibilidad = %s
-    '''
-    response_update = ejecutar_sql(sql_update_dispo, (id_disponibilidad,), es_insert=True)
+        response_cita = ejecutar_sql(
+            sql_insert_cita,
+            (
+                id_usuario,
+                id_doctor,
+                fecha_cita,
+                'Pendiente',
+                '', '', '', '', '', ''  # campos opcionales rellenados en blanco
+            ),
+            es_insert=True
+        )
 
-    if response_update.status_code != 200:
-        return response_update
+        if isinstance(response_cita, tuple) and response_cita[1] == 500:
+            current_app.logger.error("Error al insertar la cita")
+            return response_cita
 
-    return jsonify({"msg": "Cita creada y franja reservada"}), 200
+        # 3. Marcar franja como ocupada
+        sql_update_dispo = '''
+            UPDATE disponibilidad_doctor
+            SET disponible = FALSE
+            WHERE id_disponibilidad = %s
+        '''
+        response_update = ejecutar_sql(sql_update_dispo, (id_disponibilidad,), es_insert=True)
+
+        if isinstance(response_update, tuple) and response_update[1] == 500:
+            current_app.logger.error("Error al actualizar la disponibilidad")
+            return response_update
+
+        return jsonify({"msg": "Cita creada y franja reservada"}), 200
+
+    except Exception as e:
+        current_app.logger.exception("Error inesperado en reservar_franja")
+        return jsonify({"error": str(e)}), 500
 
 
 # ======================= CITAS =======================

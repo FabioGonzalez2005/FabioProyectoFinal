@@ -40,5 +40,22 @@ class AvailabilityViewModel : ViewModel() {
             }
         }
     }
-
+    
+    fun reservarFranja(idDisponibilidad: Int, idUsuario: Int, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val result = ApiServer.apiService.reservarFranja(
+                    mapOf(
+                        "id_disponibilidad" to idDisponibilidad,
+                        "id_usuario" to idUsuario
+                    )
+                )
+                Log.d("AvailabilityVM", "Cita reservada con éxito")
+                onResult(true)
+            } catch (e: Exception) {
+                Log.e("AvailabilityVM", "Error reservando franja: ${e.message}")
+                onResult(false)
+            }
+        }
+    }
 }

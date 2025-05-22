@@ -25,6 +25,7 @@ import com.example.fabioproyectofinal.model.utils.formatTime
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import com.example.fabioproyectofinal.model.data.model.Availability
 
 @Composable
 fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
@@ -34,6 +35,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
     var buttonColor by remember { mutableStateOf(Color(0xFFF4F4F4)) }
     val availabilityVM: AvailabilityViewModel = viewModel()
     val disponibilidad by availabilityVM.disponibilidad.collectAsState()
+    var selectedAvailability by remember { mutableStateOf<Availability?>(null) }
 
     val idDoctor = 1
     LaunchedEffect(Unit) {
@@ -104,10 +106,15 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     content = {
                         items(disponibilidad) { item ->
-                            val backgroundColor = if (item.disponible) Color(0xFFB2C2A4) else Color(0xFFC47E7E)
+                            val isSelected = selectedAvailability?.id_disponibilidad == item.id_disponibilidad
+                            val backgroundColor = when {
+                                !item.disponible -> Color(0xFFC47E7E)
+                                isSelected -> Color(0xFF859A72)
+                                else -> Color(0xFFB2C2A4)
+                            }
 
                             Button(
-                                onClick = { /* Acción */ },
+                                onClick = { selectedAvailability = item },
                                 enabled = item.disponible,
                                 shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier
@@ -131,7 +138,19 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                 )
                 Button(
                     onClick = {
-
+                        selectedAvailability?.let { selected ->
+                            userId?.let { uid ->
+                                availabilityVM.reservarFranja(
+                                    selected.id_disponibilidad,
+                                    uid
+                                ) { success ->
+                                    if (success) {
+                                        selectedAvailability = null
+                                        availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
+                                    }
+                                }
+                            }
+                        }
                     },
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
@@ -140,6 +159,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?) {
                 ) {
                     Text(text = "Reservar", fontFamily = afacadFont, color = Color.White)
                 }
+
             }
 
         }
