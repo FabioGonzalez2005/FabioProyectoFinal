@@ -26,12 +26,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.widget.Toast
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.platform.LocalContext
 import com.example.fabioproyectofinal.model.ApiServer
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fabioproyectofinal.viewmodel.InsuranceViewModel
 
 @Composable
 fun EditProfileDialog(onDismiss: () -> Unit) {
@@ -42,6 +47,7 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
     var email by remember { mutableStateOf(SessionManager.email ?: "") }
     Log.i("Prueba", "$username $email")
     var showMedicalDialog by remember { mutableStateOf(false) }
+    var showInsuranceDialog by remember { mutableStateOf(false) }
 
     fun guardarCambios() {
         val api = ApiServer.apiService
@@ -133,6 +139,14 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                 )
+                AnimatedDialogButton(
+                    text = "Seguros",
+                    onClick = {
+                        showInsuranceDialog = true
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
             }
             Spacer(modifier = Modifier.height(8.dp))
         },
@@ -160,4 +174,10 @@ fun EditProfileDialog(onDismiss: () -> Unit) {
     if (showMedicalDialog) {
         MedicalDataDialog(onDismiss = { showMedicalDialog = false })
     }
+    if (showInsuranceDialog) {
+        InsuranceDialog(onDismiss = { showInsuranceDialog = false })
+    }
 }
+
+
+

@@ -8,6 +8,7 @@ import com.example.fabioproyectofinal.model.data.model.LoginResponse
 import com.example.fabioproyectofinal.model.data.model.MensajeResponse
 import com.example.fabioproyectofinal.model.data.model.UsuarioLoginRequest
 import com.example.fabioproyectofinal.model.data.model.UsuarioRegistroRequest
+import com.example.fabioproyectofinal.viewmodel.Seguro
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -88,4 +89,26 @@ interface ApiService {
 
     @POST("/doctor/disponibilidad/reservar")
     suspend fun reservarFranja(@Body datos: Map<String, Int>): MensajeResponse
+
+    @GET("/seguros")
+    suspend fun getAllSeguros(): List<Seguro>
+
+    @GET("/usuarios/{id_usuario}/seguros")
+    suspend fun getSegurosUsuario(@Path("id_usuario") idUsuario: Int): List<Seguro>
+
+    @POST("/usuarios/{id_usuario}/seguros/agregar")
+    suspend fun agregarSeguroAUsuario(
+        @Path("id_usuario") idUsuario: Int,
+        @Body datos: Map<String, Int>
+    ): MensajeResponse
+
+    @retrofit2.http.HTTP(method = "DELETE", path = "/usuarios/{id_usuario}/seguros/eliminar", hasBody = true)
+    suspend fun eliminarSeguroDeUsuario(
+        @Path("id_usuario") idUsuario: Int,
+        @Body datos: Map<String, Int>
+    ): MensajeResponse
+
+
 }
+
+
