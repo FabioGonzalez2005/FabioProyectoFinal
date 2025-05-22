@@ -3,6 +3,7 @@ package com.example.fabioproyectofinal.view.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -37,6 +38,7 @@ import com.example.fabioproyectofinal.model.utils.formatFecha
 import com.example.fabioproyectofinal.model.utils.formatHora
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import com.example.fabioproyectofinal.R
 
 @Composable
@@ -184,7 +186,7 @@ fun HistoryCard(
                 }
             }
         }
-        fun String?.orNoInfo(): String = this ?: "No especificado"
+        fun String?.orNoInfo(): String = if (this.isNullOrBlank()) "No especificado" else this
 
         if (showDialog) {
             AlertDialog(
@@ -198,39 +200,41 @@ fun HistoryCard(
                     )
                 },
                 title = {
-                    Text(
-                        text = "Expediente",
-                        fontSize = 20.sp,
-                        fontFamily = afacadFont,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFB2C2A4)
-                    )
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Expediente",
+                            fontFamily = afacadFont,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFB2C2A4),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
                 },
                 text = {
-                    Column(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .verticalScroll(rememberScrollState())
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(bottom = 8.dp)
                     ) {
-                        SectionTitle("Información del paciente")
-                        InfoLine("Nombre completo", SessionManager.nombre.orNoInfo())
-                        InfoLine("Fecha de nacimiento", SessionManager.fecha_nacimiento.orNoInfo())
-                        InfoLine("Teléfono", SessionManager.telefono.orNoInfo())
-                        InfoLine("Emergencia", SessionManager.telefono_emergencia.orNoInfo())
+                        item {
+                            SectionTitle("Información del paciente")
+                            InfoLine("Nombre completo", SessionManager.nombre.orNoInfo())
+                            InfoLine("Fecha de nacimiento", SessionManager.fecha_nacimiento.orNoInfo())
+                            InfoLine("Teléfono", SessionManager.telefono.orNoInfo())
+                            InfoLine("Emergencia", SessionManager.telefono_emergencia.orNoInfo())
 
-                        Spacer(Modifier.height(12.dp))
+                            Spacer(Modifier.height(6.dp))
+                            SectionTitle("Historial médico")
+                            InfoLine("Condiciones pasadas", appointment.condiciones_pasadas.orNoInfo())
+                            InfoLine("Procedimientos quirúrgicos", appointment.procedimientos_quirurgicos.orNoInfo())
+                            InfoLine("Alergias", appointment.alergias.orNoInfo())
+                            InfoLine("Antecedentes familiares", appointment.antecedentes_familiares.orNoInfo())
 
-                        SectionTitle("Historial médico")
-                        InfoLine("Condiciones pasadas", appointment.condiciones_pasadas.orNoInfo())
-                        InfoLine("Procedimientos quirúrgicos", appointment.procedimientos_quirurgicos.orNoInfo())
-                        InfoLine("Alergias", appointment.alergias.orNoInfo())
-                        InfoLine("Antecedentes familiares", appointment.antecedentes_familiares.orNoInfo())
-
-                        Spacer(Modifier.height(12.dp))
-
-                        SectionTitle("Notas médicas")
-                        InfoLine("Medicamento y dosis", appointment.medicamento_y_dosis.orNoInfo())
-                        InfoLine("Nota", appointment.nota.orNoInfo())
+                            Spacer(Modifier.height(6.dp))
+                            SectionTitle("Notas médicas")
+                            InfoLine("Medicamento y dosis", appointment.medicamento_y_dosis.orNoInfo())
+                            InfoLine("Nota", appointment.nota.orNoInfo())
+                        }
                     }
                 },
                 shape = RoundedCornerShape(12.dp),
@@ -247,7 +251,7 @@ fun SectionTitle(text: String) {
         text = text,
         fontSize = 16.sp,
         fontFamily = afacadFont,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         color = Color(0xFFB2C2A4),
         modifier = Modifier.padding(vertical = 4.dp)
     )
@@ -260,7 +264,7 @@ fun InfoLine(label: String, value: String) {
         Text(
             text = "• $label: ",
             fontFamily = afacadFont,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Bold,
             color = Color.Black
         )
         Text(

@@ -1,8 +1,14 @@
 package com.example.fabioproyectofinal.view.components
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -27,6 +33,12 @@ import com.example.fabioproyectofinal.viewmodel.InsuranceViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Checkbox
+import androidx.compose.ui.Alignment
+
 
 @Composable
 fun InsuranceDialog(onDismiss: () -> Unit) {
@@ -51,30 +63,51 @@ fun InsuranceDialog(onDismiss: () -> Unit) {
         onDismissRequest = onDismiss,
         title = {
             Text(
-                "Selecciona tus seguros",
+                "Selecciona tus Seguros",
                 fontFamily = afacadFont,
-                color = Color(0xFF7C8B6B),
+                color = Color(0xFFB2C2A4),
                 modifier = Modifier.fillMaxWidth(),
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
         },
         text = {
-            Column {
-                seguros.forEach { seguro ->
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxWidth().height(280.dp),
+                horizontalArrangement = Arrangement.Center,
+                userScrollEnabled = true,
+            ) {
+                items(seguros) { seguro ->
                     val isSelected = selectedSeguros.contains(seguro.id_seguro)
-                    androidx.compose.material3.Checkbox(
-                        checked = isSelected,
-                        onCheckedChange = {
-                            if (isSelected) {
-                                selectedSeguros.remove(seguro.id_seguro)
-                            } else {
-                                selectedSeguros.add(seguro.id_seguro)
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Checkbox(
+                            checked = isSelected,
+                            onCheckedChange = {
+                                if (isSelected) {
+                                    selectedSeguros.remove(seguro.id_seguro)
+                                } else {
+                                    selectedSeguros.add(seguro.id_seguro)
+                                }
                             }
-                        }
-                    )
-                    Text(seguro.nombre, fontFamily = afacadFont, color = Color(0xFF7C8B6B))
+                        )
+                        Text(
+                            seguro.nombre,
+                            fontFamily = afacadFont,
+                            color = Color(0xFF7C8B6B),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
+
+
         },
         confirmButton = {
             AnimatedDialogButton(

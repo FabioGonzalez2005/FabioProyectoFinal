@@ -21,6 +21,9 @@ class InsuranceViewModel : ViewModel() {
     private val _segurosUsuario = MutableStateFlow<List<Seguro>>(emptyList())
     val segurosUsuario: StateFlow<List<Seguro>> = _segurosUsuario
 
+    private val _segurosClinica = MutableStateFlow<List<Seguro>>(emptyList())
+    val segurosClinica: StateFlow<List<Seguro>> = _segurosClinica
+
     fun cargarTodosLosSeguros() {
         viewModelScope.launch {
             try {
@@ -39,6 +42,17 @@ class InsuranceViewModel : ViewModel() {
                 _segurosUsuario.value = resultado
             } catch (e: Exception) {
                 Log.e("InsuranceVM", "Error al cargar seguros del usuario: ${e.message}")
+            }
+        }
+    }
+
+    fun cargarSegurosClinica(idClinica: Int) {
+        viewModelScope.launch {
+            try {
+                val resultado = ApiServer.apiService.getSegurosDeClinica(idClinica)
+                _segurosClinica.value = resultado
+            } catch (e: Exception) {
+                Log.e("InsuranceVM", "Error al cargar seguros de la clínica: ${e.message}")
             }
         }
     }

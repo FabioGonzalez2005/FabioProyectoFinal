@@ -96,9 +96,10 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
         onDismissRequest = onDismiss,
         title = {
             Text(
-                "Editar Datos Médicos",
+                "Datos de Interés",
                 color = Color(0xFFB2C2A4),
                 fontFamily = afacadFont,
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
