@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.screens
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,7 +26,13 @@ import com.example.fabioproyectofinal.model.utils.formatTime
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.NotificationCompat
 import com.example.fabioproyectofinal.model.data.model.Availability
+import java.time.format.DateTimeFormatter
+import android.app.NotificationManager
+import android.widget.Toast
+import com.example.fabioproyectofinal.model.utils.formatFecha
 
 @Composable
 fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idDoctor: Int) {
@@ -125,6 +132,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+                val context = LocalContext.current
                 Button(
                     onClick = {
                         selectedAvailability?.let { selected ->
@@ -136,6 +144,21 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
                                     if (success) {
                                         selectedAvailability = null
                                         availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
+
+                                        // Notificación
+                                        val fechaTexto = formatFecha(selected.fecha_inicio)
+                                        val horaTexto = formatHora(selected.fecha_inicio)
+
+                                        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                                        val notification = NotificationCompat.Builder(context, "appointment_channel")
+                                            .setSmallIcon(R.drawable.international)
+                                            .setContentTitle("Cita reservada")
+                                            .setContentText("Cita reservada con éxito para el día $fechaTexto a la hora $horaTexto")
+                                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                            .build()
+
+                                        Toast.makeText(context, "Cita reservada con éxito", Toast.LENGTH_SHORT).show()
+                                        notificationManager.notify(1, notification)
                                     }
                                 }
                             }
