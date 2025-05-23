@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.AnimatedDialogButton
 import com.example.fabioproyectofinal.view.components.GoogleMapWithClinics
@@ -169,10 +170,11 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                     title = {
                         Text(
                             "Clínicas en el mapa",
-                            fontSize = 18.sp,
-                            color = Color(0xFF7C8B6B),
+                            fontFamily = afacadFont,
+                            color = Color(0xFFB2C2A4),
+                            modifier = Modifier.fillMaxWidth(),
                             fontWeight = FontWeight.Bold,
-                            fontFamily = afacadFont
+                            textAlign = TextAlign.Center
                         )
                     },
                     text = {

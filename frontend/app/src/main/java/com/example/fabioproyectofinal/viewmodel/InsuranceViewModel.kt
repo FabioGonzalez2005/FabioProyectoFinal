@@ -21,8 +21,16 @@ class InsuranceViewModel : ViewModel() {
     private val _segurosUsuario = MutableStateFlow<List<Seguro>>(emptyList())
     val segurosUsuario: StateFlow<List<Seguro>> = _segurosUsuario
 
-    private val _segurosClinica = MutableStateFlow<List<Seguro>>(emptyList())
-    val segurosClinica: StateFlow<List<Seguro>> = _segurosClinica
+    private val _segurosClinicaMap = MutableStateFlow<Map<Int, List<Seguro>>>(emptyMap())
+    val segurosClinicaMap: StateFlow<Map<Int, List<Seguro>>> = _segurosClinicaMap
+
+
+    private val _segurosUsuarioCargados = MutableStateFlow(false)
+    val segurosUsuarioCargados: StateFlow<Boolean> = _segurosUsuarioCargados
+
+    private val _segurosClinicaCargados = MutableStateFlow<Map<Int, Boolean>>(emptyMap())
+    val segurosClinicaCargados: StateFlow<Map<Int, Boolean>> = _segurosClinicaCargados
+
 
     fun cargarTodosLosSeguros() {
         viewModelScope.launch {
@@ -40,6 +48,7 @@ class InsuranceViewModel : ViewModel() {
             try {
                 val resultado = ApiServer.apiService.getSegurosUsuario(idUsuario)
                 _segurosUsuario.value = resultado
+                _segurosUsuarioCargados.value = true
             } catch (e: Exception) {
                 Log.e("InsuranceVM", "Error al cargar seguros del usuario: ${e.message}")
             }
@@ -50,10 +59,17 @@ class InsuranceViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val resultado = ApiServer.apiService.getSegurosDeClinica(idClinica)
-                _segurosClinica.value = resultado
+                _segurosClinicaMap.value = _segurosClinicaMap.value.toMutableMap().apply {
+                    put(idClinica, resultado)
+                }
+                _segurosClinicaCargados.value = _segurosClinicaCargados.value.toMutableMap().apply {
+                    put(idClinica, true)
+                }
             } catch (e: Exception) {
                 Log.e("InsuranceVM", "Error al cargar seguros de la clínica: ${e.message}")
             }
         }
     }
+
+
 }

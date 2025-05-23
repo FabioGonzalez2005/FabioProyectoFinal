@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -74,8 +75,14 @@ fun ClinicaCard(
 
     val viewModel: InsuranceViewModel = viewModel()
     val segurosUsuario by viewModel.segurosUsuario.collectAsState()
-    val segurosClinica by viewModel.segurosClinica.collectAsState()
+    val segurosClinicaMap by viewModel.segurosClinicaMap.collectAsState()
+    val segurosClinica = segurosClinicaMap[clinic.id_clinica] ?: emptyList()
     var showInsuranceDialog by remember { mutableStateOf(false) }
+
+    val usuarioCargado by viewModel.segurosUsuarioCargados.collectAsState()
+    val segurosClinicaCargadosMap by viewModel.segurosClinicaCargados.collectAsState()
+    val clinicaCargada = segurosClinicaCargadosMap[clinic.id_clinica] ?: false
+
 
     LaunchedEffect(userId, clinic.id_clinica) {
         userId?.let { viewModel.cargarSegurosUsuario(it) }
@@ -86,171 +93,198 @@ fun ClinicaCard(
         estaEnFavoritos = inFavourites
     }
 
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(if (paddingActivo) Modifier.padding(vertical = 8.dp) else Modifier)
-            .then(
-                if (isClickable) Modifier.clickable {
-                    onClick?.invoke() ?: navController?.navigate(
-                        AppScreens.ClinicDetailScreen.createRoute(userId ?: -1, clinic.id_clinica)
-                    )
-                } else Modifier
-            ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
-    ) {
-        Row(
+    if (!mostrarCompatibilidad || (usuarioCargado && clinicaCargada)) {
+        Card(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .then(if (paddingActivo) Modifier.padding(vertical = 8.dp) else Modifier)
+                .then(
+                    if (isClickable) Modifier.clickable {
+                        onClick?.invoke() ?: navController?.navigate(
+                            AppScreens.ClinicDetailScreen.createRoute(
+                                userId ?: -1,
+                                clinic.id_clinica
+                            )
+                        )
+                    } else Modifier
+                ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(clinic.src),
-                contentDescription = clinic.nombre,
+            Row(
                 modifier = Modifier
-                    .size(110.dp)
-                    .padding(end = 16.dp)
-            )
-            Column {
-                Text(clinic.nombre, fontFamily = afacadFont, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(clinic.direccion, fontFamily = afacadFont, fontSize = 14.sp, color = Color.Gray)
-
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(clinic.src),
+                    contentDescription = clinic.nombre,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    userId?.let { uid ->
-                        // Icono de favorito
-                        if (mostrarFavoritos) {
-                            val mostrarIcono = estaEnFavoritos || mostrarIconoVacio
-                            if (mostrarIcono) {
-                                val painter = if (estaEnFavoritos)
-                                    rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_favourite_lxpak3.webp")
-                                else
-                                    rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/favourite_unselected_hq502n.webp")
+                        .size(110.dp)
+                        .padding(end = 16.dp)
+                )
+                Column {
+                    Text(
+                        clinic.nombre,
+                        fontFamily = afacadFont,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                    Text(
+                        clinic.direccion,
+                        fontFamily = afacadFont,
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
 
-                                Image(
-                                    painter = painter,
-                                    contentDescription = "Favorito",
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .then(
-                                            if (botonFavoritoActivo) Modifier.clickable {
-                                                CoroutineScope(Dispatchers.IO).launch {
-                                                    try {
-                                                        val api = ApiServer.apiService
-                                                        if (estaEnFavoritos) {
-                                                            api.eliminarDeFavoritos(uid, mapOf("id_clinica" to clinic.id_clinica))
-                                                        } else {
-                                                            api.agregarAFavoritos(uid, mapOf("id_clinica" to clinic.id_clinica))
-                                                        }
-                                                        estaEnFavoritos = !estaEnFavoritos
-                                                    } catch (e: Exception) {
-                                                        println("Error modificando favoritos: ${e.message}")
-                                                    }
-                                                }
-                                            } else Modifier
-                                        )
-                                )
-                            }
-                        }
-
-
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         userId?.let { uid ->
-                            if (mostrarCompatibilidad) {
-                                val idsUsuario = segurosUsuario.map { it.id_seguro }.toSet()
-                                val idsClinica = segurosClinica.map { it.id_seguro }.toSet()
-                                val idsCoincidentes = idsUsuario.intersect(idsClinica)
+                            // Icono de favorito
+                            if (mostrarFavoritos) {
+                                val mostrarIcono = estaEnFavoritos || mostrarIconoVacio
+                                if (mostrarIcono) {
+                                    val painter = if (estaEnFavoritos)
+                                        rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_favourite_lxpak3.webp")
+                                    else
+                                        rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/favourite_unselected_hq502n.webp")
 
-                                val nombresCoincidentes = segurosUsuario
-                                    .filter { it.id_seguro in idsCoincidentes }
-                                    .map { it.nombre }
-
-                                Text(
-                                    text = when {
-                                        segurosClinica.isEmpty() || segurosUsuario.isEmpty() -> "Cargando seguros..."
-                                        nombresCoincidentes.isNotEmpty() -> "Compatible con: ${
-                                            nombresCoincidentes.joinToString(
-                                                ", "
+                                    Image(
+                                        painter = painter,
+                                        contentDescription = "Favorito",
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                            .then(
+                                                if (botonFavoritoActivo) Modifier.clickable {
+                                                    CoroutineScope(Dispatchers.IO).launch {
+                                                        try {
+                                                            val api = ApiServer.apiService
+                                                            if (estaEnFavoritos) {
+                                                                api.eliminarDeFavoritos(
+                                                                    uid,
+                                                                    mapOf("id_clinica" to clinic.id_clinica)
+                                                                )
+                                                            } else {
+                                                                api.agregarAFavoritos(
+                                                                    uid,
+                                                                    mapOf("id_clinica" to clinic.id_clinica)
+                                                                )
+                                                            }
+                                                            estaEnFavoritos = !estaEnFavoritos
+                                                        } catch (e: Exception) {
+                                                            println("Error modificando favoritos: ${e.message}")
+                                                        }
+                                                    }
+                                                } else Modifier
                                             )
-                                        }"
-
-                                        else -> "No tienes seguros compatibles"
-                                    },
-                                    fontFamily = afacadFont,
-                                    fontSize = 12.sp,
-                                    color = Color(0xFF7C8B6B)
-                                )
+                                    )
+                                }
                             }
-                        }
+
+
+                            userId?.let { uid ->
+                                if (mostrarCompatibilidad && usuarioCargado && clinicaCargada && segurosUsuario.isNotEmpty() && segurosClinica.isNotEmpty()) {
+                                    val idsUsuario = segurosUsuario.map { it.id_seguro }.toSet()
+                                    val idsClinica = segurosClinica.map { it.id_seguro }.toSet()
+                                    val idsCoincidentes = idsUsuario.intersect(idsClinica)
+
+                                    val nombresCoincidentes = segurosUsuario
+                                        .filter { it.id_seguro in idsCoincidentes }
+                                        .map { it.nombre }
+
+                                    val textoCompatibilidad =
+                                        if (nombresCoincidentes.isNotEmpty()) {
+                                            Log.i("Compatibilidad", "$idsUsuario $idsClinica $idsCoincidentes $nombresCoincidentes")
+                                            "Compatible con: ${nombresCoincidentes.joinToString(", ")}"
+                                        } else {
+                                            "No tienes seguros compatibles"
+                                        }
+
+                                    Text(
+                                        text = textoCompatibilidad,
+                                        fontFamily = afacadFont,
+                                        fontSize = 12.sp,
+                                        color = Color(0xFF7C8B6B)
+                                    )
+                                }
+                            }
 
                             // Botón de seguros
-                        if (mostrarBotonSeguros) {
-                            Button(
-                                onClick = {
-                                    showInsuranceDialog = true
-                                    viewModel.cargarSegurosClinica(clinic.id_clinica)
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
-                                shape = RoundedCornerShape(8.dp),
-                                contentPadding = PaddingValues(4.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Security,
-                                    contentDescription = "Seguros aceptados",
-                                    modifier = Modifier.size(20.dp),
-                                    tint = Color.White
-                                )
+                            if (mostrarBotonSeguros) {
+                                Button(
+                                    onClick = {
+                                        showInsuranceDialog = true
+                                        viewModel.cargarSegurosClinica(clinic.id_clinica)
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color(
+                                            0xFFB2C2A4
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                    contentPadding = PaddingValues(4.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Security,
+                                        contentDescription = "Seguros aceptados",
+                                        modifier = Modifier.size(20.dp),
+                                        tint = Color.White
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
-    if (showInsuranceDialog) {
-        val seguros by viewModel.segurosClinica.collectAsState()
+        if (showInsuranceDialog) {
+            val segurosClinicaMap by viewModel.segurosClinicaMap.collectAsState()
+            val seguros = segurosClinicaMap[clinic.id_clinica] ?: emptyList()
 
-        AlertDialog(
-            onDismissRequest = { showInsuranceDialog = false },
-            title = {
-                Text(
-                    "Seguros aceptados",
-                    fontFamily = afacadFont,
-                    color = Color(0xFF7C8B6B),
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            },
-            text = {
-                Column {
-                    if (seguros.isEmpty()) {
-                        Text("Esta clínica no tiene seguros registrados.", fontFamily = afacadFont, color = Color.Gray)
-                    } else {
-                        seguros.forEach {
-                            Text("• ${it.nombre}", fontFamily = afacadFont, color = Color.Black)
+
+            AlertDialog(
+                onDismissRequest = { showInsuranceDialog = false },
+                title = {
+                    Text(
+                        "Seguros aceptados",
+                        fontFamily = afacadFont,
+                        color = Color(0xFF7C8B6B),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                },
+                text = {
+                    Column {
+                        if (seguros.isEmpty()) {
+                            Text(
+                                "Esta clínica no tiene seguros registrados.",
+                                fontFamily = afacadFont,
+                                color = Color.Gray
+                            )
+                        } else {
+                            seguros.forEach {
+                                Text("• ${it.nombre}", fontFamily = afacadFont, color = Color.Black)
+                            }
                         }
                     }
-                }
-            },
-            confirmButton = {
-                AnimatedDialogButton(
-                    text = "Cerrar",
-                    onClick = { showInsuranceDialog = false }
-                )
-            }
-            ,
-            containerColor = Color(0xFFFFF9F2),
-            shape = RoundedCornerShape(12.dp)
-        )
+                },
+                confirmButton = {
+                    AnimatedDialogButton(
+                        text = "Cerrar",
+                        onClick = { showInsuranceDialog = false }
+                    )
+                },
+                containerColor = Color(0xFFFFF9F2),
+                shape = RoundedCornerShape(12.dp)
+            )
+        }
     }
-
 }
