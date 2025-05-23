@@ -1,5 +1,7 @@
 package com.example.fabioproyectofinal.view.screens
 
+import android.app.NotificationManager
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,6 +35,7 @@ import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.core.app.NotificationCompat
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.AnimatedDialogButton
 import com.example.fabioproyectofinal.view.components.GoogleMapWithClinics
@@ -119,6 +123,7 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
             }
 
 
+            val context = LocalContext.current
 
             // Buscador de clínicas
             OutlinedTextField(
