@@ -33,6 +33,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.core.app.NotificationCompat
+import android.app.NotificationManager
+import android.content.Context
 
 @Composable
 fun AppointmentCard(
@@ -100,12 +103,30 @@ fun AppointmentCard(
                                         )
                                         withContext(Dispatchers.Main) {
                                             println("Cita eliminada: ${response.msg}")
-
-                                            // Refrescar lista de citas para ese usuario
                                             appointmentViewModel.fetchCitas(userId)
+
+                                            val fechaTexto = formatFecha(appointment.fecha_cita)
+                                            val horaTexto = formatHora(appointment.fecha_cita)
+                                            val nombreDoctor = doctor?.nombre ?: "Profesional"
+                                            val nombreClinica = clinic?.nombre ?: "Clínica"
+
+                                            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                                            val notification = NotificationCompat.Builder(context, "appointment_channel")
+                                                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                                .setContentTitle("Cita cancelada")
+                                                .setStyle(
+                                                    NotificationCompat.BigTextStyle().bigText(
+                                                        "Has cancelado tu cita con $nombreDoctor en $nombreClinica a las $horaTexto el $fechaTexto"
+                                                    )
+                                                )
+                                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                                .build()
+
+                                            notificationManager.notify(System.currentTimeMillis().toInt(), notification)
 
                                             Toast.makeText(context, "Cita cancelada con éxito", Toast.LENGTH_SHORT).show()
                                         }
+
                                     } catch (e: Exception) {
                                         withContext(Dispatchers.Main) {
                                             println("Error eliminando cita: ${e.message}")

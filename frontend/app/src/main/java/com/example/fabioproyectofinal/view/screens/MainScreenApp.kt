@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.fabioproyectofinal.model.data.model.Clinic
-import com.example.fabioproyectofinal.model.session.SessionManager
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.ClinicaCard
 import com.example.fabioproyectofinal.view.components.TopBar
@@ -35,8 +34,6 @@ import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.core.app.NotificationCompat
-import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.AnimatedDialogButton
 import com.example.fabioproyectofinal.view.components.GoogleMapWithClinics
 
