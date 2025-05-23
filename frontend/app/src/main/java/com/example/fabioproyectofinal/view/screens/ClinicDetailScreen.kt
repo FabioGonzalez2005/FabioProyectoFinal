@@ -194,12 +194,11 @@ fun ClinicDetailScreen(
 
                                         ) {
 
-                                            navController.navigate(
-                                                AppScreens.SelectProfessionalScreen.createRoute(
-                                                    idUsuario = userId ?: -1,
-                                                    idDoctor = doctor.id_doctor
-                                                )
-                                            )
+                                            val safeDoctorName = doctor.nombre.replace(" ", "-")
+                                            val safeClinicName = clinic?.nombre?.replace(" ", "-") ?: "Clinica"
+
+                                            navController.navigate("select_professional_screen/${userId}/${doctor.id_doctor}/$safeDoctorName/$safeClinicName")
+
                                         }
                                         Log.d("DEBUG", "ID clínica actual: ${clinic?.id_clinica}")
                                         doctorList.forEach {

@@ -35,7 +35,7 @@ import android.widget.Toast
 import com.example.fabioproyectofinal.model.utils.formatFecha
 
 @Composable
-fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idDoctor: Int) {
+fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idDoctor: Int, nombreDoctor: String, nombreClinica: String) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     val availabilityVM: AvailabilityViewModel = viewModel()
@@ -153,7 +153,11 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
                                         val notification = NotificationCompat.Builder(context, "appointment_channel")
                                             .setSmallIcon(R.drawable.ic_launcher_foreground)
                                             .setContentTitle("Cita reservada")
-                                            .setContentText("Cita reservada con éxito para el día $fechaTexto a las $horaTexto")
+                                            .setStyle(
+                                                NotificationCompat.BigTextStyle().bigText(
+                                                    "Has reservado tu cita con $nombreDoctor en $nombreClinica a las $horaTexto el $fechaTexto"
+                                                )
+                                            )
                                             .setPriority(NotificationCompat.PRIORITY_HIGH)
                                             .build()
 
