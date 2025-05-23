@@ -151,9 +151,9 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
 
                                         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                                         val notification = NotificationCompat.Builder(context, "appointment_channel")
-                                            .setSmallIcon(R.drawable.international)
+                                            .setSmallIcon(R.drawable.ic_launcher_foreground)
                                             .setContentTitle("Cita reservada")
-                                            .setContentText("Cita reservada con éxito para el día $fechaTexto a la hora $horaTexto")
+                                            .setContentText("Cita reservada con éxito para el día $fechaTexto a las $horaTexto")
                                             .setPriority(NotificationCompat.PRIORITY_HIGH)
                                             .build()
 
