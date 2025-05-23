@@ -256,10 +256,11 @@ fun ClinicaCard(
                 title = {
                     Text(
                         "Seguros aceptados",
+                        color = Color(0xFFB2C2A4),
                         fontFamily = afacadFont,
-                        color = Color(0xFF7C8B6B),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 },
                 text = {

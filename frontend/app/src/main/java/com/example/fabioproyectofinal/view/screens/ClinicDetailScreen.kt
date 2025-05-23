@@ -125,7 +125,8 @@ fun ClinicDetailScreen(
                         inFavourites = estaEnFavoritos,
                         isClickable = false,
                         mostrarIconoVacio = true,
-                        botonFavoritoActivo = true
+                        botonFavoritoActivo = true,
+                        mostrarCompatibilidad = false,
                     )
                 }
             }
