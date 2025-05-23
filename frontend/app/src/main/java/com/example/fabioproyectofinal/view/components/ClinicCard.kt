@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -149,9 +150,8 @@ fun ClinicaCard(
                     ) {
                         userId?.let { uid ->
                             // Icono de favorito
-                            if (mostrarFavoritos) {
-                                val mostrarIcono = estaEnFavoritos || mostrarIconoVacio
-                                if (mostrarIcono) {
+                            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+                                if (mostrarFavoritos && (estaEnFavoritos || mostrarIconoVacio)) {
                                     val painter = if (estaEnFavoritos)
                                         rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/icon_favourite_lxpak3.webp")
                                     else
@@ -169,12 +169,12 @@ fun ClinicaCard(
                                                             val api = ApiServer.apiService
                                                             if (estaEnFavoritos) {
                                                                 api.eliminarDeFavoritos(
-                                                                    uid,
+                                                                    userId!!,
                                                                     mapOf("id_clinica" to clinic.id_clinica)
                                                                 )
                                                             } else {
                                                                 api.agregarAFavoritos(
-                                                                    uid,
+                                                                    userId,
                                                                     mapOf("id_clinica" to clinic.id_clinica)
                                                                 )
                                                             }
@@ -191,29 +191,30 @@ fun ClinicaCard(
 
 
                             userId?.let { uid ->
-                                if (mostrarCompatibilidad && usuarioCargado && clinicaCargada && segurosUsuario.isNotEmpty() && segurosClinica.isNotEmpty()) {
-                                    val idsUsuario = segurosUsuario.map { it.id_seguro }.toSet()
-                                    val idsClinica = segurosClinica.map { it.id_seguro }.toSet()
-                                    val idsCoincidentes = idsUsuario.intersect(idsClinica)
+                                Box(modifier = Modifier.weight(4f), contentAlignment = Alignment.CenterEnd) {
+                                    if (mostrarCompatibilidad && usuarioCargado && clinicaCargada && segurosUsuario.isNotEmpty() && segurosClinica.isNotEmpty()) {
+                                        val idsUsuario = segurosUsuario.map { it.id_seguro }.toSet()
+                                        val idsClinica = segurosClinica.map { it.id_seguro }.toSet()
+                                        val idsCoincidentes = idsUsuario.intersect(idsClinica)
 
-                                    val nombresCoincidentes = segurosUsuario
-                                        .filter { it.id_seguro in idsCoincidentes }
-                                        .map { it.nombre }
+                                        val nombresCoincidentes = segurosUsuario
+                                            .filter { it.id_seguro in idsCoincidentes }
+                                            .map { it.nombre }
 
-                                    val textoCompatibilidad =
-                                        if (nombresCoincidentes.isNotEmpty()) {
-                                            Log.i("Compatibilidad", "$idsUsuario $idsClinica $idsCoincidentes $nombresCoincidentes")
-                                            "Compatible con: ${nombresCoincidentes.joinToString(", ")}"
-                                        } else {
-                                            "No tienes seguros compatibles"
-                                        }
+                                        val textoCompatibilidad =
+                                            if (nombresCoincidentes.isNotEmpty()) {
+                                                "Compatible con: ${nombresCoincidentes.joinToString(", ")}"
+                                            } else {
+                                                "No tienes seguros compatibles"
+                                            }
 
-                                    Text(
-                                        text = textoCompatibilidad,
-                                        fontFamily = afacadFont,
-                                        fontSize = 12.sp,
-                                        color = Color(0xFF7C8B6B)
-                                    )
+                                        Text(
+                                            text = textoCompatibilidad,
+                                            fontFamily = afacadFont,
+                                            fontSize = 12.sp,
+                                            color = Color(0xFF7C8B6B)
+                                        )
+                                    }
                                 }
                             }
 
