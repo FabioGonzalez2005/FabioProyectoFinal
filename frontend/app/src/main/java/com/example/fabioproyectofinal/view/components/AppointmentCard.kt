@@ -36,6 +36,7 @@ import kotlinx.coroutines.withContext
 import androidx.core.app.NotificationCompat
 import android.app.NotificationManager
 import android.content.Context
+import androidx.compose.foundation.border
 
 // Tarjeta de citas
 @Composable
@@ -51,6 +52,15 @@ fun AppointmentCard(
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
+    val today = java.util.Calendar.getInstance()
+    val citaDate = sdf.parse(appointment.fecha_cita)
+    val esHoy = citaDate?.let {
+        val citaCal = java.util.Calendar.getInstance().apply { time = it }
+        citaCal.get(java.util.Calendar.YEAR) == today.get(java.util.Calendar.YEAR) &&
+                citaCal.get(java.util.Calendar.DAY_OF_YEAR) == today.get(java.util.Calendar.DAY_OF_YEAR)
+    } ?: false
+
 
     // Diálogo de confirmación de cancelación de cita
     if (showDialog) {
@@ -171,12 +181,19 @@ fun AppointmentCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .then(
+                if (esHoy) Modifier.border(
+                    width = 2.dp,
+                    color = Color(0xFFBD8F45),
+                    shape = RoundedCornerShape(12.dp)
+                ) else Modifier
+            ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Row(
+    Row(
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
