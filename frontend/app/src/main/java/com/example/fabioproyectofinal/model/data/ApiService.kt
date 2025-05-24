@@ -12,6 +12,7 @@ import com.example.fabioproyectofinal.viewmodel.Seguro
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -111,6 +112,22 @@ interface ApiService {
     @GET("/clinicas/{id_clinica}/seguros")
     suspend fun getSegurosDeClinica(@Path("id_clinica") idClinica: Int): List<Seguro>
 
+    @GET("/medico/citas/{id_doctor}")
+    suspend fun getCitasDelDoctorPorDia(
+        @Path("id_doctor") idDoctor: Int,
+        @Query("fecha") fecha: String
+    ): List<Appointment>
+
+    @GET("/doctor/por-usuario/{id_usuario}")
+    suspend fun getIdDoctorPorUsuario(
+        @Path("id_usuario") idUsuario: Int
+    ): List<Map<String, Int>>
+
+    @PUT("citas/cancelar/{id_cita}")
+    suspend fun cancelarCitaConMotivo(
+        @Path("id_cita") idCita: Int,
+        @Body data: Map<String, String>
+    )
 
 }
 

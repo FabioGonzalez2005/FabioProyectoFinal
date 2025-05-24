@@ -648,7 +648,63 @@ def editar_datos_de_interes(id_usuario):
 def obtener_doctores():
     return ejecutar_sql('SELECT * FROM Doctor ORDER BY id_doctor')
 
+# Citas de un médico un día específico
+@app.route('/medico/citas/<int:id_doctor>', methods=['GET'])
+def obtener_citas_por_dia_para_medico(id_doctor):
+    fecha_str = request.args.get('fecha')  # YYYY-MM-DD
+    if not fecha_str:
+        return jsonify({"error": "Parámetro 'fecha' es requerido (YYYY-MM-DD)"}), 400
 
+    try:
+        # Validar formato de fecha
+        fecha = datetime.strptime(fecha_str, '%Y-%m-%d').date()
+    except ValueError:
+        return jsonify({"error": "Formato de fecha inválido. Usa YYYY-MM-DD"}), 400
+
+    sql = '''
+        SELECT C.id_cita, C.id_usuario, C.id_doctor, C.fecha_cita, C.estado,
+               U.nombre AS nombre_paciente, U.email
+        FROM Cita C
+        JOIN Usuario U ON C.id_usuario = U.id_usuario
+        WHERE C.id_doctor = %s
+        AND DATE(C.fecha_cita) = %s
+        ORDER BY C.fecha_cita ASC
+    '''
+
+    return ejecutar_sql(sql, (id_doctor, fecha))
+
+# Obtener id_usuario de un médico
+@app.route('/doctor/por-usuario/<int:id_usuario>', methods=['GET'])
+def obtener_id_doctor_por_usuario(id_usuario):
+    sql = '''
+        SELECT id_doctor FROM doctor WHERE id_usuario = %s
+    '''
+    return ejecutar_sql(sql, (id_usuario,))
+
+
+# Cancelar cita siendo médico
+@app.route('/citas/cancelar/<int:id_cita>', methods=['PUT'])
+def cancelar_cita(id_cita):
+    datos = request.get_json()
+    motivo = datos.get("motivo_cancelacion")
+
+    if not motivo:
+        return jsonify({"error": "El campo 'motivo_cancelacion' es obligatorio"}), 400
+
+    sql = '''
+        UPDATE Cita
+        SET estado = 'Cancelado',
+            motivo_cancelacion = %s
+        WHERE id_cita = %s
+    '''
+
+    try:
+        return ejecutar_sql(sql, (motivo, id_cita), es_insert=True)
+    except Exception as e:
+        return jsonify({"error": f"Error cancelando cita: {str(e)}"}), 500
+
+
+# ======================= TEST CONNECTION =======================
 @app.route('/test_connection', methods=['GET'])
 def test_connection():
     try:
