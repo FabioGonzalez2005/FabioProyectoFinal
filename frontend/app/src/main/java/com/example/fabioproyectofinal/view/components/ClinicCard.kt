@@ -244,6 +244,7 @@ fun ClinicaCard(
         if (showInsuranceDialog) {
             val segurosClinicaMap by viewModel.segurosClinicaMap.collectAsState()
             val seguros = segurosClinicaMap[clinic.id_clinica] ?: emptyList()
+            val idsUsuario = segurosUsuario.map { it.id_seguro }.toSet()
 
 
             AlertDialog(
@@ -268,7 +269,10 @@ fun ClinicaCard(
                             )
                         } else {
                             seguros.forEach {
-                                Text("• ${it.nombre}", fontFamily = afacadFont, color = Color.Black)
+                                val esCompatible = it.id_seguro in idsUsuario
+                                val texto = if (esCompatible) "${it.nombre} (Compatible)" else it.nombre
+
+                                Text("• $texto", fontFamily = afacadFont, color = Color.Black)
                             }
                         }
                     }

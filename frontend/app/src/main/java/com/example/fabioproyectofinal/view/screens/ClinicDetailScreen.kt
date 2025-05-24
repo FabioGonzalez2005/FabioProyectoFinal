@@ -53,7 +53,6 @@ import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.view.components.GoogleMapView
 import com.example.fabioproyectofinal.viewmodel.FavouriteClinicsViewModel
 
