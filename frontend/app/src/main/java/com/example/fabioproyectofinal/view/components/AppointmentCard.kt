@@ -37,6 +37,7 @@ import androidx.core.app.NotificationCompat
 import android.app.NotificationManager
 import android.content.Context
 
+// Tarjeta de citas
 @Composable
 fun AppointmentCard(
     appointment: Appointment,
@@ -46,16 +47,17 @@ fun AppointmentCard(
     userId: Int,
     appointmentViewModel: AppointmentViewModel
 ) {
+    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+    // Diálogo de confirmación de cancelación de cita
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
             confirmButton = {},
             dismissButton = {},
-            title = null,
             text = {
                 Column(
                     modifier = Modifier
@@ -63,26 +65,30 @@ fun AppointmentCard(
                         .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Título del diálogo
                     Text(
                         text = "Confirmar cancelación",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFB2C2A4),
                         fontFamily = afacadFont,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        textAlign = TextAlign.Center
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
+
+                    // Texto descriptivo del diálogo
                     Text(
                         text = "¿Estás seguro de que deseas cancelar la cita?",
                         fontSize = 14.sp,
                         color = Color.Gray,
                         fontFamily = afacadFont,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        textAlign = TextAlign.Center
                     )
+
                     Spacer(modifier = Modifier.height(24.dp))
 
+                    // Botones de acción: "Sí" y "No"
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -91,8 +97,8 @@ fun AppointmentCard(
                             text = "Sí",
                             onClick = {
                                 showDialog = false
-                                println("Eliminando cita...")
 
+                                // Lógica para eliminar la cita desde la API
                                 CoroutineScope(Dispatchers.IO).launch {
                                     try {
                                         val response = ApiServer.apiService.eliminarCita(
@@ -102,7 +108,7 @@ fun AppointmentCard(
                                             )
                                         )
                                         withContext(Dispatchers.Main) {
-                                            println("Cita eliminada: ${response.msg}")
+                                            // Refresca citas y muestra notificación
                                             appointmentViewModel.fetchCitas(userId)
 
                                             val fechaTexto = formatFecha(appointment.fecha_cita)
@@ -110,6 +116,7 @@ fun AppointmentCard(
                                             val nombreDoctor = doctor?.nombre ?: "Profesional"
                                             val nombreClinica = clinic?.nombre ?: "Clínica"
 
+                                            // Construcción y envío de la notificación
                                             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                                             val notification = NotificationCompat.Builder(context, "appointment_channel")
                                                 .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -137,6 +144,7 @@ fun AppointmentCard(
                         )
 
                         Spacer(modifier = Modifier.width(16.dp))
+
                         AnimatedDialogButton(
                             text = "No",
                             onClick = {
@@ -151,6 +159,7 @@ fun AppointmentCard(
         )
     }
 
+    // Define el color del estado de la cita
     val statusColor = when (appointment.estado) {
         "Confirmado" -> Color(0xFFB2C2A4)
         "Cancelado" -> Color(0xFFA64646)
@@ -158,6 +167,7 @@ fun AppointmentCard(
         else -> Color.Gray
     }
 
+    // Tarjeta principal de la cita
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -173,13 +183,14 @@ fun AppointmentCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
+                // Imagen de la clínica y datos básicos
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         painter = rememberAsyncImagePainter(
                             ImageRequest.Builder(context)
                                 .data(clinic?.src)
-                                .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
-                                .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                                .diskCachePolicy(CachePolicy.ENABLED)
+                                .memoryCachePolicy(CachePolicy.ENABLED)
                                 .build()
                         ),
                         contentDescription = clinic?.nombre,
@@ -187,7 +198,9 @@ fun AppointmentCard(
                             .size(110.dp)
                             .padding(end = 16.dp)
                     )
+
                     Spacer(modifier = Modifier.width(12.dp))
+
                     Column {
                         Text(
                             text = clinic?.nombre ?: "Clínica no disponible",
@@ -201,6 +214,8 @@ fun AppointmentCard(
                             fontFamily = afacadFont,
                             color = Color.Gray
                         )
+
+                        // Estado de la cita
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.End,
@@ -208,9 +223,9 @@ fun AppointmentCard(
                         ) {
                             Text(
                                 text = "Estado:",
+                                fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
                                 fontFamily = afacadFont,
-                                fontWeight = FontWeight.Bold,
                                 color = Color.Black
                             )
                             Spacer(modifier = Modifier.width(4.dp))
@@ -224,9 +239,12 @@ fun AppointmentCard(
                         }
                     }
                 }
+
                 Spacer(modifier = Modifier.height(12.dp))
                 HorizontalDivider(thickness = 2.dp, color = Color(0xFFCAD2C5))
                 Spacer(modifier = Modifier.height(8.dp))
+
+                // Fecha y hora de la cita
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -237,11 +255,9 @@ fun AppointmentCard(
                             text = "Cita:",
                             fontSize = 18.sp,
                             fontFamily = afacadFont,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
+                            fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        // Fecha
                         Text(
                             text = formatFecha(appointment.fecha_cita),
                             fontSize = 18.sp,
@@ -250,7 +266,7 @@ fun AppointmentCard(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    //Hora
+
                     Text(
                         text = formatHora(appointment.fecha_cita),
                         fontSize = 18.sp,
@@ -259,7 +275,10 @@ fun AppointmentCard(
                         fontWeight = FontWeight.Bold
                     )
                 }
+
                 Spacer(modifier = Modifier.height(12.dp))
+
+                // Información del profesional
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -269,14 +288,16 @@ fun AppointmentCard(
                             painter = rememberAsyncImagePainter(
                                 ImageRequest.Builder(context)
                                     .data("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp")
-                                    .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
-                                    .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                    .memoryCachePolicy(CachePolicy.ENABLED)
                                     .build()
                             ),
                             contentDescription = doctor?.nombre,
                             modifier = Modifier.size(20.dp)
                         )
+
                         Spacer(modifier = Modifier.width(16.dp))
+
                         Column {
                             Text(
                                 text = doctor?.nombre ?: "Profesional no disponible",
@@ -294,6 +315,7 @@ fun AppointmentCard(
                         }
                     }
 
+                    // Botón para cancelar cita o ver motivos
                     if (appointment.estado == "Cancelado") {
                         Button(
                             onClick = { println("Ver motivos de la cancelación") },

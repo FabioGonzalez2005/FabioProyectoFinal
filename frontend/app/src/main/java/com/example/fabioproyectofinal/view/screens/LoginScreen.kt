@@ -31,12 +31,23 @@ import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
+    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
+
+    // Estados del formulario
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    // Contexto para mostrar toasts
     val context = LocalContext.current
+
+    // ViewModel de login
     val loginViewModel: LoginViewModel = viewModel()
+
+    // Estado del intento de login (éxito o error)
     val estadoLogin by loginViewModel.loginEstado.collectAsState()
+
+    // Valida si ambos campos están completos
     val formularioValido = username.isNotBlank() && password.isNotBlank()
 
     Scaffold(
@@ -49,12 +60,13 @@ fun LoginScreen(navController: NavHostController) {
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         ) {
+            // Logo superior
             Image(
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(context)
                         .data("https://res.cloudinary.com/dr8es2ate/image/upload/logo_ozj4ng.webp")
-                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
-                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
                         .build()
                 ),
                 contentDescription = "Logo de CanariaSS",
@@ -65,16 +77,19 @@ fun LoginScreen(navController: NavHostController) {
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
 
+            // Título principal
             Text("Iniciar sesión", color = Color(0xFFB2C2A4), fontFamily = afacadFont, fontSize = 40.sp)
 
+            // Botones de selección: login y registro
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
+                // Botón "Iniciar sesión" (ya activo)
                 Button(
-                    onClick = { /* Ya está en login */ },
+                    onClick = { /* Ya está activo */ },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                     modifier = Modifier.weight(1f).padding(end = 8.dp),
                     elevation = ButtonDefaults.buttonElevation(0.dp),
@@ -82,27 +97,25 @@ fun LoginScreen(navController: NavHostController) {
                 ) {
                     Text("Iniciar sesión", color = Color.White, fontFamily = afacadFont, modifier = Modifier.padding(vertical = 9.dp))
                 }
+
+                // Botón "Crea una cuenta" redirige al registro
                 Button(
                     onClick = {
                         navController.navigate(route = AppScreens.RegisterScreen.route) {
-                            popUpTo(AppScreens.LoginScreen.route) {
-                                inclusive = true
-                            }
+                            popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
                             launchSingleTop = true
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp),
+                    modifier = Modifier.weight(1f).padding(start = 8.dp),
                     elevation = ButtonDefaults.buttonElevation(0.dp),
                     shape = RoundedCornerShape(6.dp),
-                )
-                {
+                ) {
                     Text("Crea una cuenta", color = Color(0xFFB2C2A4), fontFamily = afacadFont, modifier = Modifier.padding(vertical = 9.dp))
                 }
             }
 
+            // Campo de texto para nombre de usuario
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
@@ -114,6 +127,7 @@ fun LoginScreen(navController: NavHostController) {
                 )
             )
 
+            // Campo de texto para contraseña (oculta)
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -126,6 +140,7 @@ fun LoginScreen(navController: NavHostController) {
                 )
             )
 
+            // Enlace para "He olvidado mi contraseña"
             Text(
                 text = "He olvidado mi contraseña",
                 color = Color.Gray,
@@ -133,15 +148,14 @@ fun LoginScreen(navController: NavHostController) {
                 fontSize = 12.sp,
                 modifier = Modifier
                     .padding(bottom = 24.dp)
-                    .clickable { /* Acción */ }
+                    .clickable { /* Acción futura */ }
             )
 
+            // Botón para enviar el formulario de login
             Button(
                 onClick = {
                     if (formularioValido) {
-                        loginViewModel.login(
-                            UsuarioLoginRequest(usuario = username, contraseña = password)
-                        )
+                        loginViewModel.login(UsuarioLoginRequest(usuario = username, contraseña = password))
                     } else {
                         val errorMsg = when {
                             username.isBlank() -> "Por favor, escribe tu nombre de usuario"
@@ -162,28 +176,30 @@ fun LoginScreen(navController: NavHostController) {
             ) {
                 Text("Continuar", fontFamily = afacadFont, color = Color.White)
             }
+
+            // Reacción al estado del login
             LaunchedEffect(estadoLogin) {
                 estadoLogin?.let { estado ->
                     if (estado.msg != null) {
-                        // Login correcto
+                        // Login exitoso: guardar sesión y navegar
                         SessionManager.idUsuario = estado.id_usuario
                         SessionManager.nombre = estado.nombre
                         SessionManager.email = estado.email
                         SessionManager.username = estado.usuario
 
-                        navController.navigate(route = AppScreens.MainScreenApp.route.replace("{id_usuario}", estado.id_usuario.toString())) {
+                        navController.navigate(
+                            route = AppScreens.MainScreenApp.route.replace("{id_usuario}", estado.id_usuario.toString())
+                        ) {
                             popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
                         }
+
                         Toast.makeText(context, "✅ Login exitoso", Toast.LENGTH_SHORT).show()
                     } else if (estado.error != null) {
-                        // Login fallido
+                        // Error de login
                         Toast.makeText(context, estado.error, Toast.LENGTH_LONG).show()
                     }
                 }
             }
-
         }
     }
 }
-
-

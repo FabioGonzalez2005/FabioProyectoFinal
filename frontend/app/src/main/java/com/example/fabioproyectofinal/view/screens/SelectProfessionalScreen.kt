@@ -35,29 +35,39 @@ import android.widget.Toast
 import com.example.fabioproyectofinal.model.utils.formatFecha
 
 @Composable
-fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idDoctor: Int, nombreDoctor: String, nombreClinica: String) {
+fun SelectProfessionalScreen(
+    navController: NavHostController,
+    userId: Int?,
+    idDoctor: Int,
+    nombreDoctor: String,
+    nombreClinica: String
+) {
+    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
+
+    // Fecha seleccionada (por defecto hoy)
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+
+    // ViewModel para disponibilidad
     val availabilityVM: AvailabilityViewModel = viewModel()
     val disponibilidad by availabilityVM.disponibilidad.collectAsState()
+
+    // Franja horaria seleccionada
     var selectedAvailability by remember { mutableStateOf<Availability?>(null) }
 
+    // Cargar disponibilidad para la fecha seleccionada
     LaunchedEffect(selectedDate) {
         availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
     }
 
-
+    // También al montar el componente
     LaunchedEffect(Unit) {
         availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
     }
 
     Scaffold(
-        topBar = {
-            TopBar(navController = navController) { }
-        },
-        bottomBar = {
-            BottomBar(navController = navController, userId = userId ?: -1)
-        },
+        topBar = { TopBar(navController = navController) {} },
+        bottomBar = { BottomBar(navController = navController, userId = userId ?: -1) },
         containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
@@ -69,11 +79,11 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
         ) {
             Column(
                 modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
+                // Selector de fecha
                 CalendarComponent(
                     selectedDate = selectedDate,
                     onDateSelected = { selectedDate = it }
@@ -82,6 +92,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
             }
 
             if (disponibilidad.isNotEmpty()) {
+                // Título horarios disponibles
                 Text(
                     text = "Horarios disponibles:",
                     fontSize = 18.sp,
@@ -91,6 +102,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
+                // Lista en cuadrícula de franjas disponibles
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     modifier = Modifier
@@ -98,41 +110,44 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
                         .padding(horizontal = 16.dp)
                         .heightIn(max = 400.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    content = {
-                        items(disponibilidad) { item ->
-                            val isSelected = selectedAvailability?.id_disponibilidad == item.id_disponibilidad
-                            val backgroundColor = when {
-                                !item.disponible -> Color(0xFFC47E7E)
-                                isSelected -> Color(0xFF859A72)
-                                else -> Color(0xFFB2C2A4)
-                            }
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(disponibilidad) { item ->
+                        val isSelected = selectedAvailability?.id_disponibilidad == item.id_disponibilidad
+                        val backgroundColor = when {
+                            !item.disponible -> Color(0xFFC47E7E) // no disponible
+                            isSelected -> Color(0xFF859A72)       // seleccionado
+                            else -> Color(0xFFB2C2A4)            // disponible
+                        }
 
-                            Button(
-                                onClick = { selectedAvailability = item },
-                                enabled = item.disponible,
-                                shape = RoundedCornerShape(12.dp),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(36.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = backgroundColor,
-                                    disabledContainerColor = Color(0xFFC47E7E),
-                                    disabledContentColor = Color.White
-                                )
-                            ) {
-                                Text(
-                                    text = "${formatHora(item.fecha_inicio)} - ${formatHora(item.fecha_fin)}",
-                                    fontSize = 16.sp,
-                                    fontFamily = afacadFont,
-                                    color = Color.White
-                                )
-                            }
+                        Button(
+                            onClick = { selectedAvailability = item },
+                            enabled = item.disponible,
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(36.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = backgroundColor,
+                                disabledContainerColor = Color(0xFFC47E7E),
+                                disabledContentColor = Color.White
+                            )
+                        ) {
+                            Text(
+                                text = "${formatHora(item.fecha_inicio)} - ${formatHora(item.fecha_fin)}",
+                                fontSize = 16.sp,
+                                fontFamily = afacadFont,
+                                color = Color.White
+                            )
                         }
                     }
-                )
+                }
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 val context = LocalContext.current
+
+                // Botón de confirmar reserva
                 Button(
                     onClick = {
                         selectedAvailability?.let { selected ->
@@ -145,7 +160,7 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
                                         selectedAvailability = null
                                         availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
 
-                                        // Notificación
+                                        // Notificación de cita reservada
                                         val fechaTexto = formatFecha(selected.fecha_inicio)
                                         val horaTexto = formatHora(selected.fecha_inicio)
 
@@ -161,8 +176,8 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
                                             .setPriority(NotificationCompat.PRIORITY_HIGH)
                                             .build()
 
-                                        Toast.makeText(context, "Cita reservada con éxito", Toast.LENGTH_SHORT).show()
                                         notificationManager.notify(1, notification)
+                                        Toast.makeText(context, "Cita reservada con éxito", Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }
@@ -170,17 +185,12 @@ fun SelectProfessionalScreen(navController: NavHostController, userId: Int?, idD
                     },
                     enabled = selectedAvailability != null,
                     shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .height(40.dp),
+                    modifier = Modifier.height(40.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (selectedAvailability != null) Color(0xFFB2C2A4) else Color(0xFFCCCCCC)
                     )
                 ) {
-                    Text(
-                        text = "Reservar",
-                        fontFamily = afacadFont,
-                        color = Color.White
-                    )
+                    Text("Reservar", fontFamily = afacadFont, color = Color.White)
                 }
             }
         }

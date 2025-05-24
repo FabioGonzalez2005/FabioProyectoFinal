@@ -28,12 +28,15 @@ import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.FontWeight
 
-// Botón de acción con ícono y texto
+// Botón de acción con ícono y texto para usar en la clínica
 @Composable
 fun ClinicActionButton(text: String, iconRes: String, onClick: () -> Unit) {
+    // Fuente personalizada para el texto del botón
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
 
+    // Contexto actual de la aplicación, necesario para cargar imágenes con Coil
     val context = LocalContext.current
+
     Card(
         modifier = Modifier
             .size(width = 112.dp, height = 82.dp)
@@ -49,19 +52,22 @@ fun ClinicActionButton(text: String, iconRes: String, onClick: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
+            // Imagen cargada desde una URL con cache habilitado
             Image(
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(context)
                         .data(iconRes)
-                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
-                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
                         .build()
                 ),
                 contentDescription = text,
                 modifier = Modifier.size(40.dp)
             )
+
             Spacer(modifier = Modifier.height(4.dp))
+
+            // Texto que aparece debajo del ícono
             Text(
                 text = text,
                 fontFamily = afacadFont,

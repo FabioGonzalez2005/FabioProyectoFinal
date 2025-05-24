@@ -11,15 +11,25 @@ import com.example.fabioproyectofinal.view.components.ProfessionalCard
 import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 
 @Composable
-fun DoctorListScreen(navController: NavHostController, userId: Int?, viewModel: DoctorViewModel = viewModel()) {
+fun DoctorListScreen(
+    navController: NavHostController,
+    userId: Int?,
+    viewModel: DoctorViewModel = viewModel()
+) {
+    // Observa la lista de doctores desde el ViewModel
     val doctorList by viewModel.doctors.collectAsState()
+
     Log.d("DoctorListScreen", "Pantalla cargada")
+
+    // Contenedor principal en columna
     Column(modifier = Modifier.padding(top = 16.dp)) {
+
+        // Itera sobre cada doctor disponible
         doctorList.forEach { doctor ->
             Log.d("DoctorListScreen", (doctor.id_doctor).toString())
 
+            // Tarjeta visual del profesional (nombre y clínica a la que pertenece)
             ProfessionalCard(
-
                 name = "Doctor ${doctor.id_doctor}",
                 specialty = "Clinica ID: ${doctor.id_clinica}",
                 navController = navController,
@@ -27,7 +37,8 @@ fun DoctorListScreen(navController: NavHostController, userId: Int?, viewModel: 
                 onClick = {
                 }
             )
-            Spacer(modifier = Modifier.height(8.dp))
+
+            Spacer(modifier = Modifier.height(8.dp)) // Separación entre tarjetas
         }
     }
 }

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +30,7 @@ import com.example.fabioproyectofinal.model.navigation.AppScreens
 // Barra de navegación inferior
 @Composable
 fun BottomBar(navController: NavHostController, userId: Int) {
+    // Contenedor principal que ocupa el max de ancho, con fondo y padding
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -38,6 +38,7 @@ fun BottomBar(navController: NavHostController, userId: Int) {
             .padding(16.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
+        // Superficie que representa la barra con fondo, forma y elevación (sombra)
         Surface(
             modifier = Modifier
                 .fillMaxWidth(1f)
@@ -47,6 +48,7 @@ fun BottomBar(navController: NavHostController, userId: Int) {
             tonalElevation = 8.dp,
             shadowElevation = 8.dp
         ) {
+            // Fila para distribuir los botones de navegación de forma equitativa
             Row(
                 modifier = Modifier
                     .fillMaxSize()
@@ -54,26 +56,48 @@ fun BottomBar(navController: NavHostController, userId: Int) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Botón Favoritos
-
+                // Botón Favoritos como imagen clickeable
                 Image(
                     painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/favourite_white_l9ljec.webp"),
                     contentDescription = "Favoritos",
                     modifier = Modifier
                         .size(32.dp)
                         .clickable {
+                            // Navega a la pantalla de Favoritos pasando el ID del usuario en la ruta
                             navController.navigate(
                                 route = AppScreens.FavouritesScreen.route.replace("{id_usuario}", userId.toString())
                             )
                         }
                 )
-                // Botón Home
-                IconButton(onClick = { navController.navigate(route = AppScreens.MainScreenApp.route.replace("{id_usuario}", userId.toString()))}) {
-                    Icon(Icons.Default.Home, contentDescription = "Inicio", modifier = Modifier.size(32.dp), tint = Color.White)
+                // Botón Home con icono predeterminado y acción de navegación
+                IconButton(
+                    onClick = {
+                        navController.navigate(
+                            route = AppScreens.MainScreenApp.route.replace("{id_usuario}", userId.toString())
+                        )
+                    }
+                ) {
+                    Icon(
+                        Icons.Default.Home,
+                        contentDescription = "Inicio",
+                        modifier = Modifier.size(32.dp),
+                        tint = Color.White
+                    )
                 }
-                // Botón Calendario
-                IconButton(onClick = { navController.navigate(route = AppScreens.AppointmentsScreen.route.replace("{id_usuario}", userId.toString()))}) {
-                    Icon(Icons.Default.DateRange, contentDescription = "Calendario", modifier = Modifier.size(32.dp), tint = Color.White)
+                // Botón Calendario con icono predeterminado y acción de navegación
+                IconButton(
+                    onClick = {
+                        navController.navigate(
+                            route = AppScreens.AppointmentsScreen.route.replace("{id_usuario}", userId.toString())
+                        )
+                    }
+                ) {
+                    Icon(
+                        Icons.Default.DateRange,
+                        contentDescription = "Calendario",
+                        modifier = Modifier.size(32.dp),
+                        tint = Color.White
+                    )
                 }
             }
         }

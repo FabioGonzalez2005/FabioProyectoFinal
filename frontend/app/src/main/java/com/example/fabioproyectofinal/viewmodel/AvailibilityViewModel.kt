@@ -10,11 +10,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+// ViewModel encargado de manejar la disponibilidad de doctores y reservas
 class AvailabilityViewModel : ViewModel() {
-
+    // Lista observable de franjas de disponibilidad
     private val _disponibilidad = MutableStateFlow<List<Availability>>(emptyList())
     val disponibilidad: StateFlow<List<Availability>> = _disponibilidad
 
+    // Carga toda la disponibilidad de un doctor
     fun cargarDisponibilidad(idDoctor: Int) {
         viewModelScope.launch {
             try {
@@ -27,12 +29,13 @@ class AvailabilityViewModel : ViewModel() {
         }
     }
 
+    // Carga la disponibilidad de un doctor en un día específico
     fun cargarDisponibilidadPorDia(idDoctor: Int, fecha: LocalDate) {
         viewModelScope.launch {
             try {
                 val resultado = ApiServer.apiService.getDisponibilidadPorDia(
                     idDoctor,
-                    fecha.toString() // se convierte automáticamente a yyyy-MM-dd
+                    fecha.toString() // Formato esperado: yyyy-MM-dd
                 )
                 _disponibilidad.value = resultado
             } catch (e: Exception) {
@@ -40,7 +43,8 @@ class AvailabilityViewModel : ViewModel() {
             }
         }
     }
-    
+
+    // Realiza la reserva de una franja horaria y notifica el resultado
     fun reservarFranja(idDisponibilidad: Int, idUsuario: Int, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {

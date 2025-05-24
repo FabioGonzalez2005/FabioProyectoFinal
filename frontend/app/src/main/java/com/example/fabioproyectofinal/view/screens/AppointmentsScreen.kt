@@ -15,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -37,14 +36,21 @@ import com.example.fabioproyectofinal.R
 
 @Composable
 fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
+    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
-    val appointmentViewModel: AppointmentViewModel = viewModel()
-    val appointments by appointmentViewModel.citas.collectAsState()
 
-    val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
-    val hoy = java.util.Date()
+    // ViewModels
+    val appointmentViewModel: AppointmentViewModel = viewModel()
     val clinicViewModel: ClinicViewModel = viewModel()
 
+    // Obtener citas del ViewModel
+    val appointments by appointmentViewModel.citas.collectAsState()
+
+    // Obtener fecha actual para filtrar futuras
+    val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
+    val hoy = java.util.Date()
+
+    // Filtra citas futuras
     val citasFuturas = appointments.filter {
         try {
             val citaDate = sdf.parse(it.fecha_cita)
@@ -54,10 +60,12 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
         }
     }
 
+    // Contadores por estado
     val confirmedCount = citasFuturas.count { it.estado == "Confirmado" }
     val pendingCount = citasFuturas.count { it.estado == "Pendiente" }
     val cancelledCount = citasFuturas.count { it.estado == "Cancelado" }
 
+    // Llama a la API al cargar la pantalla
     LaunchedEffect(userId) {
         userId?.let { id ->
             Log.d("AppointmentsScreen", "Llamando a fetchCitas con id: $id")
@@ -66,9 +74,10 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
         }
     }
 
+    // Estructura principal de la pantalla
     Scaffold(
         topBar = {
-            TopBar(navController = navController) { /* Acción */ }
+            TopBar(navController = navController) {}
         },
         bottomBar = {
             BottomBar(navController = navController, userId = userId ?: -1)
@@ -79,30 +88,33 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFFFF9F2))
-                .height(64.dp)
                 .padding(innerPadding)
         ) {
-            // "Buscador"
+            // Título "Citas" y botón "Historial"
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // "Citas"
                 Text(
                     text = "Citas",
                     color = Color(0xFFB2C2A4),
                     fontSize = 40.sp,
                     fontFamily = afacadFont,
-                    modifier = Modifier
-                        .padding(start = 16.dp, bottom = 16.dp)
+                    modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
                 )
-                // "Historial"
                 Card(
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
                         .size(width = 120.dp, height = 45.dp)
                         .padding(end = 16.dp)
-                        .clickable { navController.navigate(route = AppScreens.HistoryScreen.route.replace("{id_usuario}", userId.toString())) },
+                        .clickable {
+                            navController.navigate(
+                                route = AppScreens.HistoryScreen.route.replace(
+                                    "{id_usuario}",
+                                    userId.toString()
+                                )
+                            )
+                        },
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
@@ -121,88 +133,44 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
                 }
             }
 
-            // Confirmadas
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(28.dp)
-                    .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(10.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Text(
-                        text = "Confirmadas: $confirmedCount",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = afacadFont,
-                        color = Color(0xFFB2C2A4),
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
-            }
-
+            // Muestra tarjetas de resumen: confirmadas, pendientes, canceladas
+            SummaryCard("Confirmadas", confirmedCount, afacadFont)
+            Spacer(modifier = Modifier.size(12.dp))
+            SummaryCard("Pendientes", pendingCount, afacadFont)
+            Spacer(modifier = Modifier.size(12.dp))
+            SummaryCard("Canceladas", cancelledCount, afacadFont)
             Spacer(modifier = Modifier.size(12.dp))
 
-            // Pendientes
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(28.dp)
-                    .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(10.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Text(
-                        text = "Pendientes: $pendingCount",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = afacadFont,
-                        color = Color(0xFFB2C2A4),
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.size(12.dp))
-
-            // Canceladas
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(28.dp)
-                    .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(10.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Text(
-                        text = "Canceladas: $cancelledCount",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = afacadFont,
-                        color = Color(0xFFB2C2A4),
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.size(12.dp))
-
+            // Lista de citas
             AppointmentList(navController = navController, userId = userId ?: -1)
+        }
+    }
+}
+
+// Componente reutilizable para mostrar contadores
+@Composable
+private fun SummaryCard(titulo: String, cantidad: Int, font: FontFamily) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(28.dp)
+            .padding(horizontal = 16.dp),
+        shape = RoundedCornerShape(10.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = "$titulo: $cantidad",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = font,
+                color = Color(0xFFB2C2A4),
+                modifier = Modifier.padding(start = 8.dp)
+            )
         }
     }
 }
@@ -213,14 +181,16 @@ fun AppointmentList(
     viewModel: DoctorViewModel = viewModel(),
     userId: Int?
 ) {
+    // ViewModels necesarios
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val clinicViewModel: ClinicViewModel = viewModel()
 
+    // Citas actuales
     val allCitas by appointmentViewModel.citas.collectAsState()
-
     val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
     val hoy = java.util.Date()
 
+    // Filtra citas futuras
     val citas = allCitas.filter {
         try {
             val citaDate = sdf.parse(it.fecha_cita)
@@ -230,9 +200,11 @@ fun AppointmentList(
         }
     }
 
+    // Datos de doctores y clínicas
     val doctorList by viewModel.doctors.collectAsState()
     val clinicas by clinicViewModel.clinics.collectAsState()
 
+    // Lista de tarjetas de citas
     LazyColumn(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)

@@ -63,47 +63,49 @@ fun ClinicDetailScreen(
     userId: Int?,
     idClinica: Int?,
     viewModel: DoctorViewModel = viewModel()
-)
- {
+) {
+    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
+
+    // ViewModels necesarios
     val clinicViewModel: ClinicViewModel = viewModel()
+    val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
+
+    // Estados observables
     val clinics by clinicViewModel.clinics.collectAsState()
     val doctorList by viewModel.doctors.collectAsState()
+    val favoritas by favouritesViewModel.favoritas.collectAsState()
     val context = LocalContext.current
-     LaunchedEffect(userId) {
-         if (userId != null) {
-             clinicViewModel.fetchClinics(userId)
-         }
-     }
-     val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
-     val favoritas by favouritesViewModel.favoritas.collectAsState()
-     val showMapDialog = remember { mutableStateOf(false) }
-     val clinic = clinics.firstOrNull { it.id_clinica == idClinica }
 
-     val estaEnFavoritos by remember(clinic, favoritas) {
-         derivedStateOf {
-             clinic != null && favoritas.any { it.id_clinica == clinic.id_clinica }
-         }
-     }
-     val filteredDoctors = clinic?.let { currentClinic ->
+    // Cargar datos al entrar en la pantalla
+    LaunchedEffect(userId) {
+        userId?.let {
+            clinicViewModel.fetchClinics(it)
+            favouritesViewModel.fetchFavoritas(it)
+        }
+    }
+
+    // Obtener la clínica específica por su ID
+    val clinic = clinics.firstOrNull { it.id_clinica == idClinica }
+
+    // Saber si esta clínica está en favoritos
+    val estaEnFavoritos by remember(clinic, favoritas) {
+        derivedStateOf {
+            clinic != null && favoritas.any { it.id_clinica == clinic.id_clinica }
+        }
+    }
+
+    // Filtrar los doctores asociados a esta clínica
+    val filteredDoctors = clinic?.let { currentClinic ->
         doctorList.filter { it.id_clinica == currentClinic.id_clinica }
     } ?: emptyList()
 
+    val showMapDialog = remember { mutableStateOf(false) }
 
-
-     LaunchedEffect(userId) {
-         userId?.let { id ->
-             favouritesViewModel.fetchFavoritas(id)
-         }
-     }
-
+    // Estructura principal de la pantalla
     Scaffold(
-        topBar = {
-            TopBar(navController = navController) { /* Acción */ }
-        },
-        bottomBar = {
-            BottomBar(navController = navController, userId = userId ?: -1)
-        },
+        topBar = { TopBar(navController = navController) {} },
+        bottomBar = { BottomBar(navController = navController, userId = userId ?: -1) },
         containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
@@ -113,10 +115,8 @@ fun ClinicDetailScreen(
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-            ) {
+            // Tarjeta con la información principal de la clínica
+            Column(modifier = Modifier.padding(16.dp)) {
                 clinic?.let {
                     ClinicaCard(
                         clinic = it,
@@ -130,14 +130,17 @@ fun ClinicDetailScreen(
                     )
                 }
             }
-            // Botones
+
+            // Botones de acción: Mapa, llamada, web
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
+                // Botón de ubicación con mapa
                 ClinicActionButton("Ubicación", "https://res.cloudinary.com/dr8es2ate/image/upload/icon_map_fc9rco.webp") {
                     showMapDialog.value = true
                 }
+                // Botón de llamar con redirección a aplicación de llamadas
                 ClinicActionButton("Llamar", "https://res.cloudinary.com/dr8es2ate/image/upload/icon_call_qbnahd.webp") {
                     clinic?.let {
                         val intent = Intent(Intent.ACTION_DIAL)
@@ -145,7 +148,7 @@ fun ClinicDetailScreen(
                         context.startActivity(intent)
                     }
                 }
-
+                // Botón de web con redirección a enlace web
                 ClinicActionButton("Web", "https://res.cloudinary.com/dr8es2ate/image/upload/icon_web_yygyly.webp") {
                     clinic?.let {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.web))
@@ -153,10 +156,11 @@ fun ClinicDetailScreen(
                     }
                 }
             }
+
             Spacer(modifier = Modifier.size(24.dp))
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
+
+            // Lista de profesionales de la clínica
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     elevation = CardDefaults.cardElevation(4.dp),
@@ -168,7 +172,6 @@ fun ClinicDetailScreen(
                             .padding(12.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // Título sección profesionales
                         Text(
                             "Escoge profesional:",
                             fontWeight = FontWeight.SemiBold,
@@ -176,35 +179,30 @@ fun ClinicDetailScreen(
                             fontSize = 16.sp,
                             color = Color(0xFFB2C2A4)
                         )
+
                         Spacer(modifier = Modifier.size(8.dp))
 
                         LazyColumn {
+                            // Agrupa los doctores de dos en dos para mostrarlos por fila
                             items(filteredDoctors.chunked(2)) { pair ->
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
                                     pair.forEach { doctor ->
-                                        Log.i("DoctorId", "IdDoctor ${doctor.id_doctor}")
+                                        // Tarjeta del profesional
                                         ProfessionalCard(
                                             name = doctor.nombre,
                                             specialty = doctor.especialidad,
                                             navController = navController,
                                             userId = userId ?: -1
-
                                         ) {
-
                                             val safeDoctorName = doctor.nombre.replace(" ", "-")
                                             val safeClinicName = clinic?.nombre?.replace(" ", "-") ?: "Clinica"
 
-                                            navController.navigate("select_professional_screen/${userId}/${doctor.id_doctor}/$safeDoctorName/$safeClinicName")
-
-                                        }
-                                        Log.d("DEBUG", "ID clínica actual: ${clinic?.id_clinica}")
-                                        doctorList.forEach {
-                                            Log.d(
-                                                "DEBUG",
-                                                "Doctor ${it.nombre}, id_clinica: ${it.id_clinica}"
+                                            // Navega a pantalla de selección de profesional
+                                            navController.navigate(
+                                                "select_professional_screen/${userId}/${doctor.id_doctor}/$safeDoctorName/$safeClinicName"
                                             )
                                         }
                                     }
@@ -217,23 +215,20 @@ fun ClinicDetailScreen(
             }
         }
     }
+
+    // Diálogo con el mapa de ubicación
     if (showMapDialog.value) {
         clinic?.let { c ->
-            Log.d("MAPA", "Latitud: ${c.lat}, Longitud: ${c.lng}")
             AlertDialog(
                 onDismissRequest = { showMapDialog.value = false },
                 confirmButton = {
                     Button(
                         onClick = { showMapDialog.value = false },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFB2C2A4)
-                        ),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                         shape = RoundedCornerShape(6.dp),
-                        modifier = Modifier
-                            .padding(bottom = 16.dp)
-                            .width(160.dp)
+                        modifier = Modifier.padding(bottom = 16.dp).width(160.dp)
                     ) {
-                        Text("Cerrar", color = Color.White, fontFamily = afacadFont,)
+                        Text("Cerrar", color = Color.White, fontFamily = afacadFont)
                     }
                 },
                 title = {
@@ -251,6 +246,7 @@ fun ClinicDetailScreen(
                             .background(Color(0xFFFFF9F2))
                             .padding(top = 8.dp)
                     ) {
+                        // Vista de mapa con latitud y longitud
                         GoogleMapView(lat = c.lat, lng = c.lng)
                     }
                 },
@@ -259,4 +255,3 @@ fun ClinicDetailScreen(
         }
     }
 }
-

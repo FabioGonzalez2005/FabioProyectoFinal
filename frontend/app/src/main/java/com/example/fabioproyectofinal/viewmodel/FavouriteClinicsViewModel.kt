@@ -9,11 +9,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+// ViewModel encargado de gestionar las clínicas favoritas del usuario
 class FavouriteClinicsViewModel : ViewModel() {
 
+    // Lista de clínicas favoritas
     private val _favoritas = MutableStateFlow<List<Clinic>>(emptyList())
     val favoritas: StateFlow<List<Clinic>> = _favoritas
 
+    // Obtiene las clínicas favoritas del usuario desde la API
     fun fetchFavoritas(idUsuario: Int) {
         viewModelScope.launch {
             try {
@@ -25,6 +28,8 @@ class FavouriteClinicsViewModel : ViewModel() {
             }
         }
     }
+
+    // Busca clínicas favoritas filtradas por especialidad
     fun buscarPorEspecialidadEnFavoritos(especialidad: String) {
         viewModelScope.launch {
             try {

@@ -25,26 +25,35 @@ import com.example.fabioproyectofinal.R
 
 @Composable
 fun FavouritesScreen(navController: NavHostController, userId: Int?) {
+    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
+
+    // Estado del texto de búsqueda
     var searchText by remember { mutableStateOf("") }
+
+    // ViewModel para clínicas favoritas
     val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
     val clinics by favouritesViewModel.favoritas.collectAsState()
+
+    // Marcamos todas las clínicas como favoritas para mostrar el ícono correspondiente
     val clinicsConMarca = clinics.map { it.copy(inFavourites = true) }
 
+    // Efecto: buscar o cargar favoritos cada vez que cambia el texto o el usuario
     LaunchedEffect(searchText, userId) {
         Log.d("FavouritesScreen", "Cargando favoritos para usuario: $userId")
+
+        // Si hay más de 2 caracteres en la búsqueda, filtra por especialidad
         if (searchText.length >= 3) {
             favouritesViewModel.buscarPorEspecialidadEnFavoritos(searchText)
         } else {
+            // Si no, recarga favoritos completos
             userId?.let { id ->
-                Log.d("FavouritesScreen", "Cargando favoritos para usuario: $id")
                 favouritesViewModel.fetchFavoritas(id)
             }
         }
     }
 
-
-    // Filtrar por búsqueda
+    // Filtro adicional sobre la lista actual según el texto
     val clinicasFiltradas = clinicsConMarca.filter {
         Log.d("FiltroEspecialidad", "especialidad de ${it.nombre}: ${it.especialidad}")
         it.nombre.contains(searchText, ignoreCase = true) ||
@@ -52,6 +61,7 @@ fun FavouritesScreen(navController: NavHostController, userId: Int?) {
                 it.especialidad?.contains(searchText, ignoreCase = true) == true
     }
 
+    // Estructura visual principal
     Scaffold(
         topBar = { TopBar(navController = navController) {} },
         bottomBar = { BottomBar(navController = navController, userId = userId ?: -1) },
@@ -63,6 +73,7 @@ fun FavouritesScreen(navController: NavHostController, userId: Int?) {
                 .background(Color(0xFFFFF9F2))
                 .padding(innerPadding)
         ) {
+            // Título de la pantalla
             Text(
                 text = "Favoritos",
                 color = Color(0xFFB2C2A4),
@@ -71,6 +82,7 @@ fun FavouritesScreen(navController: NavHostController, userId: Int?) {
                 modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
             )
 
+            // Barra de búsqueda
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
@@ -78,7 +90,12 @@ fun FavouritesScreen(navController: NavHostController, userId: Int?) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar", modifier = Modifier.size(18.dp))
                 },
                 placeholder = {
-                    Text("Clínica, especialidad o dirección", fontSize = 18.sp, fontFamily = afacadFont, color = Color(0xFFB2C2A4))
+                    Text(
+                        "Clínica, especialidad o dirección",
+                        fontSize = 18.sp,
+                        fontFamily = afacadFont,
+                        color = Color(0xFFB2C2A4)
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -92,6 +109,7 @@ fun FavouritesScreen(navController: NavHostController, userId: Int?) {
                 ),
             )
 
+            // Lista filtrada de clínicas favoritas
             ClinicList(clinicasFiltradas, navController, userId = userId ?: -1, true)
         }
     }

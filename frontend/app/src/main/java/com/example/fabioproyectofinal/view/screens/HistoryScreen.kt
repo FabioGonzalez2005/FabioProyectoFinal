@@ -28,14 +28,21 @@ import com.example.fabioproyectofinal.R
 
 @Composable
 fun HistoryScreen(navController: NavHostController, userId: Int?) {
+    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
+
+    // ViewModels necesarios
     val appointmentViewModel: AppointmentViewModel = viewModel()
-    val appointments by appointmentViewModel.citas.collectAsState()
     val clinicViewModel: ClinicViewModel = viewModel()
 
+    // Obtener lista de citas del ViewModel
+    val appointments by appointmentViewModel.citas.collectAsState()
+
+    // Formato de fecha para comparar
     val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
     val hoy = java.util.Date()
 
+    // Contar cuántas citas ya han pasado (historial)
     val appointmentsCount = appointments.count {
         try {
             val citaDate = sdf.parse(it.fecha_cita)
@@ -45,6 +52,7 @@ fun HistoryScreen(navController: NavHostController, userId: Int?) {
         }
     }
 
+    // Al iniciar, obtener citas y clínicas del usuario
     LaunchedEffect(userId) {
         userId?.let { id ->
             appointmentViewModel.fetchCitas(id)
@@ -52,38 +60,33 @@ fun HistoryScreen(navController: NavHostController, userId: Int?) {
         }
     }
 
+    // Estructura visual de la pantalla
     Scaffold(
-        topBar = {
-            TopBar(navController = navController) { /* Acción */ }
-        },
-        bottomBar = {
-            BottomBar(navController = navController, userId = userId ?: -1)
-        },
-        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+        topBar = { TopBar(navController = navController) {} },
+        bottomBar = { BottomBar(navController = navController, userId = userId ?: -1) },
+        containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFFFF9F2))
-                .height(64.dp)
                 .padding(innerPadding)
         ) {
-            // "Buscador"
+            // Título de pantalla
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // "Citas"
                 Text(
                     text = "Historial",
                     color = Color(0xFFB2C2A4),
                     fontSize = 40.sp,
                     fontFamily = afacadFont,
-                    modifier = Modifier
-                        .padding(start = 16.dp, bottom = 16.dp)
+                    modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
                 )
             }
-            // Texto
+
+            // Tarjeta con número de citas pasadas
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,14 +103,17 @@ fun HistoryScreen(navController: NavHostController, userId: Int?) {
                     Text(
                         text = "Últimas citas: $appointmentsCount",
                         fontSize = 18.sp,
-                        fontFamily = afacadFont,
                         fontWeight = FontWeight.SemiBold,
+                        fontFamily = afacadFont,
                         color = Color(0xFFB2C2A4),
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
+
             Spacer(modifier = Modifier.size(12.dp))
+
+            // Lista de tarjetas de historial
             HistoryCardList()
         }
     }
@@ -115,14 +121,17 @@ fun HistoryScreen(navController: NavHostController, userId: Int?) {
 
 @Composable
 fun HistoryCardList(navController: NavHostController? = null) {
+    // ViewModels necesarios
     val appointmentViewModel: AppointmentViewModel = viewModel()
     val doctorViewModel: DoctorViewModel = viewModel()
     val clinicViewModel: ClinicViewModel = viewModel()
 
+    // Observa los datos de citas, doctores y clínicas
     val citas by appointmentViewModel.citas.collectAsState()
     val doctorList by doctorViewModel.doctors.collectAsState()
     val clinicas by clinicViewModel.clinics.collectAsState()
 
+    // Filtra citas pasadas
     val citasPasadas = citas.filter {
         try {
             val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
@@ -134,15 +143,18 @@ fun HistoryCardList(navController: NavHostController? = null) {
         }
     }
 
+    // Lista de tarjetas con citas anteriores
     LazyColumn(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .fillMaxSize()
     ) {
         items(citasPasadas) { cita ->
+            // Busca doctor y clínica correspondientes
             val doctor = doctorList.find { it.id_doctor == cita.id_doctor }
             val clinica = doctor?.let { d -> clinicas.find { it.id_clinica == d.id_clinica } }
 
+            // Componente de tarjeta individual para cada cita
             HistoryCard(
                 appointment = cita,
                 doctor = doctor,

@@ -39,99 +39,81 @@ import com.example.fabioproyectofinal.view.components.GoogleMapWithClinics
 
 @Composable
 fun MainScreenApp(navController: NavHostController, userId: Int?) {
+    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
+
+    // ViewModels y datos observables
     val clinicViewModel: ClinicViewModel = viewModel()
     val clinics by clinicViewModel.clinics.collectAsState()
-
-    var searchText by remember { mutableStateOf("") }
 
     val favouritesViewModel: FavouriteClinicsViewModel = viewModel()
     val favoritas by favouritesViewModel.favoritas.collectAsState()
 
-// Cargar favoritos al entrar
+    var searchText by remember { mutableStateOf("") }
+
+    // Cargar clínicas y favoritos al entrar o cambiar el texto de búsqueda
     LaunchedEffect(userId, searchText) {
         val query = searchText.trim()
         if (query.isNotEmpty()) {
             clinicViewModel.buscarClinicas(query)
         } else {
-            clinicViewModel.fetchClinics(usuario_id = userId ?: -1)
+            clinicViewModel.fetchClinics(userId ?: -1)
         }
-        userId?.let { id ->
-            favouritesViewModel.fetchFavoritas(id)
-        }
+        userId?.let { favouritesViewModel.fetchFavoritas(it) }
     }
 
-// Marcar favoritas
+    // Marca las clínicas favoritas en la lista principal
     val clinicsConMarca = remember(clinics, favoritas) {
         val idsFavoritos = favoritas.map { it.id_clinica }.toSet()
-        clinics.map { clinica ->
-            clinica.copy(inFavourites = idsFavoritos.contains(clinica.id_clinica))
-        }
+        clinics.map { clinica -> clinica.copy(inFavourites = idsFavoritos.contains(clinica.id_clinica)) }
     }
 
-// Filtrar por búsqueda
+    // Ordenar clínicas mostrando primero las favoritas
     val clinicasFiltradas = clinicsConMarca.sortedByDescending { it.inFavourites }
+
     Scaffold(
-        topBar = {
-            TopBar(navController = navController) { /* Acción */ }
-        },
-        bottomBar = {
-            BottomBar(navController = navController, userId = userId ?: -1)
-        },
-        containerColor = Color(0xFFFFF9F2) // Fondo para toda la pantalla
+        topBar = { TopBar(navController = navController) {} },
+        bottomBar = { BottomBar(navController = navController, userId = userId ?: -1) },
+        containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFFFF9F2))
-                .height(64.dp)
                 .padding(innerPadding)
         ) {
             var showMapDialog by remember { mutableStateOf(false) }
-            // "Buscador"
+
+            // Encabezado y botón para ver mapa
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
-            Text(
-                text = "Buscador",
-                color = Color(0xFFB2C2A4),
-                fontSize = 40.sp,
-                fontFamily = afacadFont,
-            )
+            ) {
+                Text(
+                    text = "Buscador",
+                    color = Color(0xFFB2C2A4),
+                    fontSize = 40.sp,
+                    fontFamily = afacadFont,
+                )
                 Button(
-                    onClick = {
-                        showMapDialog = true
-                    },
+                    onClick = { showMapDialog = true },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                     shape = RoundedCornerShape(8.dp),
                     contentPadding = PaddingValues(4.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Map,
-                        contentDescription = "Mapa",
-                        modifier = Modifier.size(20.dp),
-                        tint = Color.White
-                    )
+                    Icon(Icons.Default.Map, contentDescription = "Mapa", tint = Color.White)
                 }
             }
-
-
-            val context = LocalContext.current
 
             // Buscador de clínicas
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
                 leadingIcon = {
-                    Icon(
-                        Icons.Filled.Search,
-                        contentDescription = "Buscar",
-                        modifier = Modifier.size(18.dp)
-                    )
+                    Icon(Icons.Filled.Search, contentDescription = "Buscar", modifier = Modifier.size(18.dp))
                 },
                 placeholder = {
                     Text(
@@ -149,17 +131,15 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
-                    disabledBorderColor = Color.Transparent,
-                    errorBorderColor = Color.Transparent,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color.White,
-                    errorContainerColor = Color.White,
                     cursorColor = MaterialTheme.colorScheme.primary
                 ),
                 singleLine = true
             )
-            ClinicList(clinicasFiltradas, navController, userId = userId ?: -1, false)
+
+            // Lista de clínicas (filtradas)
+            ClinicList(clinicasFiltradas, navController, userId = userId ?: -1, showFavouritesOnly = false)
+
+            // Diálogo con el mapa
             if (showMapDialog) {
                 AlertDialog(
                     onDismissRequest = { showMapDialog = false },
@@ -174,16 +154,13 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                             "Clínicas en el mapa",
                             fontFamily = afacadFont,
                             color = Color(0xFFB2C2A4),
-                            modifier = Modifier.fillMaxWidth(),
                             fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     },
                     text = {
-                        Box(modifier = Modifier
-                            .height(450.dp)
-                            .fillMaxWidth()
-                        ) {
+                        Box(modifier = Modifier.height(450.dp).fillMaxWidth()) {
                             GoogleMapWithClinics(
                                 clinics = clinics,
                                 navController = navController,
@@ -191,16 +168,13 @@ fun MainScreenApp(navController: NavHostController, userId: Int?) {
                                 onDismiss = { showMapDialog = false }
                             )
                         }
-                    }
-                    ,
+                    },
                     containerColor = Color(0xFFFFF9F2)
                 )
             }
-
         }
     }
 }
-
 
 @Composable
 fun ClinicList(
@@ -209,12 +183,14 @@ fun ClinicList(
     userId: Int?,
     showFavouritesOnly: Boolean
 ) {
+    // Filtra si solo se deben mostrar clínicas favoritas
     val clinicasAMostrar = if (showFavouritesOnly) {
         clinicasFiltradas.filter { it.inFavourites }
     } else {
         clinicasFiltradas
     }
 
+    // Lista visual de clínicas
     LazyColumn(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)

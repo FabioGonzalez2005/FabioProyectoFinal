@@ -53,33 +53,45 @@ fun CalendarComponent(
     onMonthChanged: (YearMonth) -> Unit = {},
     initialMonth: YearMonth? = null,
 ) {
+    // Fuente personalizada para los textos del calendario
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
+
+    // Fecha actual guardada en estado para evitar recomposiciones innecesarias
     val today = remember { LocalDate.now() }
+    // Mes actual basado en la fecha de hoy
     val currentActualMonth = remember { YearMonth.from(today) }
+    // Mes inicial que se mostrará, puede venir por parámetro o ser el mes actual
     val startMonth = initialMonth ?: currentActualMonth
 
+    // Límite máximo de mes permitido (16 meses adelante desde el actual)
     val maxAllowedMonth = remember { currentActualMonth.plusMonths(16) }
+    // Mes mínimo permitido (mes actual)
     val minAllowedMonth = currentActualMonth
 
+    // Mes que se está mostrando en el calendario, estado mutable para actualizaciones
     var displayedYearMonth by remember { mutableStateOf(startMonth) }
 
+    // Primer día del mes que se muestra
     val firstDayOfMonth = displayedYearMonth.atDay(1)
+    // Número total de días en el mes mostrado
     val daysInMonth = displayedYearMonth.lengthOfMonth()
+    // Índice del primer día de la semana para alinear los días (0=lunes)
     val firstDayOfWeek = (firstDayOfMonth.dayOfWeek.value + 6) % 7
 
+    // Condición para habilitar el botón de mes anterior
     val canGoToPreviousMonth = displayedYearMonth.isAfter(minAllowedMonth) || displayedYearMonth == minAllowedMonth
-
+    // Condición para habilitar el botón de mes siguiente
     val canGoToNextMonth = displayedYearMonth.isBefore(maxAllowedMonth)
 
-
     Column {
+        // Tarjeta que contiene la cabecera del calendario con controles de mes
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
-            shape = RoundedCornerShape(10.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            shape = RoundedCornerShape(10.dp), // Bordes redondeados
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp), // Elevación sutil
+            colors = CardDefaults.cardColors(containerColor = Color.White) // Fondo blanco
         ) {
             Column(
                 modifier = Modifier
@@ -87,7 +99,7 @@ fun CalendarComponent(
                     .padding(vertical = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Texto "Disponibilidad"
+                // Título "Disponibilidad"
                 Text(
                     text = "Disponibilidad:",
                     fontSize = 16.sp,
@@ -96,7 +108,7 @@ fun CalendarComponent(
                     color = Color(0xFFB2C2A4)
                 )
 
-                // Row con botones e info de mes
+                // Fila con botones para cambiar mes y mostrar mes y año actual
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -104,7 +116,7 @@ fun CalendarComponent(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Botón Mes Anterior
+                    // Botón para ir al mes anterior si está permitido
                     IconButton(
                         onClick = {
                             if (canGoToPreviousMonth) {
@@ -121,7 +133,7 @@ fun CalendarComponent(
                         )
                     }
 
-                    // Nombre del mes y año
+                    // Texto que muestra el mes y año actual formateados
                     Text(
                         text = "${displayedYearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
                             .replaceFirstChar { it.uppercase() }} ${displayedYearMonth.year}",
@@ -131,7 +143,7 @@ fun CalendarComponent(
                         fontWeight = FontWeight.Bold
                     )
 
-                    // Botón Mes Siguiente
+                    // Botón para ir al mes siguiente si está permitido
                     IconButton(
                         onClick = {
                             if (canGoToNextMonth) {
@@ -144,7 +156,7 @@ fun CalendarComponent(
                         Icon(
                             Icons.Default.ArrowBackIosNew,
                             contentDescription = "Mes siguiente",
-                            modifier = Modifier.rotate(180f),
+                            modifier = Modifier.rotate(180f), // Rota el icono para apuntar a la derecha
                             tint = if (canGoToNextMonth) Color(0xFFB2C2A4) else Color.Gray.copy(alpha = 0.5f)
                         )
                     }
@@ -152,14 +164,12 @@ fun CalendarComponent(
             }
         }
 
-
-
-
-    // Días de la semana
+        // Fila para mostrar los nombres de los días de la semana
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
+            // Lista abreviada de días de la semana (lunes a domingo)
             val daysOfWeek = listOf("Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do")
             daysOfWeek.forEach { day ->
                 Box(
@@ -176,17 +186,19 @@ fun CalendarComponent(
             }
         }
 
+        // Rejilla vertical para mostrar todos los días del mes en 7 columnas
         LazyVerticalGrid(
             columns = GridCells.Fixed(7),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(240.dp)
         ) {
+            // Espacios vacíos para alinear el primer día del mes al día correcto de la semana
             items(firstDayOfWeek) {
                 Box(modifier = Modifier.size(40.dp))
             }
 
-            // Días del mes
+            // Items para cada día del mes
             items(daysInMonth) { day ->
                 val date = firstDayOfMonth.plusDays(day.toLong())
                 val dayOfWeek = date.dayOfWeek.value % 7
@@ -194,6 +206,7 @@ fun CalendarComponent(
                 val isSelected = selectedDate == date
                 val isPastDate = date.isBefore(today)
                 val isToday = date == today
+                // Determina si el día es seleccionable (no pasado y día laborable o hoy)
                 val isEnabled = (!isPastDate || isToday) && isWorkingDay
 
                 Box(
@@ -203,15 +216,15 @@ fun CalendarComponent(
                         .clip(RoundedCornerShape(3.dp))
                         .background(
                             when {
-                                isSelected -> Color(0xFF859A72)
-                                !isWorkingDay -> Color(0xFFC47E7E)
-                                isPastDate -> Color(0xFFD5D5D5)
-                                isToday -> Color(0xFF9EC8D5)
-                                else -> Color(0xFFB2C2A4)
+                                isSelected -> Color(0xFF859A72)     // Día seleccionado
+                                !isWorkingDay -> Color(0xFFC47E7E)   // Día no laborable
+                                isPastDate -> Color(0xFFD5D5D5)      // Días pasados
+                                isToday -> Color(0xFF9EC8D5)          // Día actual
+                                else -> Color(0xFFB2C2A4)             // Días habilitados
                             }
                         )
                         .clickable(enabled = isEnabled) {
-                            if (isEnabled) onDateSelected(date)
+                            if (isEnabled) onDateSelected(date) // Llama al callback si el día es válido
                         },
                     contentAlignment = Alignment.Center
                 ) {
@@ -223,6 +236,7 @@ fun CalendarComponent(
                     }
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        // Número del día en el calendario
                         Text(
                             text = "${day + 1}",
                             color = textColor,
