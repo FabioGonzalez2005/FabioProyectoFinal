@@ -91,7 +91,7 @@ def login_usuario():
             SELECT id_usuario, nombre, email, usuario, contraseña, 
                    fecha_nacimiento, telefono, telefono_emergencia, 
                    alergias, antecedentes_familiares, condiciones_pasadas, 
-                   procedimientos_quirurgicos
+                   procedimientos_quirurgicos, rol
             FROM Usuario
             WHERE usuario = %s
         ''', (datos['usuario'],))
@@ -107,7 +107,7 @@ def login_usuario():
             id_usuario, nombre, email, usuario, contrasena_hash,
             fecha_nacimiento, telefono, telefono_emergencia,
             alergias, antecedentes_familiares, condiciones_pasadas,
-            procedimientos_quirurgicos
+            procedimientos_quirurgicos, rol
         ) = usuario_encontrado
 
         # Verificar contraseña
@@ -141,7 +141,8 @@ def login_usuario():
                 'antecedentes_familiares': antecedentes_familiares,
                 'condiciones_pasadas': condiciones_pasadas,
                 'procedimientos_quirurgicos': procedimientos_quirurgicos,
-                'token': token
+                'token': token,
+                'rol': rol,
             }), 200
         else:
             return jsonify({'error': 'Contraseña incorrecta'}), 401
@@ -207,7 +208,7 @@ def registrar_usuario():
 def obtener_perfil(id_usuario):
     sql = '''
         SELECT id_usuario, nombre, email, usuario, fecha_nacimiento, telefono, telefono_emergencia,
-               alergias, antecedentes_familiares, condiciones_pasadas, procedimientos_quirurgicos
+               alergias, antecedentes_familiares, condiciones_pasadas, procedimientos_quirurgicos, rol
         FROM Usuario
         WHERE id_usuario = %s
     '''
@@ -452,17 +453,47 @@ def eliminar_cita():
     if not id_usuario or not id_cita:
         return jsonify({"error": "Se requieren id_usuario e id_cita"}), 400
 
-    # Verifica que la cita le pertenece al usuario antes de eliminar
-    sql_verificar = "SELECT 1 FROM Cita WHERE id_cita = %s AND id_usuario = %s"
+    # Verifica que la cita existe y le pertenece
+    sql_verificar = "SELECT fecha_cita, id_doctor FROM Cita WHERE id_cita = %s AND id_usuario = %s"
     resultado = ejecutar_sql(sql_verificar, (id_cita, id_usuario))
 
     if isinstance(resultado, tuple) and resultado[1] == 500:
-        return resultado  # Error interno desde ejecutar_sql
+        return resultado
 
-    if not resultado.get_json():  # Si no hay resultados, la cita no existe o no pertenece al usuario
+    datos_cita = resultado.get_json()
+    if not datos_cita:
         return jsonify({"error": "Cita no encontrada o no pertenece al usuario"}), 404
 
-    # Procede a eliminar la cita
+    # Obtener fecha_cita e id_doctor para buscar la franja
+    fecha_cita = datos_cita[0]['fecha_cita']
+    id_doctor = datos_cita[0]['id_doctor']
+
+    # Buscar id_disponibilidad asociado
+    sql_buscar_franja = '''
+        SELECT id_disponibilidad FROM disponibilidad_doctor
+        WHERE id_doctor = %s AND fecha_inicio = %s
+    '''
+    resultado_franja = ejecutar_sql(sql_buscar_franja, (id_doctor, fecha_cita))
+
+    if isinstance(resultado_franja, tuple) and resultado_franja[1] == 500:
+        return resultado_franja
+
+    franjas = resultado_franja.get_json()
+    if franjas:
+        id_disponibilidad = franjas[0]['id_disponibilidad']
+
+        # Rehabilitar la franja
+        sql_update = '''
+            UPDATE disponibilidad_doctor
+            SET disponible = TRUE
+            WHERE id_disponibilidad = %s
+        '''
+        response_update = ejecutar_sql(sql_update, (id_disponibilidad,), es_insert=True)
+
+        if isinstance(response_update, tuple) and response_update[1] == 500:
+            return response_update
+
+    # Eliminar la cita finalmente
     sql_eliminar = "DELETE FROM Cita WHERE id_cita = %s"
     return ejecutar_sql(sql_eliminar, (id_cita,), es_insert=True)
 
