@@ -40,7 +40,9 @@ fun SelectProfessionalScreen(
     userId: Int?,
     idDoctor: Int,
     nombreDoctor: String,
-    nombreClinica: String
+    nombreClinica: String,
+    precio: String,
+    especialidad: String
 ) {
     // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
@@ -83,6 +85,11 @@ fun SelectProfessionalScreen(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                ProfessionalCardHorizontal(
+                    name = nombreDoctor,
+                    specialty = especialidad,
+                    price = precio
+                )
                 // Selector de fecha
                 CalendarComponent(
                     selectedDate = selectedDate,

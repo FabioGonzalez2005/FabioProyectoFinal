@@ -84,17 +84,23 @@ fun AppNavigation(
             val userId = backStackEntry.arguments?.getString("id_usuario")?.toIntOrNull()
             HistoryScreen(navController, userId)
         }
-        composable("select_professional_screen/{id_usuario}/{id_doctor}/{nombreDoctor}/{nombreClinica}") { backStackEntry ->
+        composable("select_professional_screen/{id_usuario}/{id_doctor}/{nombreDoctor}/{nombreClinica}/{precio}/{especialidad}")
+        { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("id_usuario")?.toIntOrNull()
             val idDoctor = backStackEntry.arguments?.getString("id_doctor")?.toIntOrNull()
             val nombreDoctor = backStackEntry.arguments?.getString("nombreDoctor")?.replace("-", " ") ?: ""
             val nombreClinica = backStackEntry.arguments?.getString("nombreClinica")?.replace("-", " ") ?: ""
+            val precio = backStackEntry.arguments?.getString("precio")?.replace("-", " ") ?: ""
+            val especialidad = backStackEntry.arguments?.getString("especialidad")?.replace("-", " ") ?: ""
+
             SelectProfessionalScreen(
                 navController = navController,
                 userId = userId,
                 idDoctor = idDoctor ?: -1,
                 nombreDoctor = nombreDoctor,
-                nombreClinica = nombreClinica
+                nombreClinica = nombreClinica,
+                precio = precio,
+                especialidad = especialidad
             )
         }
 

@@ -198,10 +198,12 @@ fun ClinicDetailScreen(
                                         ) {
                                             val safeDoctorName = doctor.nombre.replace(" ", "-")
                                             val safeClinicName = clinic?.nombre?.replace(" ", "-") ?: "Clinica"
-
+                                            val safePrecio = (doctor.precio ?: "").replace(" ", "-")
+                                            val safeEspecialidad = (doctor.especialidad ?: "").replace(" ", "-")
                                             // Navega a pantalla de selección de profesional
+
                                             navController.navigate(
-                                                "select_professional_screen/${userId}/${doctor.id_doctor}/$safeDoctorName/$safeClinicName"
+                                                "select_professional_screen/${userId}/${doctor.id_doctor}/$safeDoctorName/$safeClinicName/$safePrecio/$safeEspecialidad"
                                             )
                                         }
                                     }
