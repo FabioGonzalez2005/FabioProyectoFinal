@@ -21,6 +21,7 @@ import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.CalendarComponent
 import com.example.fabioproyectofinal.view.components.DoctorCitaCard
 import com.example.fabioproyectofinal.view.components.TopBar
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
@@ -31,6 +32,7 @@ fun DoctorAppointmentsScreen(
     val afacadFont = FontFamily(Font(R.font.afacadfont))
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var citasFiltradas by remember { mutableStateOf<List<Appointment>>(emptyList()) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(userId, selectedDate) {
         if (userId != null) {
@@ -97,7 +99,26 @@ fun DoctorAppointmentsScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(citasFiltradas) { cita ->
-                            DoctorCitaCard(cita = cita, afacadFont = afacadFont)
+                            DoctorCitaCard(
+                                cita = cita,
+                                afacadFont = afacadFont,
+                                onCitaActualizada = {
+                                    val fechaStr = selectedDate.toString()
+                                    scope.launch {
+                                        try {
+                                            val idDoctorResponse = ApiServer.apiService.getIdDoctorPorUsuario(userId ?: -1)
+                                            val idDoctor = idDoctorResponse.firstOrNull()?.get("id_doctor")
+                                            if (idDoctor != null) {
+                                                citasFiltradas = ApiServer.apiService.getCitasDelDoctorPorDia(idDoctor, fechaStr)
+                                                    .filter { it.estado == "Confirmado" || it.estado == "Cancelado" }
+                                            }
+                                        } catch (e: Exception) {
+                                            println("❌ Error actualizando citas: ${e.message}")
+                                        }
+                                    }
+                                }
+                            )
+
                         }
                     }
                 }

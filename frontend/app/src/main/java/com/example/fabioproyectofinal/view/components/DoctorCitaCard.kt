@@ -34,7 +34,11 @@ import com.example.fabioproyectofinal.model.utils.formatFechaCompleta
 import kotlinx.coroutines.launch
 
 @Composable
-fun DoctorCitaCard(cita: Appointment, afacadFont: FontFamily) {
+fun DoctorCitaCard(
+    cita: Appointment,
+    afacadFont: FontFamily,
+    onCitaActualizada: () -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
     var motivo by remember { mutableStateOf("") }
 
@@ -118,6 +122,9 @@ fun DoctorCitaCard(cita: Appointment, afacadFont: FontFamily) {
                                     )
                                 )
                                 println("✅ Cita cancelada con motivo: $motivo")
+
+                                onCitaActualizada() // 🔁 Notifica a la screen que recargue
+
                             } catch (e: Exception) {
                                 println("❌ Error cancelando cita: ${e.message}")
                             }

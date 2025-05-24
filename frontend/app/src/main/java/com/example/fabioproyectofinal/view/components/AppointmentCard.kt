@@ -36,6 +36,7 @@ import kotlinx.coroutines.withContext
 import androidx.core.app.NotificationCompat
 import android.app.NotificationManager
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.border
 
 // Tarjeta de citas
@@ -61,6 +62,7 @@ fun AppointmentCard(
         citaCal.get(java.util.Calendar.YEAR) == today.get(java.util.Calendar.YEAR) &&
                 citaCal.get(java.util.Calendar.DAY_OF_YEAR) == today.get(java.util.Calendar.DAY_OF_YEAR)
     } ?: false
+    val scope = rememberCoroutineScope()
 
 
     // Diálogo de confirmación de cancelación de cita
@@ -194,7 +196,7 @@ fun AppointmentCard(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-    Row(
+        Row(
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
@@ -358,10 +360,37 @@ fun AppointmentCard(
                         AlertDialog(
                             onDismissRequest = { showMotivoDialog = false },
                             confirmButton = {
-                                AnimatedDialogButton(
-                                    text = "Cerrar",
-                                    onClick = { showMotivoDialog = false }
-                                )
+                                Log.i("Motivo", "${appointment.motivo_cancelacion}")
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    AnimatedDialogButton(
+                                        text = "Cerrar",
+                                        onClick = { showMotivoDialog = false }
+                                    )
+
+                                    AnimatedDialogButton(
+                                        text = "Borrar cita",
+                                        onClick = {
+                                            showMotivoDialog = false
+                                            scope.launch {
+                                                try {
+                                                    ApiServer.apiService.eliminarCita(
+                                                        mapOf(
+                                                            "id_usuario" to userId,
+                                                            "id_cita" to appointment.id_cita
+                                                        )
+                                                    )
+                                                    println("🗑️ Cita ${appointment.id_cita} eliminada correctamente.")
+                                                    appointmentViewModel.fetchCitas(userId)
+                                                } catch (e: Exception) {
+                                                    println("❌ Error al eliminar cita: ${e.message}")
+                                                }
+                                            }
+                                        }
+                                    )
+                                }
                             },
                             title = {
                                 Text(
@@ -375,9 +404,13 @@ fun AppointmentCard(
                             },
                             text = {
                                 Text(
-                                    text = appointment.motivo_cancelacion ?: "No se especificó un motivo.",
+                                    text = if (appointment.motivo_cancelacion.isNullOrBlank()) {
+                                        "• No se especificó un motivo."
+                                    } else {
+                                        "• ${appointment.motivo_cancelacion}"
+                                    },
                                     fontFamily = afacadFont,
-                                    color = Color.DarkGray
+                                    color = Color.DarkGray,
                                 )
                             },
                             shape = RoundedCornerShape(12.dp),
