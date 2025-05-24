@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.components
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +52,7 @@ fun DoctorCitaCard(
         else -> Color.Gray
     }
 
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
     Card(
@@ -121,12 +124,19 @@ fun DoctorCitaCard(
                                         "motivo_cancelacion" to motivo
                                     )
                                 )
-                                println("✅ Cita cancelada con motivo: $motivo")
-
+                                Toast.makeText(
+                                    context,
+                                    "✅ Cita cancelada con motivo: $motivo",
+                                    Toast.LENGTH_LONG
+                                ).show()
                                 onCitaActualizada() // 🔁 Notifica a la screen que recargue
 
                             } catch (e: Exception) {
-                                println("❌ Error cancelando cita: ${e.message}")
+                                Toast.makeText(
+                                    context,
+                                    "Error al eliminar cita: ${e.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
                         }
                     },

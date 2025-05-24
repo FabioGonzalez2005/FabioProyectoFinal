@@ -113,7 +113,7 @@ fun DoctorAppointmentsScreen(
                                                     .filter { it.estado == "Confirmado" || it.estado == "Cancelado" }
                                             }
                                         } catch (e: Exception) {
-                                            println("❌ Error actualizando citas: ${e.message}")
+                                            println("Error actualizando citas: ${e.message}")
                                         }
                                     }
                                 }

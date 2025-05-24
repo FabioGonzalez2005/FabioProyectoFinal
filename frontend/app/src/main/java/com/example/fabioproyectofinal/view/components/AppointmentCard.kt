@@ -382,10 +382,18 @@ fun AppointmentCard(
                                                             "id_cita" to appointment.id_cita
                                                         )
                                                     )
-                                                    println("🗑️ Cita ${appointment.id_cita} eliminada correctamente.")
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Cita eliminada correctamente",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                                     appointmentViewModel.fetchCitas(userId)
                                                 } catch (e: Exception) {
-                                                    println("❌ Error al eliminar cita: ${e.message}")
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Error al eliminar cita",
+                                                        Toast.LENGTH_LONG
+                                                    ).show()
                                                 }
                                             }
                                         }
