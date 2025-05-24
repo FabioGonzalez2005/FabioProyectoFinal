@@ -399,7 +399,7 @@ def reservar_franja():
                 id_usuario,
                 id_doctor,
                 fecha_cita,
-                'Pendiente',
+                'Confirmado',
                 '', '', '', '', '', ''  # campos opcionales rellenados en blanco
             ),
             es_insert=True

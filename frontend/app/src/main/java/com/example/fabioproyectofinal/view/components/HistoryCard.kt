@@ -63,12 +63,17 @@ fun HistoryCard(
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(
+                    horizontal = 16.dp,
+                    vertical = 6.dp
+                )
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-
+            Column(modifier = Modifier.padding(
+                horizontal = 16.dp,
+                vertical = 4.dp
+            )) {
                 // Parte superior: imagen y datos de la clínica
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(

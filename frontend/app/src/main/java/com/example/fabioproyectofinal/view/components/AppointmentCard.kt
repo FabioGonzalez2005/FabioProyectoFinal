@@ -182,7 +182,10 @@ fun AppointmentCard(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(
+                horizontal = 16.dp,
+                vertical = 4.dp
+            )) {
                 // Imagen de la clínica y datos básicos
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(

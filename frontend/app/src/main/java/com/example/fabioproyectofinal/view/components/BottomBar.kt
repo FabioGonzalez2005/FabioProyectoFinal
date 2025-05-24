@@ -1,6 +1,5 @@
 package com.example.fabioproyectofinal.view.components
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,9 +40,6 @@ fun BottomBar(navController: NavHostController, userId: Int) {
 
     val density = LocalDensity.current
 
-    val indicatorOffsetDp by animateDpAsState(targetValue = with(LocalDensity.current) { indicatorOffsetPx.value.toDp() })
-    val indicatorWidthDp by animateDpAsState(targetValue = with(LocalDensity.current) { indicatorWidthPx.value.toDp() })
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,13 +50,12 @@ fun BottomBar(navController: NavHostController, userId: Int) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp) // espacio superior para que el selector sobresalga
+                .height(80.dp)
         ) {
-            // Indicador animado posicionado dinámicamente
             Box(
                 modifier = Modifier
-                    .offset(x = indicatorOffsetDp, y = (-2).dp)
-                    .width(indicatorWidthDp)
+                    .offset(x = with(density) { indicatorOffsetPx.value.toDp() }, y = 4.dp)
+                    .width(with(density) { indicatorWidthPx.value.toDp() })
                     .height(48.dp)
                     .background(Color(0xFFB2C2A4), shape = RoundedCornerShape(12.dp))
                     .align(Alignment.TopStart)

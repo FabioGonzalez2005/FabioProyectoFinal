@@ -62,7 +62,6 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
 
     // Contadores por estado
     val confirmedCount = citasFuturas.count { it.estado == "Confirmado" }
-    val pendingCount = citasFuturas.count { it.estado == "Pendiente" }
     val cancelledCount = citasFuturas.count { it.estado == "Cancelado" }
 
     // Llama a la API al cargar la pantalla
@@ -135,8 +134,6 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
 
             // Muestra tarjetas de resumen: confirmadas, pendientes, canceladas
             SummaryCard("Confirmadas", confirmedCount, afacadFont)
-            Spacer(modifier = Modifier.size(12.dp))
-            SummaryCard("Pendientes", pendingCount, afacadFont)
             Spacer(modifier = Modifier.size(12.dp))
             SummaryCard("Canceladas", cancelledCount, afacadFont)
             Spacer(modifier = Modifier.size(12.dp))
