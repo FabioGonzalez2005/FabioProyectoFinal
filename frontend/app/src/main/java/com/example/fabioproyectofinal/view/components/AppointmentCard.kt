@@ -339,8 +339,8 @@ fun AppointmentCard(
                     // Botón para cancelar cita o ver motivos
                     if (appointment.estado == "Cancelado") {
                         Button(
-                            onClick = { println("Ver motivos de la cancelación") },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                            onClick = { showMotivoDialog = true },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC47E7E)),
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text("Ver motivos", fontFamily = afacadFont, color = Color.White)
@@ -358,15 +358,20 @@ fun AppointmentCard(
                         AlertDialog(
                             onDismissRequest = { showMotivoDialog = false },
                             confirmButton = {
-                                Button(
-                                    onClick = { showMotivoDialog = false },
-                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4))
-                                ) {
-                                    Text("Cerrar", fontFamily = afacadFont, color = Color.White)
-                                }
+                                AnimatedDialogButton(
+                                    text = "Cerrar",
+                                    onClick = { showMotivoDialog = false }
+                                )
                             },
                             title = {
-                                Text("Motivo de la cancelación", fontFamily = afacadFont)
+                                Text(
+                                    "Motivo de la cancelación",
+                                    fontFamily = afacadFont,
+                                    color = Color(0xFFB2C2A4),
+                                    modifier = Modifier.fillMaxWidth(),
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center
+                                )
                             },
                             text = {
                                 Text(
