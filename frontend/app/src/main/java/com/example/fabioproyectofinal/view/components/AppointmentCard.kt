@@ -327,7 +327,7 @@ fun AppointmentCard(
                     } else {
                         Button(
                             onClick = { showDialog = true },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC47E7E)),
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text("Cancelar", fontFamily = afacadFont, color = Color.White)

@@ -22,16 +22,15 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.utils.formatHora
-import com.example.fabioproyectofinal.model.utils.formatTime
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.NotificationCompat
 import com.example.fabioproyectofinal.model.data.model.Availability
-import java.time.format.DateTimeFormatter
 import android.app.NotificationManager
 import android.widget.Toast
+import androidx.compose.ui.text.style.TextAlign
 import com.example.fabioproyectofinal.model.utils.formatFecha
 
 @Composable
@@ -44,25 +43,18 @@ fun SelectProfessionalScreen(
     precio: String,
     especialidad: String
 ) {
-    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
-
-    // Fecha seleccionada (por defecto hoy)
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
-
-    // ViewModel para disponibilidad
     val availabilityVM: AvailabilityViewModel = viewModel()
     val disponibilidad by availabilityVM.disponibilidad.collectAsState()
-
-    // Franja horaria seleccionada
     var selectedAvailability by remember { mutableStateOf<Availability?>(null) }
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
-    // Cargar disponibilidad para la fecha seleccionada
     LaunchedEffect(selectedDate) {
         availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
     }
 
-    // También al montar el componente
     LaunchedEffect(Unit) {
         availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
     }
@@ -90,7 +82,7 @@ fun SelectProfessionalScreen(
                     specialty = especialidad,
                     price = precio
                 )
-                // Selector de fecha
+                Spacer(modifier = Modifier.height(8.dp))
                 CalendarComponent(
                     selectedDate = selectedDate,
                     onDateSelected = { selectedDate = it }
@@ -99,7 +91,6 @@ fun SelectProfessionalScreen(
             }
 
             if (disponibilidad.isNotEmpty()) {
-                // Título horarios disponibles
                 Text(
                     text = "Horarios disponibles:",
                     fontSize = 18.sp,
@@ -109,7 +100,6 @@ fun SelectProfessionalScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
-                // Lista en cuadrícula de franjas disponibles
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     modifier = Modifier
@@ -122,9 +112,9 @@ fun SelectProfessionalScreen(
                     items(disponibilidad) { item ->
                         val isSelected = selectedAvailability?.id_disponibilidad == item.id_disponibilidad
                         val backgroundColor = when {
-                            !item.disponible -> Color(0xFFC47E7E) // no disponible
-                            isSelected -> Color(0xFF859A72)       // seleccionado
-                            else -> Color(0xFFB2C2A4)            // disponible
+                            !item.disponible -> Color(0xFFC47E7E)
+                            isSelected -> Color(0xFF859A72)
+                            else -> Color(0xFFB2C2A4)
                         }
 
                         Button(
@@ -152,44 +142,8 @@ fun SelectProfessionalScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                val context = LocalContext.current
-
-                // Botón de confirmar reserva
                 Button(
-                    onClick = {
-                        selectedAvailability?.let { selected ->
-                            userId?.let { uid ->
-                                availabilityVM.reservarFranja(
-                                    selected.id_disponibilidad,
-                                    uid
-                                ) { success ->
-                                    if (success) {
-                                        selectedAvailability = null
-                                        availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
-
-                                        // Notificación de cita reservada
-                                        val fechaTexto = formatFecha(selected.fecha_inicio)
-                                        val horaTexto = formatHora(selected.fecha_inicio)
-
-                                        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                                        val notification = NotificationCompat.Builder(context, "appointment_channel")
-                                            .setSmallIcon(R.drawable.ic_launcher_foreground)
-                                            .setContentTitle("Cita reservada")
-                                            .setStyle(
-                                                NotificationCompat.BigTextStyle().bigText(
-                                                    "Has reservado tu cita con $nombreDoctor en $nombreClinica a las $horaTexto el $fechaTexto"
-                                                )
-                                            )
-                                            .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                            .build()
-
-                                        notificationManager.notify(1, notification)
-                                        Toast.makeText(context, "Cita reservada con éxito", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                        }
-                    },
+                    onClick = { showConfirmationDialog = true },
                     enabled = selectedAvailability != null,
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.height(40.dp),
@@ -199,6 +153,88 @@ fun SelectProfessionalScreen(
                 ) {
                     Text("Reservar", fontFamily = afacadFont, color = Color.White)
                 }
+            }
+
+            // 🔔 AlertDialog de confirmación
+            if (showConfirmationDialog && selectedAvailability != null) {
+                AlertDialog(
+                    onDismissRequest = { showConfirmationDialog = false },
+                    title = {
+                        Text(
+                            "Confirmar cita",
+                            fontFamily = afacadFont,
+                            color = Color(0xFFB2C2A4),
+                            modifier = Modifier.fillMaxWidth(),
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                    },
+                    text = {
+                        Column {
+                            Text(
+                                "¿Deseas confirmar esta reserva?",
+                                fontFamily = afacadFont,
+                                color = Color.Black
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            ProfessionalCardHorizontal(
+                                name = nombreDoctor,
+                                specialty = especialidad,
+                                price = precio
+                            )
+                        }
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                userId?.let { uid ->
+                                    availabilityVM.reservarFranja(
+                                        selectedAvailability!!.id_disponibilidad,
+                                        uid
+                                    ) { success ->
+                                        if (success) {
+                                            showConfirmationDialog = false
+                                            val fechaTexto = formatFecha(selectedAvailability!!.fecha_inicio)
+                                            val horaTexto = formatHora(selectedAvailability!!.fecha_inicio)
+                                            selectedAvailability = null
+                                            availabilityVM.cargarDisponibilidadPorDia(idDoctor, selectedDate)
+
+                                            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                                            val notification = NotificationCompat.Builder(context, "appointment_channel")
+                                                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                                .setContentTitle("Cita reservada")
+                                                .setStyle(
+                                                    NotificationCompat.BigTextStyle().bigText(
+                                                        "Has reservado tu cita con $nombreDoctor en $nombreClinica a las $horaTexto el $fechaTexto"
+                                                    )
+                                                )
+                                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                                .build()
+
+                                            notificationManager.notify(1, notification)
+                                            Toast.makeText(context, "Cita reservada con éxito", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text("Confirmar", color = Color.White, fontFamily = afacadFont)
+                        }
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = { showConfirmationDialog = false },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC47E7E)),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text("Cancelar", fontFamily = afacadFont)
+                        }
+                    },
+                    containerColor = Color.White,
+                    shape = RoundedCornerShape(12.dp)
+                )
             }
         }
     }

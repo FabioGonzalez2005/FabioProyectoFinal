@@ -89,14 +89,14 @@ fun CalendarComponent(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
-            shape = RoundedCornerShape(10.dp), // Bordes redondeados
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp), // Elevación sutil
-            colors = CardDefaults.cardColors(containerColor = Color.White) // Fondo blanco
+            shape = RoundedCornerShape(10.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp),
+                    .padding(vertical = 6.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Título "Disponibilidad"
