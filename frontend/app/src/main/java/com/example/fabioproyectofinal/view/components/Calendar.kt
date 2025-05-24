@@ -135,7 +135,7 @@ fun CalendarComponent(
 
                     // Texto que muestra el mes y año actual formateados
                     Text(
-                        text = "${displayedYearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+                        text = "${displayedYearMonth.month.getDisplayName(TextStyle.FULL, Locale("es", "ES"))
                             .replaceFirstChar { it.uppercase() }} ${displayedYearMonth.year}",
                         color = Color(0xFFB2C2A4),
                         fontFamily = afacadFont,

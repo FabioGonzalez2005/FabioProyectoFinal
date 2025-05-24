@@ -19,6 +19,7 @@ import com.example.fabioproyectofinal.model.ApiServer
 import com.example.fabioproyectofinal.model.data.model.Appointment
 import com.example.fabioproyectofinal.view.components.BottomBar
 import com.example.fabioproyectofinal.view.components.CalendarComponent
+import com.example.fabioproyectofinal.view.components.DoctorCitaCard
 import com.example.fabioproyectofinal.view.components.TopBar
 import java.time.LocalDate
 

@@ -11,5 +11,7 @@ data class Appointment(
     val alergias: String,
     val antecedentes_familiares: String,
     val medicamento_y_dosis: String,
-    val nota: String
+    val nota: String,
+    val nombre_paciente: String? = null,
+    val email: String? = null
 )

@@ -86,7 +86,7 @@ fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
                             }
                             append(" €")
                         },
-                        fontSize = 12.sp,
+                        fontSize = 17.sp,
                         fontFamily = afacadFont,
                         color = Color.Gray
                     )

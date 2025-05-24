@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import com.example.fabioproyectofinal.model.ApiServer
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.model.session.SessionManager
+import com.example.fabioproyectofinal.view.screens.DoctorAppointmentsScreen
 
 @Composable
 fun AppNavigation(
@@ -54,7 +55,7 @@ fun AppNavigation(
 
                     val destino = when (SessionManager.rol?.trim()?.lowercase()) {
                         "usuario" -> AppScreens.MainScreenApp.route
-                        "medico" -> AppScreens.AppointmentsScreen.route
+                        "medico" -> "doctor_appointments_screen/$id"
                         else -> AppScreens.MainScreenApp.route
                     }
 
@@ -127,6 +128,11 @@ fun AppNavigation(
         composable("doctor_list_screen/{id_usuario}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("id_usuario")?.toIntOrNull()
             DoctorListScreen(navController, userId)
+        }
+
+        composable("doctor_appointments_screen/{id_usuario}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("id_usuario")?.toIntOrNull()
+            DoctorAppointmentsScreen(navController, userId)
         }
     }
 
