@@ -188,14 +188,18 @@ fun AppointmentList(
     val hoy = java.util.Date()
 
     // Filtra citas futuras
-    val citas = allCitas.filter {
-        try {
-            val citaDate = sdf.parse(it.fecha_cita)
-            citaDate?.after(hoy) == true
-        } catch (e: Exception) {
-            false
+    val citas = allCitas
+        .mapNotNull {
+            try {
+                val date = sdf.parse(it.fecha_cita)
+                if (date?.after(hoy) == true) it to date else null
+            } catch (e: Exception) {
+                null
+            }
         }
-    }
+        .sortedBy { it.second }
+        .map { it.first }
+
 
     // Datos de doctores y clínicas
     val doctorList by viewModel.doctors.collectAsState()
