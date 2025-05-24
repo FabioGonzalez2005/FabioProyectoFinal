@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 import java.text.SimpleDateFormat
+import java.time.ZonedDateTime
 
 // Convertir fecha a formato de hora (12:30)
 fun formatTime(dateTimeString: String): String {
@@ -34,16 +35,6 @@ fun formatHour(time: String): String {
     return time.trim().take(5)
 }
 
-// Convertir fecha a formato largo (Lunes 20 de Mayo)
-fun formatDateToLong(date: LocalDate): String {
-    val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale("es", "ES"))
-    val dayOfMonth = date.dayOfMonth
-    val month = date.month.getDisplayName(TextStyle.FULL, Locale("es", "ES"))
-    return "${dayOfWeek.replaceFirstChar { it.uppercase() }} $dayOfMonth de ${month.lowercase()}"
-}
-
-
-
 fun formatFecha(fechaRaw: String): String {
     return try {
         val inputFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
@@ -65,3 +56,23 @@ fun formatHora(fechaRaw: String): String {
         fechaRaw
     }
 }
+
+fun formatFechaCompleta(fechaString: String): String {
+    return try {
+        val formatter = DateTimeFormatter.RFC_1123_DATE_TIME
+        val zonedDateTime = ZonedDateTime.parse(fechaString, formatter)
+        val date = zonedDateTime.toLocalDate()
+
+        val diaSemana = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale("es", "ES"))
+        val dia = String.format("%02d", date.dayOfMonth)
+        val mes = date.month.getDisplayName(TextStyle.FULL, Locale("es", "ES"))
+        val anio = date.year
+
+        "${diaSemana.replaceFirstChar { it.uppercase() }}, $dia de ${mes.replaceFirstChar { it.uppercase() }}, $anio"
+    } catch (e: Exception) {
+        println("⚠️ Error al parsear fecha: $fechaString → ${e.message}")
+        "Fecha: $fechaString"
+    }
+}
+
+
