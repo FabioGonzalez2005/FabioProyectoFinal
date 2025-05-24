@@ -51,6 +51,7 @@ fun AppointmentCard(
     // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var showDialog by remember { mutableStateOf(false) }
+    var showMotivoDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
     val today = java.util.Calendar.getInstance()
@@ -352,6 +353,31 @@ fun AppointmentCard(
                         ) {
                             Text("Cancelar", fontFamily = afacadFont, color = Color.White)
                         }
+                    }
+                    if (showMotivoDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showMotivoDialog = false },
+                            confirmButton = {
+                                Button(
+                                    onClick = { showMotivoDialog = false },
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4))
+                                ) {
+                                    Text("Cerrar", fontFamily = afacadFont, color = Color.White)
+                                }
+                            },
+                            title = {
+                                Text("Motivo de la cancelación", fontFamily = afacadFont)
+                            },
+                            text = {
+                                Text(
+                                    text = appointment.motivo_cancelacion ?: "No se especificó un motivo.",
+                                    fontFamily = afacadFont,
+                                    color = Color.DarkGray
+                                )
+                            },
+                            shape = RoundedCornerShape(12.dp),
+                            containerColor = Color.White
+                        )
                     }
                 }
             }
