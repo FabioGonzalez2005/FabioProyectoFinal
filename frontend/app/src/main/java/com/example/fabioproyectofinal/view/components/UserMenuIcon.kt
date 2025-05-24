@@ -34,13 +34,19 @@ import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun UserMenuIcon(navController: NavHostController) {
+    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
+
+    // Estados locales para mostrar menú y diálogo
     var expanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
+
+    // ViewModel para manejar el logout
     val loginViewModel: LoginViewModel = viewModel()
 
     Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
+        // Ícono de usuario con imagen remota y caché habilitada
         Image(
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(context)
@@ -56,11 +62,13 @@ fun UserMenuIcon(navController: NavHostController) {
                 .clickable { expanded = true }
         )
 
+        // Menú desplegable con opciones de usuario
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier.background(Color(0xFFFFFFFF))
         ) {
+            // Opción: Editar perfil
             DropdownMenuItem(
                 text = { Text("Editar perfil", fontFamily = afacadFont, color = Color(0xFFB2C2A4)) },
                 onClick = {
@@ -68,11 +76,13 @@ fun UserMenuIcon(navController: NavHostController) {
                     showDialog = true
                 }
             )
+            // Opción: Cerrar sesión
             DropdownMenuItem(
                 text = { Text("Cerrar sesión", fontFamily = afacadFont, color = Color(0xFFB2C2A4)) },
                 onClick = {
                     expanded = false
                     loginViewModel.logout()
+                    // Navega a la pantalla de login y limpia el back stack
                     navController.navigate(AppScreens.LoginScreen.route) {
                         popUpTo(0) { inclusive = true }
                     }
@@ -81,6 +91,7 @@ fun UserMenuIcon(navController: NavHostController) {
         }
     }
 
+    // Diálogo para editar perfil
     if (showDialog) {
         EditProfileDialog(onDismiss = { showDialog = false })
     }

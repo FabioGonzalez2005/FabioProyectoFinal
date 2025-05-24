@@ -23,41 +23,49 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.example.fabioproyectofinal.model.navigation.AppScreens
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 
 
-// Tarjeta de profesional en vertical
+// Tarjeta vertical que muestra un profesional (nombre + especialidad)
 @Composable
-fun ProfessionalCard(name: String, specialty: String, navController: NavHostController, userId: Int?, onClick: () -> Unit) {
+fun ProfessionalCard(
+    name: String,                      // Nombre del profesional
+    specialty: String,                // Especialidad médica
+    navController: NavHostController, // Para navegación
+    userId: Int?,                     // ID del usuario
+    onClick: () -> Unit               // Acción al hacer clic en la tarjeta
+) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
+
     Card(
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
-            .clickable { onClick() },
+            .clickable { onClick() }, // Navegación o acción personalizada al tocar
         colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp),
+            modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Imagen del profesional (actualmente una imagen fija genérica)
             Image(
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(context)
                         .data("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp")
-                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
-                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
                         .build()
                 ),
                 contentDescription = name,
                 modifier = Modifier.size(60.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
+
+            // Nombre del profesional
             Text(
                 text = name,
                 fontSize = 14.sp,
@@ -65,6 +73,8 @@ fun ProfessionalCard(name: String, specialty: String, navController: NavHostCont
                 fontFamily = afacadFont,
                 color = Color(0xFFB2C2A4)
             )
+
+            // Especialidad médica
             Text(
                 text = specialty,
                 fontSize = 12.sp,
@@ -74,8 +84,6 @@ fun ProfessionalCard(name: String, specialty: String, navController: NavHostCont
         }
     }
 }
-
-
 
 
 

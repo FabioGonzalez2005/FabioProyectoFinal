@@ -1,9 +1,6 @@
 package com.example.fabioproyectofinal.view.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,11 +27,13 @@ import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 
 
-// Barra de navegación superior
+// Barra de navegación superior personalizada
 @Composable
 fun TopBar(navController: NavHostController, onClick: () -> Unit) {
+    // Fuente personalizada
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,14 +41,14 @@ fun TopBar(navController: NavHostController, onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Botón de retroceso
+        // Botón de retroceso que navega al destino anterior
         IconButton(onClick = { navController.popBackStack() }) {
             Image(
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(context)
                         .data("https://res.cloudinary.com/dr8es2ate/image/upload/icon_back_rn6lna.webp")
-                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
-                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                        .diskCachePolicy(CachePolicy.ENABLED)    // habilita caché en disco
+                        .memoryCachePolicy(CachePolicy.ENABLED)  // habilita caché en memoria
                         .build()
                 ),
                 contentDescription = "Volver",
@@ -57,7 +56,7 @@ fun TopBar(navController: NavHostController, onClick: () -> Unit) {
             )
         }
 
-        // Nombre + icono
+        // Nombre del usuario y menú de opciones (editar perfil, cerrar sesión)
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = SessionManager.nombre ?: "Usuario",

@@ -21,12 +21,14 @@ import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.FontWeight
 
+// Diálogo para visualizar y editar los datos médicos del usuario
 @Composable
 fun MedicalDataDialog(onDismiss: () -> Unit) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
     val api = ApiServer.apiService
 
+    // Estados locales para los campos médicos
     var fecha_nacimiento by remember { mutableStateOf("") }
     var telefono by remember { mutableStateOf("") }
     var telefono_emergencia by remember { mutableStateOf("") }
@@ -35,11 +37,13 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
     var condiciones_pasadas by remember { mutableStateOf("") }
     var procedimientos_quirurgicos by remember { mutableStateOf("") }
 
+    // Efecto inicial: carga los datos médicos del usuario al mostrar el diálogo
     LaunchedEffect(true) {
         val idUsuario = SessionManager.idUsuario ?: return@LaunchedEffect
         try {
             val datos = api.obtenerDatosDeInteres(idUsuario).firstOrNull() ?: return@LaunchedEffect
 
+            // Asigna los datos recibidos a los estados locales
             fecha_nacimiento = datos["fecha_nacimiento"] ?: ""
             telefono = datos["telefono"] ?: ""
             telefono_emergencia = datos["telefono_emergencia"] ?: ""
@@ -48,7 +52,7 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
             condiciones_pasadas = datos["condiciones_pasadas"] ?: ""
             procedimientos_quirurgicos = datos["procedimientos_quirurgicos"] ?: ""
 
-            // Opcional: actualiza SessionManager también
+            // También actualiza el SessionManager
             SessionManager.fecha_nacimiento = fecha_nacimiento
             SessionManager.telefono = telefono
             SessionManager.telefono_emergencia = telefono_emergencia
@@ -63,10 +67,12 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
         }
     }
 
+    // Envía los cambios a la API para guardar los datos actualizados
     fun guardarCambios() {
         val idUsuario = SessionManager.idUsuario ?: return
         val datos = mutableMapOf<String, String>()
 
+        // Solo agrega los campos que no estén vacíos
         if (fecha_nacimiento.isNotBlank()) datos["fecha_nacimiento"] = fecha_nacimiento
         if (telefono.isNotBlank()) datos["telefono"] = telefono
         if (telefono_emergencia.isNotBlank()) datos["telefono_emergencia"] = telefono_emergencia
@@ -75,10 +81,12 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
         if (condiciones_pasadas.isNotBlank()) datos["condiciones_pasadas"] = condiciones_pasadas
         if (procedimientos_quirurgicos.isNotBlank()) datos["procedimientos_quirurgicos"] = procedimientos_quirurgicos
 
+        // Envío asincrónico a la API
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 api.actualizarDatosDeInteres(idUsuario, datos)
 
+                // Muestra mensaje de éxito y cierra el diálogo
                 CoroutineScope(Dispatchers.Main).launch {
                     Toast.makeText(context, "Datos de interés actualizados correctamente", Toast.LENGTH_SHORT).show()
                     onDismiss()
@@ -92,6 +100,7 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
         }
     }
 
+    // Diálogo principal con los campos a editar
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
@@ -106,6 +115,7 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
         },
         text = {
             Column {
+                // Campos de entrada reutilizables con estado mutable
                 buildTextField("Fecha de nacimiento", fecha_nacimiento) { fecha_nacimiento = it }
                 buildTextField("Teléfono", telefono) { telefono = it }
                 buildTextField("Teléfono de emergencia", telefono_emergencia) { telefono_emergencia = it }
@@ -134,21 +144,33 @@ fun MedicalDataDialog(onDismiss: () -> Unit) {
     )
 }
 
+// Campo de texto reutilizable con estilo personalizado
 @Composable
-private fun buildTextField(label: String, value: String, onValueChange: (String) -> Unit) {
+private fun buildTextField(
+    label: String,                  // Etiqueta del campo
+    value: String,                  // Valor actual del texto
+    onValueChange: (String) -> Unit // Callback al cambiar el texto
+) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label, fontFamily = afacadFont, color = Color(0xFF7C8B6B)) },
-        textStyle = TextStyle(color = Color(0xFF7C8B6B)),
+        label = {
+            Text(
+                label,
+                fontFamily = afacadFont,
+                color = Color(0xFF7C8B6B) // Verde oliva suave
+            )
+        },
+        textStyle = TextStyle(color = Color(0xFF7C8B6B)), // Color de texto
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 12.dp),
+            .padding(bottom = 12.dp), // Espaciado inferior entre campos
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color(0xFF7C8B6B),
             unfocusedBorderColor = Color(0xFF7C8B6B)
         ),
-        singleLine = true
+        singleLine = true // Campo de una sola línea
     )
 }

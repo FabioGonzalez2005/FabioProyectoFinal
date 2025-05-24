@@ -3,12 +3,9 @@ package com.example.fabioproyectofinal.view.components
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -40,13 +37,20 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.ui.Alignment
 
 
+// Diálogo para seleccionar y actualizar los seguros médicos del usuario
 @Composable
 fun InsuranceDialog(onDismiss: () -> Unit) {
     val viewModel: InsuranceViewModel = viewModel()
     val seguros by viewModel.todosLosSeguros.collectAsState()
     val usuarioId = SessionManager.idUsuario
+
+    // Lista de IDs de seguros seleccionados actualmente
     val selectedSeguros = remember { mutableStateListOf<Int>() }
+
+    // Lista actual de seguros que el usuario tiene asignados
     val segurosUsuario by viewModel.segurosUsuario.collectAsState()
+
+    // Al cambiar la lista de seguros del usuario, actualiza los seleccionados
     LaunchedEffect(segurosUsuario) {
         selectedSeguros.clear()
         selectedSeguros.addAll(segurosUsuario.map { it.id_seguro })
@@ -54,6 +58,7 @@ fun InsuranceDialog(onDismiss: () -> Unit) {
 
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
 
+    // Carga inicial de todos los seguros y los del usuario
     LaunchedEffect(Unit) {
         viewModel.cargarTodosLosSeguros()
         usuarioId?.let { viewModel.cargarSegurosUsuario(it) }
@@ -72,9 +77,12 @@ fun InsuranceDialog(onDismiss: () -> Unit) {
             )
         },
         text = {
+            // Muestra los seguros en una grilla con checkbox por cada uno
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                modifier = Modifier.fillMaxWidth().height(280.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(280.dp),
                 horizontalArrangement = Arrangement.Center,
                 userScrollEnabled = true,
             ) {
@@ -87,6 +95,7 @@ fun InsuranceDialog(onDismiss: () -> Unit) {
                             .padding(4.dp)
                             .fillMaxWidth()
                     ) {
+                        // Checkbox que permite seleccionar/deseleccionar seguros
                         Checkbox(
                             checked = isSelected,
                             onCheckedChange = {
@@ -106,10 +115,9 @@ fun InsuranceDialog(onDismiss: () -> Unit) {
                     }
                 }
             }
-
-
         },
         confirmButton = {
+            // Guarda los cambios al presionar "Guardar"
             AnimatedDialogButton(
                 text = "Guardar",
                 onClick = {
@@ -117,9 +125,11 @@ fun InsuranceDialog(onDismiss: () -> Unit) {
                         val anteriores = segurosUsuario.map { it.id_seguro }.toSet()
                         val actuales = selectedSeguros.toSet()
 
+                        // Determina qué seguros se deben agregar y eliminar
                         val aAgregar = actuales - anteriores
                         val aEliminar = anteriores - actuales
 
+                        // Llamadas a la API para agregar nuevos seguros
                         aAgregar.forEach { idSeguro ->
                             CoroutineScope(Dispatchers.IO).launch {
                                 try {
@@ -130,6 +140,7 @@ fun InsuranceDialog(onDismiss: () -> Unit) {
                             }
                         }
 
+                        // Llamadas a la API para eliminar seguros deseleccionados
                         aEliminar.forEach { idSeguro ->
                             CoroutineScope(Dispatchers.IO).launch {
                                 try {
@@ -143,9 +154,9 @@ fun InsuranceDialog(onDismiss: () -> Unit) {
                     onDismiss()
                 }
             )
-
         },
         dismissButton = {
+            // Botón para cerrar el diálogo sin guardar cambios
             AnimatedDialogButton(
                 text = "Cerrar",
                 onClick = onDismiss

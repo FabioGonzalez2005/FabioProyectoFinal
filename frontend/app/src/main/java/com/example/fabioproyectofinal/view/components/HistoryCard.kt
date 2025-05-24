@@ -41,16 +41,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import com.example.fabioproyectofinal.R
 
+// Tarjeta que muestra información de una cita médica pasada y permite ver el expediente completo
 @Composable
 fun HistoryCard(
-    appointment: Appointment,
-    doctor: Doctor?,
-    clinic: Clinic?,
-    navController: NavHostController? = null
+    appointment: Appointment,         // Datos de la cita
+    doctor: Doctor?,                  // Profesional asociado
+    clinic: Clinic?,                  // Clínica donde se realizó
+    navController: NavHostController? = null // Opcional (por si se desea navegación futura)
 ) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,16 +67,16 @@ fun HistoryCard(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+
+                // Parte superior: imagen y datos de la clínica
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         painter = rememberAsyncImagePainter(
                             ImageRequest.Builder(context)
                                 .data(clinic?.src)
-                                .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
-                                .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                                .diskCachePolicy(CachePolicy.ENABLED)
+                                .memoryCachePolicy(CachePolicy.ENABLED)
                                 .build()
                         ),
                         contentDescription = clinic?.nombre,
@@ -98,9 +100,12 @@ fun HistoryCard(
                         )
                     }
                 }
+
                 Spacer(modifier = Modifier.height(12.dp))
                 HorizontalDivider(thickness = 2.dp, color = Color(0xFFCAD2C5))
                 Spacer(modifier = Modifier.height(8.dp))
+
+                // Fecha y hora de la cita
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -111,8 +116,7 @@ fun HistoryCard(
                             text = "Cita:",
                             fontSize = 18.sp,
                             fontFamily = afacadFont,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
+                            fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
@@ -131,27 +135,30 @@ fun HistoryCard(
                         fontWeight = FontWeight.Bold
                     )
                 }
+
                 Spacer(modifier = Modifier.height(8.dp))
+
+                // Profesional que atendió la cita
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = "Profesional:",
                         fontSize = 14.sp,
                         fontFamily = afacadFont,
-                        color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = doctor?.nombre + " (" + doctor?.especialidad + ")",
                         fontSize = 12.sp,
-                        fontFamily = afacadFont,
-                        color = Color.Black
+                        fontFamily = afacadFont
                     )
                 }
+
                 Spacer(modifier = Modifier.height(8.dp))
+
+                // Botón para ver expediente
                 Button(
                     onClick = { showDialog = true },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
@@ -186,17 +193,18 @@ fun HistoryCard(
                 }
             }
         }
+
+        // Función de extensión para mostrar "No especificado" si el campo está vacío
         fun String?.orNoInfo(): String = if (this.isNullOrBlank()) "No especificado" else this
 
+        // Diálogo que muestra el expediente de la cita
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
                 confirmButton = {
                     AnimatedDialogButton(
                         text = "Cerrar",
-                        onClick = {
-                            showDialog = false
-                        }
+                        onClick = { showDialog = false }
                     )
                 },
                 title = {
@@ -244,6 +252,7 @@ fun HistoryCard(
     }
 }
 
+// Título estilizado para secciones dentro de una pantalla
 @Composable
 fun SectionTitle(text: String) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
@@ -257,16 +266,19 @@ fun SectionTitle(text: String) {
     )
 }
 
+// Línea de información con etiqueta destacada y valor en texto plano
 @Composable
 fun InfoLine(label: String, value: String) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     Column(modifier = Modifier.padding(vertical = 2.dp)) {
+        // Etiqueta en negrita con viñeta
         Text(
             text = "• $label: ",
             fontFamily = afacadFont,
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
+        // Valor asociado
         Text(
             text = value,
             fontFamily = afacadFont,
