@@ -12,4 +12,5 @@ object SessionManager {
     var antecedentes_familiares: String? = null
     var condiciones_pasadas: String? = null
     var procedimientos_quirurgicos: String? = null
+    var rol: String? = null
 }

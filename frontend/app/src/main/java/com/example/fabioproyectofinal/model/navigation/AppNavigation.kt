@@ -20,6 +20,7 @@ import com.example.fabioproyectofinal.view.screens.SelectProfessionalScreen
 import com.example.fabioproyectofinal.viewmodel.LoginViewModel
 import androidx.compose.runtime.getValue
 import com.example.fabioproyectofinal.model.ApiServer
+import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.model.session.SessionManager
 
 @Composable
@@ -47,11 +48,21 @@ fun AppNavigation(
                     SessionManager.antecedentes_familiares = it.antecedentes_familiares
                     SessionManager.condiciones_pasadas = it.condiciones_pasadas
                     SessionManager.procedimientos_quirurgicos = it.procedimientos_quirurgicos
+                    SessionManager.rol = it.rol
+
+                    Log.i("Login2", "ROL DETECTADO DESDE PERFIL: ${SessionManager.rol}")
+
+                    val destino = when (SessionManager.rol?.trim()?.lowercase()) {
+                        "usuario" -> AppScreens.MainScreenApp.route
+                        "medico" -> AppScreens.AppointmentsScreen.route
+                        else -> AppScreens.MainScreenApp.route
+                    }
+
+                    navController.navigate(destino.replace("{id_usuario}", id.toString())) {
+                        popUpTo("main") { inclusive = true }
+                    }
                 }
 
-                navController.navigate("main_screen_app/$id") {
-                    popUpTo("main") { inclusive = true }
-                }
             } catch (e: Exception) {
                 Log.e("AppNavigation", "Error al cargar perfil del usuario", e)
             }

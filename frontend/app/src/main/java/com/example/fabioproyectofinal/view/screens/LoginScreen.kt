@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -187,11 +188,20 @@ fun LoginScreen(navController: NavHostController) {
                         SessionManager.email = estado.email
                         SessionManager.username = estado.usuario
 
+                        SessionManager.rol = estado.rol
+                        Log.e("LoginRol", "${estado.rol}")
+                        val destino = when (estado.rol) {
+                            "Usuario" -> AppScreens.MainScreenApp.route
+                            "Medico" -> AppScreens.AppointmentsScreen.route
+                            else -> AppScreens.MainScreenApp.route
+                        }
+
                         navController.navigate(
-                            route = AppScreens.MainScreenApp.route.replace("{id_usuario}", estado.id_usuario.toString())
+                            route = destino.replace("{id_usuario}", estado.id_usuario.toString())
                         ) {
                             popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
                         }
+
 
                         Toast.makeText(context, "✅ Login exitoso", Toast.LENGTH_SHORT).show()
                     } else if (estado.error != null) {

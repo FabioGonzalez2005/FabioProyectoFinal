@@ -19,5 +19,6 @@ data class LoginResponse(
     val antecedentes_familiares: String? = null,
     val condiciones_pasadas: String? = null,
     val procedimientos_quirurgicos: String? = null,
-    val token: String? = null
+    val token: String? = null,
+    val rol: String? = null
 )
