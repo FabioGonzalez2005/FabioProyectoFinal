@@ -1,36 +1,49 @@
 package com.example.fabioproyectofinal.view.components
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 
-// Barra de navegación inferior
 @Composable
 fun BottomBar(navController: NavHostController, userId: Int) {
-    // Contenedor principal que ocupa el max de ancho, con fondo y padding
+    val currentRoute = navController.currentDestination?.route
+    val activeIndex = when {
+        currentRoute?.startsWith("favourites_screen") == true -> 0
+        currentRoute?.startsWith("main_screen_app") == true -> 1
+        currentRoute?.startsWith("appointments_screen") == true -> 2
+        else -> 1
+    }
+
+    val iconPositions = remember { mutableStateListOf<Float>() }
+    val iconWidths = remember { mutableStateListOf<Float>() }
+
+    val indicatorOffsetPx = remember { mutableStateOf(0f) }
+    val indicatorWidthPx = remember { mutableStateOf(0f) }
+
+    val density = LocalDensity.current
+
+    val indicatorOffsetDp by animateDpAsState(targetValue = with(LocalDensity.current) { indicatorOffsetPx.value.toDp() })
+    val indicatorWidthDp by animateDpAsState(targetValue = with(LocalDensity.current) { indicatorWidthPx.value.toDp() })
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -38,66 +51,91 @@ fun BottomBar(navController: NavHostController, userId: Int) {
             .padding(16.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
-        // Superficie que representa la barra con fondo, forma y elevación (sombra)
-        Surface(
+        Box(
             modifier = Modifier
-                .fillMaxWidth(1f)
-                .height(64.dp),
-            shape = RoundedCornerShape(16.dp),
-            color = Color(0xFFB2C2A4),
-            tonalElevation = 8.dp,
-            shadowElevation = 8.dp
+                .fillMaxWidth()
+                .height(80.dp) // espacio superior para que el selector sobresalga
         ) {
-            // Fila para distribuir los botones de navegación de forma equitativa
-            Row(
+            // Indicador animado posicionado dinámicamente
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                    .offset(x = indicatorOffsetDp, y = (-2).dp)
+                    .width(indicatorWidthDp)
+                    .height(48.dp)
+                    .background(Color(0xFFB2C2A4), shape = RoundedCornerShape(12.dp))
+                    .align(Alignment.TopStart)
+            )
+
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .height(64.dp),
+                shape = RoundedCornerShape(16.dp),
+                color = Color(0xFFB2C2A4),
+                tonalElevation = 8.dp,
+                shadowElevation = 8.dp
             ) {
-                // Botón Favoritos como imagen clickeable
-                Image(
-                    painter = rememberAsyncImagePainter("https://res.cloudinary.com/dr8es2ate/image/upload/favourite_white_l9ljec.webp"),
-                    contentDescription = "Favoritos",
+                Row(
                     modifier = Modifier
-                        .size(32.dp)
-                        .clickable {
-                            // Navega a la pantalla de Favoritos pasando el ID del usuario en la ruta
-                            navController.navigate(
-                                route = AppScreens.FavouritesScreen.route.replace("{id_usuario}", userId.toString())
-                            )
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val items = listOf(
+                        Triple("https://res.cloudinary.com/dr8es2ate/image/upload/favourite_white_l9ljec.webp", "Favoritos", AppScreens.FavouritesScreen.route),
+                        Triple(null, "Inicio", AppScreens.MainScreenApp.route),
+                        Triple(null, "Calendario", AppScreens.AppointmentsScreen.route)
+                    )
+
+                    items.forEachIndexed { index, (imageUrl, desc, route) ->
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .onGloballyPositioned { coordinates ->
+                                    val x = with(density) { coordinates.positionInRoot().x - 16.dp.toPx() }
+                                    val width = coordinates.size.width.toFloat()
+
+                                    if (iconPositions.size <= index) {
+                                        iconPositions.add(x)
+                                        iconWidths.add(width)
+                                    } else {
+                                        iconPositions[index] = x
+                                        iconWidths[index] = width
+                                    }
+
+                                    if (index == activeIndex) {
+                                        indicatorOffsetPx.value = x
+                                        indicatorWidthPx.value = width
+                                    }
+                                }
+                                .clickable {
+                                    navController.navigate(route.replace("{id_usuario}", userId.toString()))
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (imageUrl != null) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(imageUrl),
+                                    contentDescription = desc,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                            } else {
+                                val icon = when (desc) {
+                                    "Inicio" -> Icons.Default.Home
+                                    "Calendario" -> Icons.Default.DateRange
+                                    else -> Icons.Default.Home
+                                }
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = desc,
+                                    modifier = Modifier.size(32.dp),
+                                    tint = Color.White
+                                )
+                            }
                         }
-                )
-                // Botón Home con icono predeterminado y acción de navegación
-                IconButton(
-                    onClick = {
-                        navController.navigate(
-                            route = AppScreens.MainScreenApp.route.replace("{id_usuario}", userId.toString())
-                        )
                     }
-                ) {
-                    Icon(
-                        Icons.Default.Home,
-                        contentDescription = "Inicio",
-                        modifier = Modifier.size(32.dp),
-                        tint = Color.White
-                    )
-                }
-                // Botón Calendario con icono predeterminado y acción de navegación
-                IconButton(
-                    onClick = {
-                        navController.navigate(
-                            route = AppScreens.AppointmentsScreen.route.replace("{id_usuario}", userId.toString())
-                        )
-                    }
-                ) {
-                    Icon(
-                        Icons.Default.DateRange,
-                        contentDescription = "Calendario",
-                        modifier = Modifier.size(32.dp),
-                        tint = Color.White
-                    )
                 }
             }
         }
