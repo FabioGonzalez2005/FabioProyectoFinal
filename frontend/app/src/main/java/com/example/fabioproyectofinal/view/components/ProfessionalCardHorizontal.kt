@@ -1,6 +1,8 @@
 package com.example.fabioproyectofinal.view.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,10 +37,11 @@ import com.example.fabioproyectofinal.R
 fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 2.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -52,36 +55,45 @@ fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(context)
                         .data("https://res.cloudinary.com/dr8es2ate/image/upload/icon_user_aueq9d.webp")
-                        .diskCachePolicy(CachePolicy.ENABLED)    // cache en disco
-                        .memoryCachePolicy(CachePolicy.ENABLED)  // cache en memoria
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
                         .build()
                 ),
                 contentDescription = name,
-                modifier = Modifier.size(60.dp)
+                modifier = Modifier.size(38.dp)
             )
+
             Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = name,
-                    fontSize = 14.sp,
-                    fontFamily = afacadFont,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFFB2C2A4)
-                )
-                Text(
-                    text = specialty,
-                    fontSize = 12.sp,
-                    fontFamily = afacadFont,
-                    color = Color.Gray
-                )
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = name,
+                        fontSize = 14.sp,
+                        fontFamily = afacadFont,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFB2C2A4)
+                    )
+                    Text(
+                        buildAnnotatedString {
+                            append("Precio: ")
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append(price)
+                            }
+                            append(" €")
+                        },
+                        fontSize = 12.sp,
+                        fontFamily = afacadFont,
+                        color = Color.Gray
+                    )
+                }
 
                 Text(
-                    buildAnnotatedString {
-                        append("Precio: ")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(price)
-                        }
-                        append(" €") },
+                    text = specialty,
                     fontSize = 12.sp,
                     fontFamily = afacadFont,
                     color = Color.Gray
@@ -90,9 +102,3 @@ fun ProfessionalCardHorizontal(name: String, specialty: String, price: String) {
         }
     }
 }
-
-
-
-
-
-
