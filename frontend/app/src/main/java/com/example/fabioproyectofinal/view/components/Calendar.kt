@@ -52,7 +52,25 @@ fun CalendarComponent(
     workingDays: List<Int> = listOf(1, 2, 3, 4, 5),
     onMonthChanged: (YearMonth) -> Unit = {},
     initialMonth: YearMonth? = null,
+    validaFecha: (LocalDate) -> Boolean = { true },
+    allowFuture: Boolean = true,
+    allowPast: Boolean = true,
+    colorProvider: (
+        isSelected: Boolean,
+        isWorkingDay: Boolean,
+        isPastDate: Boolean,
+        isToday: Boolean
+    ) -> Color = { isSelected, isWorkingDay, isPastDate, isToday ->
+        when {
+            isSelected -> Color(0xFF859A72)
+            !isWorkingDay -> Color(0xFFC47E7E)
+            isPastDate -> Color(0xFFD5D5D5)
+            isToday -> Color(0xFF9EC8D5)
+            else -> Color(0xFFB2C2A4)
+        }
+    }
 ) {
+
     // Fuente personalizada para los textos del calendario
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
 
@@ -64,9 +82,9 @@ fun CalendarComponent(
     val startMonth = initialMonth ?: currentActualMonth
 
     // Límite máximo de mes permitido (16 meses adelante desde el actual)
-    val maxAllowedMonth = remember { currentActualMonth.plusMonths(16) }
-    // Mes mínimo permitido (mes actual)
-    val minAllowedMonth = currentActualMonth
+    val maxAllowedMonth = remember { if (allowFuture) currentActualMonth.plusMonths(16) else currentActualMonth }
+    val minAllowedMonth = remember { if (allowPast) currentActualMonth.minusMonths(16) else currentActualMonth }
+
 
     // Mes que se está mostrando en el calendario, estado mutable para actualizaciones
     var displayedYearMonth by remember { mutableStateOf(startMonth) }
@@ -207,22 +225,15 @@ fun CalendarComponent(
                 val isPastDate = date.isBefore(today)
                 val isToday = date == today
                 // Determina si el día es seleccionable (no pasado y día laborable o hoy)
-                val isEnabled = (!isPastDate || isToday) && isWorkingDay
+                val isEnabled = isWorkingDay && validaFecha(date)
+
 
                 Box(
                     modifier = Modifier
                         .padding(4.dp)
                         .size(40.dp)
                         .clip(RoundedCornerShape(3.dp))
-                        .background(
-                            when {
-                                isSelected -> Color(0xFF859A72)     // Día seleccionado
-                                !isWorkingDay -> Color(0xFFC47E7E)   // Día no laborable
-                                isPastDate -> Color(0xFFD5D5D5)      // Días pasados
-                                isToday -> Color(0xFF9EC8D5)          // Día actual
-                                else -> Color(0xFFB2C2A4)             // Días habilitados
-                            }
-                        )
+                        .background(colorProvider(isSelected, isWorkingDay, isPastDate, isToday))
                         .clickable(enabled = isEnabled) {
                             if (isEnabled) onDateSelected(date) // Llama al callback si el día es válido
                         },

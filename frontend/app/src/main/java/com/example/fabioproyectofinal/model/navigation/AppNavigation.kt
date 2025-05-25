@@ -23,6 +23,7 @@ import com.example.fabioproyectofinal.model.ApiServer
 import com.example.fabioproyectofinal.model.navigation.AppScreens
 import com.example.fabioproyectofinal.model.session.SessionManager
 import com.example.fabioproyectofinal.view.screens.DoctorAppointmentsScreen
+import com.example.fabioproyectofinal.view.screens.DoctorPastAppointmentsScreen
 
 @Composable
 fun AppNavigation(
@@ -133,6 +134,11 @@ fun AppNavigation(
         composable("doctor_appointments_screen/{id_usuario}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("id_usuario")?.toIntOrNull()
             DoctorAppointmentsScreen(navController, userId)
+        }
+
+        composable("doctor_past_appointments_screen/{id_usuario}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("id_usuario")?.toIntOrNull()
+            DoctorPastAppointmentsScreen(navController, userId)
         }
     }
 }

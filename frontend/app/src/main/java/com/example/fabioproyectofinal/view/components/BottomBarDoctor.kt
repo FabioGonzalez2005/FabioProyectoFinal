@@ -79,7 +79,7 @@ fun BottomBarDoctor(navController: NavHostController, userId: Int) {
                 ) {
                     val items = listOf(
                         Triple(null, "Inicio", AppScreens.DoctorAppointmentsScreen.route),
-                        Triple(null, "Calendario", AppScreens.AppointmentsScreen.route)
+                        Triple(null, "Calendario", AppScreens.DoctorPastAppointmentsScreen.route)
                     )
 
                     items.forEachIndexed { index, (imageUrl, desc, route) ->
