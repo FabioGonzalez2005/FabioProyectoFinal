@@ -18,6 +18,7 @@ import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.ApiServer
 import com.example.fabioproyectofinal.model.data.model.Appointment
 import com.example.fabioproyectofinal.view.components.BottomBar
+import com.example.fabioproyectofinal.view.components.BottomBarDoctor
 import com.example.fabioproyectofinal.view.components.CalendarComponent
 import com.example.fabioproyectofinal.view.components.DoctorCitaCard
 import com.example.fabioproyectofinal.view.components.TopBar
@@ -54,7 +55,7 @@ fun DoctorAppointmentsScreen(
 
     Scaffold(
         topBar = { TopBar(navController = navController) {} },
-        bottomBar = { BottomBar(navController = navController, userId = userId ?: -1) },
+        bottomBar = { BottomBarDoctor(navController = navController, userId = userId ?: -1) },
         containerColor = Color(0xFFFFF9F2)
     ) { innerPadding ->
         Column(
@@ -111,6 +112,7 @@ fun DoctorAppointmentsScreen(
                                             if (idDoctor != null) {
                                                 citasFiltradas = ApiServer.apiService.getCitasDelDoctorPorDia(idDoctor, fechaStr)
                                                     .filter { it.estado == "Confirmado" || it.estado == "Cancelado" }
+                                                    .sortedBy { it.fecha_cita }
                                             }
                                         } catch (e: Exception) {
                                             println("Error actualizando citas: ${e.message}")

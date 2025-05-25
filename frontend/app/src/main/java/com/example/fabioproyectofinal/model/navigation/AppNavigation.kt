@@ -135,5 +135,4 @@ fun AppNavigation(
             DoctorAppointmentsScreen(navController, userId)
         }
     }
-
 }

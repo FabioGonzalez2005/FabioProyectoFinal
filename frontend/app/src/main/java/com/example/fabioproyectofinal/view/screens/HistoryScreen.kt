@@ -1,6 +1,7 @@
 package com.example.fabioproyectofinal.view.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -80,24 +81,61 @@ fun HistoryScreen(navController: NavHostController, userId: Int?) {
                 )
 
                 Box {
-                    TextButton(onClick = { expanded = true }) {
-                        Text(selectedOption, color = Color(0xFFB2C2A4))
+                    Card(
+                        modifier = Modifier
+                            .height(28.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(horizontal = 8.dp)
+                                .clickable { expanded = true }
+                        ) {
+                            Text(
+                                text = selectedOption,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                fontFamily = afacadFont,
+                                color = Color(0xFFB2C2A4)
+                            )
+                        }
                     }
 
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
-                        modifier = Modifier.background(Color(0xFFFFFFFF))
+                        modifier = Modifier
+                            .background(Color.White)
+                            .width(IntrinsicSize.Min)
+                            .padding(horizontal = 8.dp)
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Más recientes", fontFamily = afacadFont, color = Color(0xFFB2C2A4)) },
+                            text = {
+                                Text(
+                                    "Más recientes",
+                                    fontFamily = afacadFont,
+                                    color = Color(0xFFB2C2A4),
+                                    fontSize = 16.sp
+                                )
+                            },
                             onClick = {
                                 selectedOption = "Más recientes"
                                 expanded = false
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text("Más antiguas", fontFamily = afacadFont, color = Color(0xFFB2C2A4)) },
+                            text = {
+                                Text(
+                                    "Más antiguas",
+                                    fontFamily = afacadFont,
+                                    color = Color(0xFFB2C2A4),
+                                    fontSize = 16.sp
+                                )
+                            },
                             onClick = {
                                 selectedOption = "Más antiguas"
                                 expanded = false
@@ -105,6 +143,7 @@ fun HistoryScreen(navController: NavHostController, userId: Int?) {
                         )
                     }
                 }
+
             }
 
             Card(

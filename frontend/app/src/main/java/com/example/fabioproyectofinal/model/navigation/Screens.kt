@@ -15,4 +15,5 @@ sealed class AppScreens(val route: String) {
     object RegisterScreen: AppScreens("register_screen/{id_usuario}")
     object LoginScreen: AppScreens("login_screen/{id_usuario}")
     object DoctorListScreen: AppScreens("doctor_list_screen/{id_usuario}")
+    object DoctorAppointmentsScreen: AppScreens("doctor_appointments_screen/{id_usuario}")
 }
