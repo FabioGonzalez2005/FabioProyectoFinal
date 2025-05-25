@@ -28,11 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fabioproyectofinal.model.ApiServer
 import com.example.fabioproyectofinal.model.data.model.Appointment
 import com.example.fabioproyectofinal.model.utils.formatFechaCompleta
+import com.example.fabioproyectofinal.model.utils.formatHora
 import kotlinx.coroutines.launch
 
 @Composable
@@ -44,6 +46,8 @@ fun DoctorPastCitaCard(
     var showEditDialog by remember { mutableStateOf(false) }
 
     val fecha = formatFechaCompleta(cita.fecha_cita)
+    val hora = formatHora(cita.fecha_cita)
+
     val estadoColor = when (cita.estado) {
         "Confirmado" -> Color(0xFFB2C2A4)
         "Cancelado" -> Color(0xFFE57373)
@@ -82,12 +86,21 @@ fun DoctorPastCitaCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = fecha,
-                    fontSize = 14.sp,
-                    fontFamily = afacadFont,
-                    color = Color.DarkGray
-                )
+                Column {
+                    Text(
+                        text = fecha,
+                        fontSize = 14.sp,
+                        fontFamily = afacadFont,
+                        color = Color.DarkGray
+                    )
+                    Text(
+                        text = "Hora: $hora",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = afacadFont,
+                        color = Color(0xFFB2C2A4)
+                    )
+                }
 
                 Button(
                     onClick = { showEditDialog = true },
