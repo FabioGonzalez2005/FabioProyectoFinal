@@ -129,6 +129,13 @@ interface ApiService {
         @Body data: Map<String, String>
     )
 
+    @PUT("/citas/editar-datos-medicos/{id_cita}")
+    suspend fun actualizarDatosCita(
+        @Path("id_cita") idCita: Int,
+        @Body datos: Map<String, String>
+    ): MensajeResponse
+
+
 }
 
 

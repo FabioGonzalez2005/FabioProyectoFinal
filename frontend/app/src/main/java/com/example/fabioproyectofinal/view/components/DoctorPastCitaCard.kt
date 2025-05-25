@@ -91,7 +91,7 @@ fun DoctorPastCitaCard(
 
                 Button(
                     onClick = { showEditDialog = true },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF859A72)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text("Expediente", fontFamily = afacadFont, color = Color.White)
@@ -99,7 +99,7 @@ fun DoctorPastCitaCard(
             }
 
             if (showEditDialog) {
-                EditProfileDialog(onDismiss = { showEditDialog = false })
+                EditRecordDialog(cita = cita, onDismiss = { showEditDialog = false })
             }
         }
     }

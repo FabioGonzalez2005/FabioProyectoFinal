@@ -234,7 +234,7 @@ fun HistoryCard(
                             InfoLine("Nombre completo", appointment.nombre.orNoInfo())
                             InfoLine("Fecha de nacimiento", appointment.fecha_nacimiento.orNoInfo())
                             InfoLine("Teléfono", appointment.telefono.orNoInfo())
-                            InfoLine("Emergencia", appointment.telefono_emergencia.orNoInfo())
+                            InfoLine("Teléfono emergencia", appointment.telefono_emergencia.orNoInfo())
 
                             Spacer(Modifier.height(6.dp))
                             SectionTitle("Historial médico")

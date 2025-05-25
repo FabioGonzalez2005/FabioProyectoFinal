@@ -31,9 +31,10 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.fabioproyectofinal.R
 import androidx.compose.ui.text.font.FontWeight
+import com.example.fabioproyectofinal.model.data.model.Appointment
 
 @Composable
-fun EditRecordDialog(onDismiss: () -> Unit) {
+fun EditRecordDialog(cita: Appointment, onDismiss: () -> Unit) {
     val afacadFont = FontFamily(Font(R.font.afacadfont, FontWeight.Normal))
     val context = LocalContext.current
 
@@ -88,13 +89,9 @@ fun EditRecordDialog(onDismiss: () -> Unit) {
         shape = RoundedCornerShape(12.dp)
     )
 
-    if (showPatientInfoDialog) {
-        PatientInformationDialog(onDismiss = { showPatientInfoDialog = false })
-    }
+
     if (showMedicalHistoryDialog) {
-        MedicalHistoryDialog(onDismiss = { showMedicalHistoryDialog = false })
+        MedicalHistoryDialog(cita = cita, onDismiss = { showMedicalHistoryDialog = false })
     }
-    if (showMedicalNotesDialog) {
-        MedicalNotesDialog(onDismiss = { showMedicalNotesDialog = false })
-    }
+
 }
