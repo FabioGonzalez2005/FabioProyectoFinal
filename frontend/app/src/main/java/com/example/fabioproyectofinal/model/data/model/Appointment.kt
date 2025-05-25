@@ -14,5 +14,9 @@ data class Appointment(
     val nota: String,
     val nombre_paciente: String? = null,
     val email: String? = null,
-    val motivo_cancelacion: String
+    val motivo_cancelacion: String,
+    val nombre: String,
+    val fecha_nacimiento: String,
+    val telefono: String,
+    val telefono_emergencia: String,
 )

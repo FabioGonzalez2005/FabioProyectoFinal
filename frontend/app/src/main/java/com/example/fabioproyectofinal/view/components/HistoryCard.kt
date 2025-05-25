@@ -231,10 +231,10 @@ fun HistoryCard(
                     ) {
                         item {
                             SectionTitle("Información del paciente")
-                            InfoLine("Nombre completo", SessionManager.nombre.orNoInfo())
-                            InfoLine("Fecha de nacimiento", SessionManager.fecha_nacimiento.orNoInfo())
-                            InfoLine("Teléfono", SessionManager.telefono.orNoInfo())
-                            InfoLine("Emergencia", SessionManager.telefono_emergencia.orNoInfo())
+                            InfoLine("Nombre completo", appointment.nombre.orNoInfo())
+                            InfoLine("Fecha de nacimiento", appointment.fecha_nacimiento.orNoInfo())
+                            InfoLine("Teléfono", appointment.telefono.orNoInfo())
+                            InfoLine("Emergencia", appointment.telefono_emergencia.orNoInfo())
 
                             Spacer(Modifier.height(6.dp))
                             SectionTitle("Historial médico")
