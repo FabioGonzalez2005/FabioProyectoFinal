@@ -33,6 +33,10 @@ import com.example.fabioproyectofinal.viewmodel.AppointmentViewModel
 import com.example.fabioproyectofinal.viewmodel.ClinicViewModel
 import com.example.fabioproyectofinal.viewmodel.DoctorViewModel
 import com.example.fabioproyectofinal.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @Composable
 fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
@@ -46,19 +50,28 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
     // Obtener citas del ViewModel
     val appointments by appointmentViewModel.citas.collectAsState()
 
-    // Obtener fecha actual para filtrar futuras
-    val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
-    val hoy = java.util.Date()
+    LaunchedEffect(appointments) {
+        Log.i("Prueba", "Citas que llegaron al Composable: ${appointments.size}")
+    }
 
-    // Filtra citas futuras
+    // Obtener fecha actual para filtrar futuras
+    val sdf = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
+    sdf.timeZone = TimeZone.getTimeZone("GMT")  // Asegura que el parseo se haga en GMT
+    val hoy = Date()
+
     val citasFuturas = appointments.filter {
         try {
             val citaDate = sdf.parse(it.fecha_cita)
-            citaDate?.after(hoy) == true
+            citaDate != null && citaDate.after(hoy)
         } catch (e: Exception) {
+            println("Error parsing: ${it.fecha_cita}")
             false
         }
     }
+    Log.i("Prueba", "Hoy (ahora): $hoy")
+    appointments.forEach { println("→ cita.fecha_cita: ${it.fecha_cita}") }
+    Log.i("Prueba", "Total citas futuras: ${citasFuturas.size}")
+
 
     // Contadores por estado
     val confirmedCount = citasFuturas.count { it.estado == "Confirmado" }
@@ -139,7 +152,7 @@ fun AppointmentsScreen(navController: NavHostController, userId: Int?) {
             Spacer(modifier = Modifier.size(12.dp))
 
             // Lista de citas
-            AppointmentList(navController = navController, userId = userId ?: -1)
+            AppointmentList(navController = navController, userId = userId ?: -1, appointmentViewModel = appointmentViewModel)
         }
     }
 }
@@ -176,7 +189,8 @@ private fun SummaryCard(titulo: String, cantidad: Int, font: FontFamily) {
 fun AppointmentList(
     navController: NavHostController? = null,
     viewModel: DoctorViewModel = viewModel(),
-    userId: Int?
+    userId: Int?,
+    appointmentViewModel: AppointmentViewModel
 ) {
     // ViewModels necesarios
     val appointmentViewModel: AppointmentViewModel = viewModel()
@@ -184,7 +198,7 @@ fun AppointmentList(
 
     // Citas actuales
     val allCitas by appointmentViewModel.citas.collectAsState()
-    val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", java.util.Locale.ENGLISH)
+    val sdf = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
     val hoy = java.util.Date()
 
     // Filtra citas futuras

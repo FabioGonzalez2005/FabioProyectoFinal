@@ -110,7 +110,7 @@ fun DoctorCitaCard(
                 if (cita.estado == "Confirmado") {
                     Button(
                         onClick = { showDialog = true },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC47E7E)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB2C2A4)),
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text("Cancelar", fontFamily = afacadFont, color = Color.White)
@@ -124,7 +124,8 @@ fun DoctorCitaCard(
         AlertDialog(
             onDismissRequest = { showDialog = false },
             confirmButton = {
-                Button(
+                AnimatedDialogButton(
+                    text = "Confirmar cancelación",
                     onClick = {
                         showDialog = false
                         scope.launch {
@@ -141,8 +142,7 @@ fun DoctorCitaCard(
                                     "✅ Cita cancelada con motivo: $motivo",
                                     Toast.LENGTH_LONG
                                 ).show()
-                                onCitaActualizada() // 🔁 Notifica a la screen que recargue
-
+                                onCitaActualizada() // Recargar citas
                             } catch (e: Exception) {
                                 Toast.makeText(
                                     context,
@@ -151,20 +151,14 @@ fun DoctorCitaCard(
                                 ).show()
                             }
                         }
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC47E7E)),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text("Confirmar cancelación", fontFamily = afacadFont, color = Color.White)
-                }
+                    }
+                )
             },
             dismissButton = {
-                OutlinedButton(
-                    onClick = { showDialog = false },
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text("Cerrar", fontFamily = afacadFont)
-                }
+                AnimatedDialogButton(
+                    text = "Cerrar",
+                    onClick = { showDialog = false }
+                )
             },
             title = {
                 Text("¿Cancelar cita?", fontFamily = afacadFont, fontSize = 18.sp)

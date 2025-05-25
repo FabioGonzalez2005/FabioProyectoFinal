@@ -1,5 +1,6 @@
 package com.example.fabioproyectofinal.view.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,14 +42,17 @@ fun DoctorAppointmentsScreen(
             try {
                 val idDoctorResponse = ApiServer.apiService.getIdDoctorPorUsuario(userId)
                 val idDoctor = idDoctorResponse.firstOrNull()?.get("id_doctor")
+                Log.i("Prueba"," ID Doctor: $idDoctor para userId=$userId en fecha=$fechaStr")
                 if (idDoctor != null) {
-                    citasFiltradas = ApiServer.apiService.getCitasDelDoctorPorDia(idDoctor, fechaStr)
-                        .filter { it.estado == "Confirmado" || it.estado == "Cancelado" }
+                    val citas = ApiServer.apiService.getCitasDelDoctorPorDia(idDoctor, fechaStr)
+                    Log.i("Prueba"," Citas recibidas (${citas.size}): $citas")
+                    citasFiltradas = citas.filter { it.estado == "Confirmado" || it.estado == "Cancelado" }
                 } else {
-                    println("No se encontró el id_doctor para el usuario $userId")
+                    Log.i("Prueba", " No se encontró el id_doctor para el usuario $userId")
                 }
             } catch (e: Exception) {
-                println("Error cargando citas: ${e.message}")
+                Log.i("Prueba"," Error cargando citas del médico: ${e.message}")
+                e.printStackTrace()
             }
         }
     }

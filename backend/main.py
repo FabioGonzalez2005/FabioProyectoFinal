@@ -359,7 +359,7 @@ def reservar_franja():
         return jsonify({"error": "Faltan datos requeridos"}), 400
 
     try:
-        # 1. Obtener la disponibilidad
+        # 1. Obtener la franja de disponibilidad
         sql_get_disponibilidad = '''
             SELECT fecha_inicio, id_doctor
             FROM disponibilidad_doctor
@@ -369,42 +369,46 @@ def reservar_franja():
         respuesta = ejecutar_sql(sql_get_disponibilidad, (id_disponibilidad,))
 
         if isinstance(respuesta, tuple) and respuesta[1] == 500:
-            current_app.logger.error("Error al obtener disponibilidad")
             return respuesta
 
         datos_disponibilidad = respuesta.get_json()
         if not datos_disponibilidad:
-            current_app.logger.warning("Franja no encontrada")
             return jsonify({"error": "Franja no encontrada"}), 404
 
         fecha_cita_raw = datos_disponibilidad[0]['fecha_inicio']
         id_doctor = datos_disponibilidad[0]['id_doctor']
-        current_app.logger.info(f"Fecha cita RAW: {fecha_cita_raw}, doctor: {id_doctor}")
 
+        # 2. Parsear la fecha
         fecha_cita_clean = fecha_cita_raw.replace(" GMT", "")
         fecha_cita = datetime.strptime(fecha_cita_clean, "%a, %d %b %Y %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
 
-        # 2. Insertar la cita con todos los campos requeridos
+        # 3. Insertar la cita
         sql_insert_cita = '''
             INSERT INTO cita (
                 id_usuario, id_doctor, fecha_cita, estado,
                 condiciones_pasadas, procedimientos_quirurgicos,
-                alergias, antecedentes_familiares, medicamento_y_dosis, nota
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                alergias, antecedentes_familiares, medicamento_y_dosis,
+                nota, motivo_cancelacion,
+                nombre, fecha_nacimiento, telefono, telefono_emergencia
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         '''
-        current_app.logger.info(f"Inserting cita con: usuario={id_usuario}, doctor={id_doctor}, fecha={fecha_cita}")
 
-        response_cita = ejecutar_sql(
-            sql_insert_cita,
-            (
-                id_usuario,
-                id_doctor,
-                fecha_cita,
-                'Confirmado',
-                '', '', '', '', '', ''  # campos opcionales rellenados en blanco
-            ),
-            es_insert=True
+        params = (
+            id_usuario,
+            id_doctor,
+            fecha_cita,
+            'Confirmado',
+            '', '', '', '', '', '', '', '', '', '', ''
         )
+
+        current_app.logger.info(f"Inserting cita con: usuario={id_usuario}, doctor={id_doctor}, fecha={fecha_cita}")
+        response_cita = ejecutar_sql(sql_insert_cita, params, es_insert=True)
+
+        return jsonify({"mensaje": "Cita reservada correctamente"}), 201
+
+    except Exception as e:
+        current_app.logger.error(f"Error en reserva: {str(e)}")
+        return jsonify({"error": "Error en el servidor"}), 500
 
         if isinstance(response_cita, tuple) and response_cita[1] == 500:
             current_app.logger.error("Error al insertar la cita")
@@ -656,8 +660,8 @@ def obtener_citas_por_dia_para_medico(id_doctor):
         return jsonify({"error": "Parámetro 'fecha' es requerido (YYYY-MM-DD)"}), 400
 
     try:
-        # Validar formato de fecha
-        fecha = datetime.strptime(fecha_str, '%Y-%m-%d').date()
+        fecha_inicio = datetime.strptime(fecha_str, '%Y-%m-%d')
+        fecha_fin = fecha_inicio + timedelta(days=1)
     except ValueError:
         return jsonify({"error": "Formato de fecha inválido. Usa YYYY-MM-DD"}), 400
 
@@ -667,11 +671,11 @@ def obtener_citas_por_dia_para_medico(id_doctor):
         FROM Cita C
         JOIN Usuario U ON C.id_usuario = U.id_usuario
         WHERE C.id_doctor = %s
-        AND DATE(C.fecha_cita) = %s
+        AND C.fecha_cita >= %s AND C.fecha_cita < %s
         ORDER BY C.fecha_cita ASC
     '''
+    return ejecutar_sql(sql, (id_doctor, fecha_inicio, fecha_fin))
 
-    return ejecutar_sql(sql, (id_doctor, fecha))
 
 # Obtener id_usuario de un médico
 @app.route('/doctor/por-usuario/<int:id_usuario>', methods=['GET'])

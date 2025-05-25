@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -32,12 +32,7 @@ fun BottomBarDoctor(navController: NavHostController, userId: Int) {
         else -> 1
     }
 
-    val iconPositions = remember { mutableStateListOf<Float>() }
-    val iconWidths = remember { mutableStateListOf<Float>() }
-
     val indicatorOffsetPx = remember { mutableStateOf(0f) }
-    val indicatorWidthPx = remember { mutableStateOf(0f) }
-
     val density = LocalDensity.current
 
     Box(
@@ -52,10 +47,11 @@ fun BottomBarDoctor(navController: NavHostController, userId: Int) {
                 .fillMaxWidth()
                 .height(80.dp)
         ) {
+            // Indicador visual superior
             Box(
                 modifier = Modifier
                     .offset(x = with(density) { indicatorOffsetPx.value.toDp() }, y = 4.dp)
-                    .width(with(density) { indicatorWidthPx.value.toDp() })
+                    .width(24.dp)
                     .height(48.dp)
                     .background(Color(0xFFB2C2A4), shape = RoundedCornerShape(12.dp))
                     .align(Alignment.TopStart)
@@ -88,20 +84,17 @@ fun BottomBarDoctor(navController: NavHostController, userId: Int) {
                                 .weight(1f)
                                 .fillMaxHeight()
                                 .onGloballyPositioned { coordinates ->
-                                    val x = with(density) { coordinates.positionInRoot().x - 16.dp.toPx() }
+                                    val x = coordinates.positionInParent().x
                                     val width = coordinates.size.width.toFloat()
-
-                                    if (iconPositions.size <= index) {
-                                        iconPositions.add(x)
-                                        iconWidths.add(width)
-                                    } else {
-                                        iconPositions[index] = x
-                                        iconWidths[index] = width
-                                    }
+                                    val centerX = x + (width / 2f)
 
                                     if (index == activeIndex) {
-                                        indicatorOffsetPx.value = x
-                                        indicatorWidthPx.value = width
+                                        val ajuste = when (index) {
+                                            0 -> -12f // "Inicio" se desplaza a la izquierda
+                                            1 -> 0f   // "Calendario" centrado
+                                            else -> 0f
+                                        }
+                                        indicatorOffsetPx.value = centerX - with(density) { 12.dp.toPx() } + ajuste
                                     }
                                 }
                                 .clickable {
