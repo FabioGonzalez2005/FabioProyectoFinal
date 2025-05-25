@@ -20,6 +20,7 @@ import com.example.fabioproyectofinal.model.data.model.Appointment
 import com.example.fabioproyectofinal.view.components.BottomBarDoctor
 import com.example.fabioproyectofinal.view.components.CalendarComponent
 import com.example.fabioproyectofinal.view.components.DoctorCitaCard
+import com.example.fabioproyectofinal.view.components.DoctorPastCitaCard
 import com.example.fabioproyectofinal.view.components.TopBar
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -112,7 +113,7 @@ fun DoctorPastAppointmentsScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(citasFiltradas) { cita ->
-                            DoctorCitaCard(
+                            DoctorPastCitaCard(
                                 cita = cita,
                                 afacadFont = afacadFont,
                                 onCitaActualizada = {
@@ -123,7 +124,7 @@ fun DoctorPastAppointmentsScreen(
                                             val idDoctor = idDoctorResponse.firstOrNull()?.get("id_doctor")
                                             if (idDoctor != null) {
                                                 citasFiltradas = ApiServer.apiService.getCitasDelDoctorPorDia(idDoctor, fechaStr)
-                                                    .filter { it.estado == "Confirmado" || it.estado == "Cancelado" }
+                                                    .filter { it.estado == "Confirmado" }
                                                     .sortedBy { it.fecha_cita }
                                             }
                                         } catch (e: Exception) {
