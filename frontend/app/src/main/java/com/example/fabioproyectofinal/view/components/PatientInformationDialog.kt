@@ -9,11 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.example.fabioproyectofinal.R
 import com.example.fabioproyectofinal.model.ApiServer
 import com.example.fabioproyectofinal.model.data.model.Appointment
@@ -22,7 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun MedicalHistoryDialog(
+fun PatientInformationDialog(
     cita: Appointment,
     onDismiss: () -> Unit,
     onUpdated: () -> Unit = {}
@@ -31,24 +31,23 @@ fun MedicalHistoryDialog(
     val context = LocalContext.current
     val api = ApiServer.apiService
 
-    var alergias by remember { mutableStateOf(cita.alergias ?: "") }
-    var antecedentes_familiares by remember { mutableStateOf(cita.antecedentes_familiares ?: "") }
-    var condiciones_pasadas by remember { mutableStateOf(cita.condiciones_pasadas ?: "") }
-    var procedimientos_quirurgicos by remember { mutableStateOf(cita.procedimientos_quirurgicos ?: "") }
-
+    var nombre by remember { mutableStateOf(cita.nombre ?: "") }
+    var fechaNacimiento by remember { mutableStateOf(cita.fecha_nacimiento ?: "") }
+    var telefono by remember { mutableStateOf(cita.telefono ?: "") }
+    var telefonoEmergencia by remember { mutableStateOf(cita.telefono_emergencia ?: "") }
 
     fun guardarCambios() {
         val datos = mutableMapOf<String, String>()
-        if (alergias.isNotBlank()) datos["alergias"] = alergias
-        if (antecedentes_familiares.isNotBlank()) datos["antecedentes_familiares"] = antecedentes_familiares
-        if (condiciones_pasadas.isNotBlank()) datos["condiciones_pasadas"] = condiciones_pasadas
-        if (procedimientos_quirurgicos.isNotBlank()) datos["procedimientos_quirurgicos"] = procedimientos_quirurgicos
+        if (nombre.isNotBlank()) datos["nombre"] = nombre
+        if (fechaNacimiento.isNotBlank()) datos["fecha_nacimiento"] = fechaNacimiento
+        if (telefono.isNotBlank()) datos["telefono"] = telefono
+        if (telefonoEmergencia.isNotBlank()) datos["telefono_emergencia"] = telefonoEmergencia
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 api.actualizarDatosCita(cita.id_cita, datos)
                 CoroutineScope(Dispatchers.Main).launch {
-                    Toast.makeText(context, "Historial médico actualizado correctamente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Información del paciente actualizada correctamente", Toast.LENGTH_SHORT).show()
                     onUpdated()
                     onDismiss()
                 }
@@ -65,7 +64,7 @@ fun MedicalHistoryDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                "Historial Médico",
+                "Información del Paciente",
                 color = Color(0xFFB2C2A4),
                 fontFamily = afacadFont,
                 fontWeight = FontWeight.Bold,
@@ -75,10 +74,10 @@ fun MedicalHistoryDialog(
         },
         text = {
             Column {
-                buildTextField("Alergias", alergias) { alergias = it }
-                buildTextField("Antecedentes familiares", antecedentes_familiares) { antecedentes_familiares = it }
-                buildTextField("Condiciones pasadas", condiciones_pasadas) { condiciones_pasadas = it }
-                buildTextField("Procedimientos quirúrgicos", procedimientos_quirurgicos) { procedimientos_quirurgicos = it }
+                buildTextField("Nombre completo", nombre) { nombre = it }
+                buildTextField("Fecha de nacimiento", fechaNacimiento) { fechaNacimiento = it }
+                buildTextField("Teléfono", telefono) { telefono = it }
+                buildTextField("Teléfono de emergencia", telefonoEmergencia) { telefonoEmergencia = it }
             }
         },
         confirmButton = {
@@ -117,6 +116,6 @@ private fun buildTextField(label: String, value: String, onValueChange: (String)
             focusedBorderColor = Color(0xFF7C8B6B),
             unfocusedBorderColor = Color(0xFF7C8B6B)
         ),
-        singleLine = false
+        singleLine = true
     )
 }
