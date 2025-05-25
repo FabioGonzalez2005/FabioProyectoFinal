@@ -77,11 +77,6 @@ fun SelectProfessionalScreen(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ProfessionalCardHorizontal(
-                    name = nombreDoctor,
-                    specialty = especialidad,
-                    price = precio
-                )
                 Spacer(modifier = Modifier.height(8.dp))
                 CalendarComponent(
                     selectedDate = selectedDate,

@@ -200,7 +200,7 @@ fun ClinicaCard(
                                             if (nombresCoincidentes.isNotEmpty()) {
                                                 "Compatible con: ${nombresCoincidentes.joinToString(", ")}"
                                             } else {
-                                                "No tienes seguros compatibles"
+                                                ""
                                             }
 
                                         Text(

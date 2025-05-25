@@ -224,9 +224,8 @@ fun CalendarComponent(
                 val isSelected = selectedDate == date
                 val isPastDate = date.isBefore(today)
                 val isToday = date == today
-                // Determina si el día es seleccionable (no pasado y día laborable o hoy)
-                val isEnabled = isWorkingDay && validaFecha(date)
 
+                val isEnabled = isWorkingDay && validaFecha(date) && (!date.isBefore(today) || allowPast)
 
                 Box(
                     modifier = Modifier
@@ -235,19 +234,13 @@ fun CalendarComponent(
                         .clip(RoundedCornerShape(3.dp))
                         .background(colorProvider(isSelected, isWorkingDay, isPastDate, isToday))
                         .clickable(enabled = isEnabled) {
-                            if (isEnabled) onDateSelected(date) // Llama al callback si el día es válido
+                            if (isEnabled) onDateSelected(date)
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    val textColor = when {
-                        isSelected -> Color.White
-                        isPastDate -> Color.White
-                        !isWorkingDay -> Color.White
-                        else -> Color.White
-                    }
+                    val textColor = Color.White
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        // Número del día en el calendario
                         Text(
                             text = "${day + 1}",
                             color = textColor,

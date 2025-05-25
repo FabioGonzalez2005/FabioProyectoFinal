@@ -49,7 +49,7 @@ fun DoctorPastCitaCard(
     val hora = formatHora(cita.fecha_cita)
 
     val estadoColor = when (cita.estado) {
-        "Confirmado" -> Color(0xFFB2C2A4)
+        "Confirmado" -> Color(0xFFBD8F45)
         "Cancelado" -> Color(0xFFE57373)
         else -> Color.Gray
     }
