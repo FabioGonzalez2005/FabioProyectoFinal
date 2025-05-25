@@ -703,6 +703,43 @@ def cancelar_cita(id_cita):
     except Exception as e:
         return jsonify({"error": f"Error cancelando cita: {str(e)}"}), 500
 
+# Cambiar datos expediente cita
+@app.route('/citas/editar-datos-medicos/<int:id_cita>', methods=['PUT'])
+def editar_datos_medicos_cita(id_cita):
+    datos = request.get_json() or {}
+
+    campos_validos = [
+        "condiciones_pasadas",
+        "procedimientos_quirurgicos",
+        "alergias",
+        "antecedentes_familiares",
+        "nombre",
+        "fecha_nacimiento",
+        "telefono",
+        "telefono_emergencia",
+        "medicamento_y_dosis",
+        "nota"
+    ]
+
+    campos_actualizar = []
+    valores = []
+
+    for campo in campos_validos:
+        if campo in datos:
+            campos_actualizar.append(f"{campo} = %s")
+            valores.append(datos[campo])
+
+    if not campos_actualizar:
+        return jsonify({"error": "No se proporcionaron campos válidos para actualizar"}), 400
+
+    valores.append(id_cita)
+    sql = f"""
+        UPDATE Cita
+        SET {', '.join(campos_actualizar)}
+        WHERE id_cita = %s
+    """
+
+    return ejecutar_sql(sql, tuple(valores), es_insert=True)
 
 # ======================= TEST CONNECTION =======================
 @app.route('/test_connection', methods=['GET'])

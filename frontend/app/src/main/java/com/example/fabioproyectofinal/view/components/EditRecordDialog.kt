@@ -89,9 +89,13 @@ fun EditRecordDialog(cita: Appointment, onDismiss: () -> Unit) {
         shape = RoundedCornerShape(12.dp)
     )
 
-
+    if (showPatientInfoDialog) {
+        PatientInformationDialog(cita = cita, onDismiss = { showPatientInfoDialog = false })
+    }
     if (showMedicalHistoryDialog) {
         MedicalHistoryDialog(cita = cita, onDismiss = { showMedicalHistoryDialog = false })
     }
-
+    if (showMedicalNotesDialog) {
+        MedicalNotesDialog(cita = cita, onDismiss = { showMedicalNotesDialog = false })
+    }
 }
